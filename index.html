@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Zaberman Broker Calculator MVP</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-700">
+
+<div class="min-h-screen flex">
+
+  <!-- SIDEBAR -->
+  <aside class="w-64 bg-[#203241] text-slate-300 min-h-screen fixed left-0 top-0 overflow-y-auto">
+
+    <!-- Logo -->
+    <div class="p-6 border-b border-slate-700">
+
+      <h1 class="text-2xl font-bold text-[#12365a]">
+        zaberman
+      </h1>
+
+      <div class="mt-6 flex items-center gap-3">
+
+        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
+          z
+        </div>
+
+        <div>
+          <p class="text-white font-semibold text-sm">
+            Broker
+          </p>
+
+          <p class="text-xs text-slate-400">
+            Calculator MVP
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="p-4 text-sm">
+
+      <p class="uppercase text-xs text-slate-500 mb-3">
+        Main
+      </p>
+
+      <!-- Calculator -->
+      <div class="mt-2">
+
+        <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-800 text-white">
+
+          <div class="flex items-center gap-3">
+            <i data-lucide="calculator" class="w-4"></i>
+            Calculator
+          </div>
+
+          <i data-lucide="chevron-up" class="w-4"></i>
+
+        </div>
+
+        <div class="ml-8 mt-2 space-y-2">
+
+          <a class="block text-white font-semibold" href="index.html">
+            New Calculation
+          </a>
+
+          <a class="block hover:text-white" href="#">
+            My Drafts
+          </a>
+
+          <a class="block hover:text-white" href="#">
+            My Estimates
+          </a>
+
+          <a class="block hover:text-white" href="#">
+            All Calculations
+          </a>
+
+          <a class="block hover:text-white" href="variables.html">
+            Variables
+          </a>
+
+        </div>
+
+      </div>
+
+      <!-- Future -->
+      <p class="uppercase text-xs text-slate-500 mt-6 mb-3">
+        Future
+      </p>
+
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800" href="breakdown.html">
+        <i data-lucide="file-text" class="w-4"></i>
+        Cost Breakdown
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="#">
+        <i data-lucide="clipboard-check" class="w-4"></i>
+        eBOL
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="#">
+        <i data-lucide="package-check" class="w-4"></i>
+        Orders
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ml-64 w-full">
+
+    <!-- TOPBAR -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+
+      <div>
+        <p class="text-xs text-slate-400">
+          Zaberman › Broker Calculator
+        </p>
+
+        <h2 class="text-lg font-semibold text-slate-800">
+          New Quote
+        </h2>
+      </div>
+
+      <div class="flex items-center gap-3">
+
+        <span class="text-xs px-3 py-1 rounded-full bg-amber-100 text-amber-700 font-semibold">
+          Draft
+        </span>
+
+        <button class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
+          Save Draft
+        </button>
+
+        <button class="px-4 py-2 rounded-lg bg-teal-500 text-white hover:bg-teal-600">
+          Recalculate
+        </button>
+
+        <button class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
+          Generate Estimate
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- PAGE -->
+    <div class="p-6">
+
+      <!-- HEADER -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+
+        <div class="flex justify-between items-start">
+
+          <div>
+
+            <div class="flex items-center gap-3">
+
+              <h1 class="text-2xl font-bold text-slate-800">
+                Quote Draft
+              </h1>
+
+              <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-semibold">
+                Formula v1.0
+              </span>
+
+            </div>
+
+            <p class="text-sm text-slate-500 mt-1">
+              Single-screen workflow for fast broker quote creation.
+            </p>
+
+          </div>
+
+          <div class="text-right text-sm text-slate-500">
+
+            <p>
+              Estimate ID:
+              <b class="text-slate-700">EST-291</b>
+            </p>
+
+            <p>
+              Last saved:
+              <b class="text-slate-700">Auto-save enabled</b>
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- GRID -->
+      <div class="grid grid-cols-12 gap-6">
+
+        <!-- LEFT -->
+        <div class="col-span-8 space-y-6">
+
+          <!-- CUSTOMER & ROUTE -->
+          <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+            <div class="flex items-center justify-between mb-4">
+
+              <div class="flex items-center gap-2">
+
+                <h3 class="font-bold text-slate-800">
+                  Customer & Route
+                </h3>
+
+                <!-- Tooltip -->
+                <div class="relative group">
+
+                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                  <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+
+                    <p>
+                      <b>Назначение:</b> заполнение базовой информации по клиенту и маршруту.
+                    </p>
+
+                    <p class="mt-2">
+                      На основании адресов система определяет:
+                    </p>
+
+                    <ul class="list-disc ml-5 mt-2 space-y-1">
+                      <li>pickup / delivery zones</li>
+                      <li>distance</li>
+                      <li>nearest route</li>
+                      <li>operational pricing context</li>
+                    </ul>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <button class="text-sm text-teal-600 font-semibold">
+                Open Kommo Lead
+              </button>
+
+            </div>
+
+            <!-- Form -->
+            <div class="grid grid-cols-3 gap-4 text-sm">
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Customer Name
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="John Smith" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Phone
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="+1 555 0147" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Email
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="john@email.com" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Pickup Address
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="Brooklyn, NY" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Delivery Address
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="Los Angeles, CA" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Delivery Type
+                </label>
+
+                <select class="mt-1 w-full border rounded-lg px-3 py-2">
+
+                  <option>
+                    Consolidated route
+                  </option>
+
+                  <option>
+                    Requested delivery date
+                  </option>
+
+                  <option>
+                    Exclusive delivery
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+            <!-- Route Info -->
+            <div class="grid grid-cols-4 gap-3 mt-4 text-sm">
+
+              <div class="bg-slate-50 rounded-lg p-3">
+                <p class="text-xs text-slate-400">Pickup Zone</p>
+                <p class="font-semibold text-slate-800">NY Area</p>
+              </div>
+
+              <div class="bg-slate-50 rounded-lg p-3">
+                <p class="text-xs text-slate-400">Delivery Zone</p>
+                <p class="font-semibold text-slate-800">CA South</p>
+              </div>
+
+              <div class="bg-slate-50 rounded-lg p-3">
+                <p class="text-xs text-slate-400">Distance</p>
+                <p class="font-semibold text-slate-800">2800 mi</p>
+              </div>
+
+              <div class="bg-blue-50 rounded-lg p-3">
+                <p class="text-xs text-blue-600">Nearest Route</p>
+                <p class="font-semibold text-blue-700">May 24</p>
+              </div>
+
+            </div>
+
+          </section>
+
+                    <!-- QUOTE OPTIONS -->
+          <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+            <div class="flex items-center gap-2 mb-4">
+
+              <h3 class="font-bold text-slate-800">
+                Quote Options
+              </h3>
+
+              <!-- Tooltip -->
+              <div class="relative group">
+
+                <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+
+                  <p>
+                    <b>Назначение:</b> estimate-level параметры.
+                  </p>
+
+                  <p class="mt-2">
+                    Влияют на итоговую стоимость всего quote:
+                  </p>
+
+                  <ul class="list-disc ml-5 mt-2 space-y-1">
+                    <li>insurance</li>
+                    <li>storage</li>
+                    <li>exclusive delivery</li>
+                    <li>requested date</li>
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 text-sm">
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Liability / Insurance
+                </label>
+
+                <select class="mt-1 w-full border rounded-lg px-3 py-2">
+
+                  <option>
+                    Basic Liability ($0.60/lb)
+                  </option>
+
+                  <option>
+                    Full Coverage
+                  </option>
+
+                  <option>
+                    Declared Value
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Declared Value
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="1500" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Storage Days
+                </label>
+
+                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="3" />
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">
+                  Requested Date
+                </label>
+
+                <input type="date" class="mt-1 w-full border rounded-lg px-3 py-2" />
+              </div>
+
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 mt-4 text-sm">
+
+              <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                <input type="checkbox" checked class="accent-teal-500" />
+                Storage required
+              </label>
+
+              <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                <input type="checkbox" class="accent-teal-500" />
+                Exclusive delivery
+              </label>
+
+              <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                <input type="checkbox" class="accent-teal-500" />
+                White glove
+              </label>
+
+              <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                <input type="checkbox" checked class="accent-teal-500" />
+                Packing required
+              </label>
+
+            </div>
+
+          </section>
+
+          <!-- ACCESS CONDITIONS -->
+          <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+            <div class="flex items-center gap-2 mb-4">
+
+              <h3 class="font-bold text-slate-800">
+                Access Conditions
+              </h3>
+
+              <!-- Tooltip -->
+              <div class="relative group">
+
+                <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+
+                  <p>
+                    <b>Назначение:</b> условия доступа на pickup и delivery.
+                  </p>
+
+                  <p class="mt-2">
+                    Влияют на:
+                  </p>
+
+                  <ul class="list-disc ml-5 mt-2 space-y-1">
+                    <li>labor cost</li>
+                    <li>handling time</li>
+                    <li>access fee</li>
+                    <li>crew requirements</li>
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-sm">
+
+              <!-- Pickup -->
+              <div class="border border-slate-200 rounded-xl p-4">
+
+                <h4 class="font-semibold text-slate-800 mb-3">
+                  Pickup Access
+                </h4>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                  <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                    <input type="checkbox" class="accent-teal-500" />
+                    Stairs
+                  </label>
+
+                  <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                    <input type="checkbox" class="accent-teal-500" />
+                    Elevator unavailable
+                  </label>
+
+                  <div>
+                    <label class="text-xs text-slate-400">
+                      Floor
+                    </label>
+
+                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="1" />
+                  </div>
+
+                  <div>
+                    <label class="text-xs text-slate-400">
+                      Long carry, ft
+                    </label>
+
+                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="0" />
+                  </div>
+
+                </div>
+
+              </div>
+
+              <!-- Delivery -->
+              <div class="border border-slate-200 rounded-xl p-4">
+
+                <h4 class="font-semibold text-slate-800 mb-3">
+                  Delivery Access
+                </h4>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                  <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                    <input type="checkbox" checked class="accent-teal-500" />
+                    Stairs
+                  </label>
+
+                  <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
+                    <input type="checkbox" class="accent-teal-500" />
+                    Elevator unavailable
+                  </label>
+
+                  <div>
+                    <label class="text-xs text-slate-400">
+                      Floor
+                    </label>
+
+                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="4" />
+                  </div>
+
+                  <div>
+                    <label class="text-xs text-slate-400">
+                      Long carry, ft
+                    </label>
+
+                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="50" />
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          <!-- ITEMS -->
+          <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+            <div class="flex items-center justify-between mb-4">
+
+              <div class="flex items-center gap-2">
+
+                <h3 class="font-bold text-slate-800">
+                  Items
+                </h3>
+
+                <!-- Tooltip -->
+                <div class="relative group">
+
+                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                  <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+
+                    <p>
+                      <b>Назначение:</b> item-level operational logic.
+                    </p>
+
+                    <p class="mt-2">
+                      На основании items система рассчитывает:
+                    </p>
+
+                    <ul class="list-disc ml-5 mt-2 space-y-1">
+                      <li>volume</li>
+                      <li>effective volume</li>
+                      <li>vehicle fit</li>
+                      <li>handling impact</li>
+                      <li>packaging cost</li>
+                    </ul>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <button class="px-3 py-2 rounded-lg bg-teal-500 text-white text-sm hover:bg-teal-600">
+                Add Item
+              </button>
+
+            </div>
+
+            <!-- TABLE -->
+            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+
+              <table class="w-full text-sm min-w-[1300px]">
+
+                <thead class="bg-slate-50 text-slate-500">
+
+                  <tr>
+
+                    <th class="text-left px-3 py-3">Item</th>
+                    <th class="text-left px-3 py-3">Category</th>
+                    <th class="text-left px-3 py-3">L</th>
+                    <th class="text-left px-3 py-3">W</th>
+                    <th class="text-left px-3 py-3">H</th>
+                    <th class="text-left px-3 py-3">Weight</th>
+                    <th class="text-left px-3 py-3">Qty</th>
+                    <th class="text-left px-3 py-3">Packaging</th>
+                    <th class="text-center px-3 py-3">Fragile</th>
+                    <th class="text-center px-3 py-3">Non-stack</th>
+                    <th class="text-center px-3 py-3">Crate</th>
+                    <th class="text-left px-3 py-3">Eff. Vol.</th>
+                    <th class="text-left px-3 py-3">Comment</th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-200">
+
+                  <!-- ROW -->
+                  <tr>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-52" value="Concrete Table" />
+                    </td>
+
+                    <td class="px-3 py-3">
+
+                      <select class="border rounded-lg px-2 py-2 w-32">
+
+                        <option>Furniture</option>
+                        <option>Electronics</option>
+                        <option>Art</option>
+
+                      </select>
+
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-16" value="140" />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-16" value="50" />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-16" value="20" />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-20" value="500" />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-16" value="1" />
+                    </td>
+
+                    <td class="px-3 py-3">
+
+                      <select class="border rounded-lg px-2 py-2 w-44">
+
+                        <option>Custom Crate</option>
+                        <option>Blanket Wrap</option>
+                        <option>TV / Monitor Box</option>
+                        <option>Bubble Protection</option>
+                        <option>None</option>
+
+                      </select>
+
+                    </td>
+
+                    <td class="px-3 py-3 text-center">
+                      <input type="checkbox" checked class="accent-teal-500" />
+                    </td>
+
+                    <td class="px-3 py-3 text-center">
+                      <input type="checkbox" checked class="accent-teal-500" />
+                    </td>
+
+                    <td class="px-3 py-3 text-center">
+                      <input type="checkbox" checked class="accent-teal-500" />
+                    </td>
+
+                    <td class="px-3 py-3 font-semibold text-amber-700">
+                      128
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input class="border rounded-lg px-2 py-2 w-56" value="Requires 2 people" />
+                    </td>
+
+                  </tr>
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- RIGHT -->
+        <aside class="col-span-4">
+
+          <div class="sticky top-24 space-y-6">
+
+            <!-- FINAL PRICE -->
+            <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+              <div class="flex items-center gap-2 mb-4">
+
+                <h3 class="font-bold text-slate-800">
+                  Final Price
+                </h3>
+
+                <div class="relative group">
+
+                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                  <div class="absolute hidden group-hover:block z-50 w-72 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 right-0 top-6">
+
+                    <p>
+                      Итоговая customer-facing стоимость estimate.
+                    </p>
+
+                    <p class="mt-2">
+                      Финальная сумма округляется вверх до ближайших $10.
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="text-center py-4 border-b border-slate-200">
+
+                <p class="text-sm text-slate-500">
+                  Rounded Final Price
+                </p>
+
+                <p class="text-5xl font-bold text-slate-900 mt-2">
+                  $1,130
+                </p>
+
+              </div>
+
+              <div class="space-y-3 text-sm mt-5">
+
+                <div class="flex justify-between">
+                  <span>Operational Cost</span>
+                  <b>$922</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Additional Charges</span>
+                  <b>$78</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Margin</span>
+                  <b>$124</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Raw Price</span>
+                  <b>$1,124</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Rounding Delta</span>
+                  <b class="text-teal-600">+$6</b>
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- SUMMARY -->
+            <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+              <h3 class="font-bold text-slate-800 mb-4">
+                Quote Summary
+              </h3>
+
+              <div class="space-y-3 text-sm">
+
+                <div class="flex justify-between">
+                  <span>Item Lines</span>
+                  <b>1</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Total Weight</span>
+                  <b>500 lb</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Effective Volume</span>
+                  <b class="text-amber-700">128 cu ft</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Vehicle Fit</span>
+                  <b>Sprinter 488</b>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Nearest Route</span>
+                  <b>May 24</b>
+                </div>
+
+              </div>
+
+            </section>
+
+            <!-- WARNINGS -->
+            <section class="bg-white rounded-xl border border-slate-200 p-5">
+
+              <h3 class="font-bold text-slate-800 mb-4">
+                Warnings
+              </h3>
+
+              <div class="space-y-3 text-sm">
+
+                <div class="p-3 rounded-lg bg-red-50 text-red-700">
+                  Heavy item requires 2-person handling.
+                </div>
+
+                <div class="p-3 rounded-lg bg-amber-50 text-amber-700">
+                  Non-stackable item increases effective volume.
+                </div>
+
+                <div class="p-3 rounded-lg bg-blue-50 text-blue-700">
+                  Final price rounded up to nearest $10.
+                </div>
+
+              </div>
+
+            </section>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+      <!-- BA NOTES -->
+      <section class="mt-6 bg-white rounded-xl border border-slate-200 p-6">
+
+        <div class="flex items-center gap-2 mb-4">
+
+          <h3 class="font-bold text-slate-800">
+            Business Analysis Notes
+          </h3>
+
+          <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+
+        </div>
+
+        <div class="text-sm text-slate-600 space-y-4">
+
+          <div>
+
+            <p class="font-semibold text-slate-800 mb-2">
+              Общая цель страницы
+            </p>
+
+            <p>
+              Index.html является основным рабочим экраном брокера.
+              Весь основной workflow создания quote выполняется на одном экране.
+            </p>
+
+          </div>
+
+          <div>
+
+            <p class="font-semibold text-slate-800 mb-2">
+              Основная логика
+            </p>
+
+            <ul class="list-disc ml-5 space-y-1">
+              <li>Broker-first UX</li>
+              <li>Минимум переходов между экранами</li>
+              <li>Operational logic скрыта от брокера</li>
+              <li>Breakdown вынесен отдельно</li>
+              <li>Все расчеты происходят автоматически</li>
+            </ul>
+
+          </div>
+
+          <div>
+
+            <p class="font-semibold text-slate-800 mb-2">
+              Используемые расчеты
+            </p>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-xs space-y-2">
+
+              <p>
+                Physical Volume =
+                (Length × Width × Height × Quantity) / 1728
+              </p>
+
+              <p>
+                Effective Volume =
+                Physical Volume × Stackability Coefficient
+              </p>
+
+              <p>
+                Operational Cost =
+                Pickup + Interstate + Delivery
+              </p>
+
+              <p>
+                Final Price =
+                Operational Cost + Additional Charges + Margin
+              </p>
+
+              <p>
+                Rounded Final Price =
+                CEILING(Final Price, 10)
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
