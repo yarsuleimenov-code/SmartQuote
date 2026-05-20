@@ -1175,6 +1175,246 @@
       
       </section>
 
+            <!-- FORMULA REFERENCE -->
+      <section class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+      
+        <button
+          onclick="toggleFormulaReference()"
+          class="w-full flex items-center justify-between px-6 py-5 hover:bg-slate-50 transition"
+        >
+      
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-slate-800">
+              Formula Reference
+            </h3>
+      
+            <i data-lucide="function-square" class="w-4 h-4 text-slate-400"></i>
+      
+            <span class="text-xs text-slate-400">
+              pricing engine formulas
+            </span>
+          </div>
+      
+          <i id="formulaReferenceChevron"
+             data-lucide="chevron-down"
+             class="w-5 h-5 text-slate-500 transition-transform">
+          </i>
+      
+        </button>
+      
+        <div id="formulaReferenceContent" class="hidden border-t border-slate-200 p-6">
+      
+          <div class="space-y-5 text-sm">
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Physical Volume</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Physical Volume = (Length × Width × Height × Quantity) / 1728
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Effective Volume</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Effective Volume = Physical Volume × Stackability Coefficient
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Total Effective Volume</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Total Effective Volume = SUM(Item Effective Volume)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Vehicle Fit</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Vehicle Selected = First Active Vehicle Where Capacity ≥ Total Effective Volume AND Max Weight ≥ Total Weight
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Vehicle Count</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Vehicle Count = CEILING(Total Effective Volume / Vehicle Capacity)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Internal Fuel Price</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Internal Fuel Price = Current Avg. × (1 + Fuel Surcharge % / 100)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Fuel Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Fuel Cost = Distance / Loaded MPG × Internal Fuel Price
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Mileage Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Mileage Cost = Distance × Cost Per Mile
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Pickup / Delivery Labor Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Labor Cost = MAX(Min Loading Time, Weight × Handling Time Per lb) × Wage Per Minute × Crew Size
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Heavy Item Handling</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Heavy Handling Fee = IF(Item Weight > Max One Person Weight, Heavy Handling Rate, 0)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Unacceptable Weight Flag</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Manual Review = IF(Item Weight > Unacceptable Weight, TRUE, FALSE)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Packaging Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Packaging Cost = SUM(Packaging Price Per Item × Quantity)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Crate Surface Area</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Crate Surface Area = 2 × (L × W + L × H + W × H) / 144
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Crate Material Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Crate Material Cost = Crate Surface Area × Crate Material Cost Per sq ft
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Crate Labor Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Crate Labor Cost = Crate Surface Area × Crate Labor Minutes Per sq ft × Wage Per Minute
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Crate Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Crate Cost = MAX(Minimum Crate Cost, Crate Material Cost + Crate Labor Cost)
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Storage Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Storage Cost = Total Effective Volume × Storage Rate Per cu ft Per Day × Storage Days
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Stairs Fee</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Stairs Fee = MAX(0, Floor - 3) × Stairs Rate Per Floor
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Long Carry Fee</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Long Carry Fee = Long Carry Distance × Long Carry Rate Per ft
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">NYC Zone Fees</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                NYC Fees = Toll Allowance + Parking Allowance + Ticket Risk Reserve
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Full Coverage Fee</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Full Coverage Fee = Declared Value × Full Coverage Rate
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Basic Liability Coverage</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Basic Liability Coverage = Total Weight × 0.60
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Consolidation Discount</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Consolidation Discount = Eligible Charge × Discount %
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Exclusive Delivery Fee</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Exclusive Delivery Fee = Operational Cost × Exclusive Delivery Multiplier
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Operational Cost</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Operational Cost = Pickup Cost + Interstate Cost + Delivery Cost
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Additional Charges</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Additional Charges = Packaging Cost + Crate Cost + Storage Cost + Insurance Fee + Access Fees + Zone Fees
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Margin</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Margin = (Operational Cost + Additional Charges) × Margin Rate
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Raw Final Price</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Raw Final Price = Operational Cost + Additional Charges + Margin - Discounts
+              </code>
+            </div>
+      
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <p class="font-semibold text-slate-800">Rounded Final Price</p>
+              <code class="block mt-2 text-xs text-slate-600">
+                Rounded Final Price = CEILING(Raw Final Price, Rounding Rule)
+              </code>
+            </div>
+      
+          </div>
+      
+        </div>
+      
+      </section>
+
       <!-- BA NOTES -->
       <section class="mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden">
 
