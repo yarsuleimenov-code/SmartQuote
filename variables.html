@@ -1511,6 +1511,14 @@
 
   }
 
+  function toggleFormulaReference() {
+    const content = document.getElementById('formulaReferenceContent');
+    const chevron = document.getElementById('formulaReferenceChevron');
+  
+    content.classList.toggle('hidden');
+    chevron.classList.toggle('rotate-180');
+  }
+    
   lucide.createIcons();
 
 </script>
