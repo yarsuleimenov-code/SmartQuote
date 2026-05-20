@@ -922,80 +922,173 @@
   </button>
 
   <!-- Content -->
-  <div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
+<div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
 
-    <div class="text-sm text-slate-600 space-y-4">
+  <div class="text-sm text-slate-600 space-y-6">
 
-      <div>
+    <!-- Goal -->
+    <div>
 
-        <p class="font-semibold text-slate-800 mb-2">
-          Общая цель страницы
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Цель MVP
+      </h4>
+
+      <p>
+        MVP калькулятора создаётся как единый рабочий экран брокера
+        для быстрого формирования customer quote без переходов между
+        несколькими системами и таблицами.
+      </p>
+
+      <p class="mt-2">
+        Основной сценарий:
+        брокер получает запрос → заполняет данные → получает estimate
+        за минимальное количество действий.
+      </p>
+
+    </div>
+
+    <!-- Main principles -->
+    <div>
+
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Основные принципы системы
+      </h4>
+
+      <ul class="list-disc ml-5 space-y-2">
+
+        <li>
+          Single-screen workflow:
+          весь основной quote flow находится на одном экране.
+        </li>
+
+        <li>
+          Broker-first UX:
+          интерфейс оптимизирован под скорость работы брокера,
+          а не под сложную операционную аналитику.
+        </li>
+
+        <li>
+          Минимизация визуального шума:
+          убраны вторичные блоки, audit-информация и избыточные breakdown.
+        </li>
+
+        <li>
+          Operational logic скрыта:
+          сложные расчеты выполняются автоматически.
+        </li>
+
+        <li>
+          Breakdown и audit выносятся на отдельные экраны.
+        </li>
+
+      </ul>
+
+    </div>
+
+    <!-- What is automated -->
+    <div>
+
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Автоматизируемые расчеты
+      </h4>
+
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-xs space-y-2">
+
+        <p>
+          • Physical Volume =
+          (Length × Width × Height × Quantity) / 1728
         </p>
 
         <p>
-          Index.html является основным рабочим экраном брокера.
-          Весь основной workflow создания quote выполняется на одном экране.
+          • Effective Volume =
+          Physical Volume × Stackability Coefficient
         </p>
 
-      </div>
-
-      <div>
-
-        <p class="font-semibold text-slate-800 mb-2">
-          Основная логика
+        <p>
+          • Vehicle Fit =
+          automatic vehicle selection based on effective volume
         </p>
 
-        <ul class="list-disc ml-5 space-y-1">
-          <li>Broker-first UX</li>
-          <li>Минимум переходов между экранами</li>
-          <li>Operational logic скрыта от брокера</li>
-          <li>Breakdown вынесен отдельно</li>
-          <li>Все расчеты происходят автоматически</li>
-        </ul>
-
-      </div>
-
-      <div>
-
-        <p class="font-semibold text-slate-800 mb-2">
-          Используемые расчеты
+        <p>
+          • Operational Cost =
+          Pickup + Interstate + Delivery
         </p>
 
-        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-xs space-y-2">
+        <p>
+          • Additional Charges =
+          storage + packing + stairs + exclusive delivery + insurance
+        </p>
 
-          <p>
-            Physical Volume =
-            (Length × Width × Height × Quantity) / 1728
-          </p>
-
-          <p>
-            Effective Volume =
-            Physical Volume × Stackability Coefficient
-          </p>
-
-          <p>
-            Operational Cost =
-            Pickup + Interstate + Delivery
-          </p>
-
-          <p>
-            Final Price =
-            Operational Cost + Additional Charges + Margin
-          </p>
-
-          <p>
-            Rounded Final Price =
-            CEILING(Final Price, 10)
-          </p>
-
-        </div>
+        <p>
+          • Rounded Final Price =
+          CEILING(Final Price, 10)
+        </p>
 
       </div>
 
     </div>
 
+    <!-- Architecture -->
+    <div>
+
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Архитектурный подход
+      </h4>
+
+      <ul class="list-disc ml-5 space-y-2">
+
+        <li>
+          Index.html — основной экран создания quote.
+        </li>
+
+        <li>
+          Breakdown.html — отдельный экран детальных расчетов.
+        </li>
+
+        <li>
+          Variables.html — административное управление коэффициентами.
+        </li>
+
+        <li>
+          Дальнейшее развитие:
+          draft history, eBOL, invoice generation, photo tracking,
+          item lifecycle tracking.
+        </li>
+
+      </ul>
+
+    </div>
+
+    <!-- Why simplified -->
+    <div>
+
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Причина упрощения интерфейса
+      </h4>
+
+      <p>
+        Текущая версия намеренно упрощена для демонстрации CEO и разработке.
+      </p>
+
+      <p class="mt-2">
+        Основная задача MVP:
+        показать core workflow, структуру данных и бизнес-логику,
+        а не финальный visual design.
+      </p>
+
+      <p class="mt-2">
+        Приоритет:
+        скорость работы брокера,
+        прозрачность расчетов,
+        масштабируемость логики.
+      </p>
+
+    </div>
+
   </div>
 
+</div>
+  
 </section>
 
     </div>
