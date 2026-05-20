@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Zaberman Broker Calculator MVP | Orders</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-700">
+
+<div class="min-h-screen flex">
+
+  <!-- SIDEBAR -->
+  <aside class="w-64 bg-[#203241] text-slate-300 min-h-screen fixed left-0 top-0 overflow-y-auto">
+
+    <div class="p-6 border-b border-slate-700">
+      <h1 class="text-2xl font-bold text-[#12365a]">zaberman</h1>
+
+      <div class="mt-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
+          z
+        </div>
+
+        <div>
+          <p class="text-white font-semibold text-sm">Operations</p>
+          <p class="text-xs text-slate-400">Future Orders</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="p-4 text-sm">
+
+      <p class="uppercase text-xs text-slate-500 mb-3">Main</p>
+
+      <div class="mt-2">
+        <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-800 text-white">
+          <div class="flex items-center gap-3">
+            <i data-lucide="calculator" class="w-4"></i>
+            Calculator
+          </div>
+          <i data-lucide="chevron-up" class="w-4"></i>
+        </div>
+
+        <div class="ml-8 mt-2 space-y-2">
+          <a class="block hover:text-white" href="index.html">New Calculation</a>
+          <a class="block hover:text-white" href="drafts.html">My Drafts</a>
+          <a class="block hover:text-white" href="estimates.html">My Estimates</a>
+          <a class="block hover:text-white" href="#">All Calculations</a>
+          <a class="block hover:text-white" href="variables.html">Variables</a>
+        </div>
+      </div>
+
+      <p class="uppercase text-xs text-slate-500 mt-6 mb-3">Future</p>
+
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800" href="breakdown.html">
+        <i data-lucide="file-text" class="w-4"></i>
+        Cost Breakdown
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="invoices.html">
+        <i data-lucide="receipt" class="w-4"></i>
+        Invoices
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="ebol.html">
+        <i data-lucide="clipboard-check" class="w-4"></i>
+        eBOL
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg bg-slate-800 text-white" href="orders.html">
+        <i data-lucide="package-check" class="w-4"></i>
+        Orders
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ml-64 w-full">
+
+    <!-- TOPBAR -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+
+      <div>
+        <p class="text-xs text-slate-400">Zaberman › Operations</p>
+        <h2 class="text-lg font-semibold text-slate-800">Orders</h2>
+      </div>
+
+      <a href="estimates.html" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
+        Back to Estimates
+      </a>
+
+    </header>
+
+    <div class="p-6">
+
+      <!-- PAGE HEADER -->
+      <section class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+
+        <div class="flex justify-between items-start">
+
+          <div>
+            <div class="flex items-center gap-3">
+              <h1 class="text-2xl font-bold text-slate-800">Orders</h1>
+
+              <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">
+                Future Module
+              </span>
+
+              <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-semibold">
+                Operational Layer
+              </span>
+            </div>
+
+            <p class="text-sm text-slate-500 mt-2">
+              Operational container created from approved estimate / invoice. Orders manage execution and open item-level eBOL.
+            </p>
+          </div>
+
+          <div class="text-right text-sm text-slate-500">
+            <p>Lifecycle:</p>
+            <p class="font-semibold text-slate-800">Estimate → Invoice → Order → eBOL</p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- KPI ROW -->
+      <section class="grid grid-cols-4 gap-4 mb-6">
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400">Pending Pickup</p>
+          <p class="text-2xl font-bold text-slate-800 mt-1">1</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400">In Transit</p>
+          <p class="text-2xl font-bold text-blue-700 mt-1">1</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400">Delivered</p>
+          <p class="text-2xl font-bold text-green-700 mt-1">0</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400">Exceptions</p>
+          <p class="text-2xl font-bold text-red-700 mt-1">0</p>
+        </div>
+
+      </section>
+
+      <!-- ORDERS TABLE -->
+      <section class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-slate-800">Orders List</h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Future operational execution list
+            </p>
+          </div>
+
+          <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">
+            Read-only placeholder
+          </span>
+        </div>
+
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+
+          <table class="w-full text-sm min-w-[1050px]">
+
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="text-left px-4 py-3">Order ID</th>
+                <th class="text-left px-4 py-3">Customer</th>
+                <th class="text-left px-4 py-3">Route</th>
+                <th class="text-left px-4 py-3">Items</th>
+                <th class="text-left px-4 py-3">Status</th>
+                <th class="text-left px-4 py-3">Invoice</th>
+                <th class="text-left px-4 py-3">eBOL</th>
+                <th class="text-right px-4 py-3">Action</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-200">
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">ORD-291</td>
+
+                <td class="px-4 py-3">
+                  <p class="font-medium text-slate-800">John Smith</p>
+                  <p class="text-xs text-slate-400">EST-291 / INV-001</p>
+                </td>
+
+                <td class="px-4 py-3">
+                  <p class="text-slate-800">NY Area → CA South</p>
+                  <p class="text-xs text-slate-400">Brooklyn, NY → Los Angeles, CA</p>
+                </td>
+
+                <td class="px-4 py-3">
+                  <p class="font-medium">2 item lines</p>
+                  <p class="text-xs text-slate-400">525 lb · fragile / non-stackable</p>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs font-semibold">
+                    Pending Pickup
+                  </span>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold">
+                    Approved
+                  </span>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-semibold">
+                    Incomplete
+                  </span>
+                </td>
+
+                <td class="px-4 py-3 text-right">
+                  <a href="ebol.html" class="inline-block px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">
+                    Open eBOL
+                  </a>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">ORD-284</td>
+
+                <td class="px-4 py-3">
+                  <p class="font-medium text-slate-800">Sarah Lee</p>
+                  <p class="text-xs text-slate-400">EST-284 / INV-002</p>
+                </td>
+
+                <td class="px-4 py-3">
+                  <p class="text-slate-800">NY Area → Boston</p>
+                  <p class="text-xs text-slate-400">Queens, NY → Boston, MA</p>
+                </td>
+
+                <td class="px-4 py-3">
+                  <p class="font-medium">1 item line</p>
+                  <p class="text-xs text-slate-400">120 lb · standard</p>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs font-semibold">
+                    In Transit
+                  </span>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold">
+                    Paid
+                  </span>
+                </td>
+
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs font-semibold">
+                    Pickup Complete
+                  </span>
+                </td>
+
+                <td class="px-4 py-3 text-right">
+                  <a href="ebol.html" class="inline-block px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">
+                    Open eBOL
+                  </a>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+      <!-- BA NOTES -->
+      <section class="mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+        <button
+          onclick="toggleBANotes()"
+          class="w-full flex items-center justify-between px-6 py-5 hover:bg-slate-50 transition"
+        >
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-slate-800">Business Analysis Notes</h3>
+            <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+          </div>
+
+          <i id="baNotesChevron" data-lucide="chevron-down" class="w-5 h-5 text-slate-500 transition-transform"></i>
+        </button>
+
+        <div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
+
+          <div class="text-sm text-slate-600 space-y-5">
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">Цель страницы</h4>
+              <p>
+                Orders.html показывает будущий operational execution layer.
+                Order создаётся из approved estimate / invoice и становится контейнером для выполнения перевозки.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">Ключевое правило</h4>
+              <p>
+                Order не должен пересчитывать pricing. Он использует frozen estimate snapshot и отвечает только за выполнение перевозки.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">Связь с eBOL</h4>
+              <p>
+                eBOL открывается из Order и фиксирует item-level pickup/delivery proof:
+                photos, comments, statuses, signatures и POD.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  function toggleBANotes() {
+    const content = document.getElementById('baNotesContent');
+    const chevron = document.getElementById('baNotesChevron');
+
+    content.classList.toggle('hidden');
+    chevron.classList.toggle('rotate-180');
+  }
+
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
