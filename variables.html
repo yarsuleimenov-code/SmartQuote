@@ -1440,56 +1440,97 @@
 
         </button>
 
-        <div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
+<div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
 
-          <div class="text-sm text-slate-600 space-y-6">
+  <div class="text-sm text-slate-600 space-y-6">
 
-            <div>
-              <h4 class="font-semibold text-slate-800 mb-2">
-                Цель страницы
-              </h4>
+    <div>
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Цель страницы
+      </h4>
 
-              <p>
-                Variables.html используется для управления pricing engine:
-                коэффициентами, fuel prices, vehicle logic и operational rules.
-              </p>
+      <p>
+        Variables.html используется как административный слой pricing engine.
+        Страница управляет коэффициентами, operational rules, vehicle logic,
+        fuel pricing и formula governance.
+      </p>
 
-              <p class="mt-2">
-                Брокер не должен взаимодействовать с variables напрямую.
-              </p>
-            </div>
+      <p class="mt-2">
+        Broker не взаимодействует с variables напрямую.
+        Broker работает только с quote screen.
+      </p>
+    </div>
 
-            <div>
-              <h4 class="font-semibold text-slate-800 mb-2">
-                Основной принцип
-              </h4>
+    <div>
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Архитектурный принцип
+      </h4>
 
-              <ul class="list-disc ml-5 space-y-2">
-                <li>Variables изменяются только admin role.</li>
-                <li>Estimate хранит variables snapshot.</li>
-                <li>Старые estimates не пересчитываются после изменения variables.</li>
-                <li>Pricing engine использует только active formula version.</li>
-              </ul>
-            </div>
+      <ul class="list-disc ml-5 space-y-2">
+        <li>UI не должен содержать pricing logic.</li>
+        <li>Все расчёты должны выполняться backend pricing engine.</li>
+        <li>Variables являются input layer для pricing engine.</li>
+        <li>HTML screens отображают результат расчётов, а не вычисляют его.</li>
+      </ul>
+    </div>
 
-            <div>
-              <h4 class="font-semibold text-slate-800 mb-2">
-                Что важно для разработки
-              </h4>
+    <div>
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Formula Governance
+      </h4>
 
-              <ul class="list-disc ml-5 space-y-2">
-                <li>Variables должны храниться централизованно.</li>
-                <li>Нужен formula versioning.</li>
-                <li>Нужен estimate-level variables snapshot.</li>
-                <li>Fuel prices должны обновляться через API.</li>
-                <li>Vehicle selection должен выполняться backend pricing engine.</li>
-              </ul>
-            </div>
+      <ul class="list-disc ml-5 space-y-2">
+        <li>Каждое изменение variables должно создавать новую formula version.</li>
+        <li>Новые variables применяются только к новым estimates.</li>
+        <li>Старые estimates не должны пересчитываться задним числом.</li>
+        <li>Estimate должен хранить formula version и variables snapshot.</li>
+      </ul>
+    </div>
 
-          </div>
+    <div>
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Operational Logic
+      </h4>
 
-        </div>
+      <ul class="list-disc ml-5 space-y-2">
+        <li>Vehicle selection выполняется автоматически по Effective Volume и Weight.</li>
+        <li>Non-stackable items учитывают воздух над предметом.</li>
+        <li>Crating влияет одновременно на cost, handling и effective volume.</li>
+        <li>Fragile items должны увеличивать handling complexity.</li>
+        <li>NYC operational risks должны закладываться в zone fees.</li>
+      </ul>
+    </div>
 
+    <div>
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Separation of Roles
+      </h4>
+
+      <ul class="list-disc ml-5 space-y-2">
+        <li>Broker создаёт quote.</li>
+        <li>Admin управляет pricing variables.</li>
+        <li>Pricing engine рассчитывает стоимость.</li>
+        <li>Breakdown screen объясняет расчёт.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-semibold text-slate-800 mb-2">
+        Future Scalability
+      </h4>
+
+      <ul class="list-disc ml-5 space-y-2">
+        <li>Поддержка нескольких regional pricing models.</li>
+        <li>Поддержка dynamic fuel pricing.</li>
+        <li>Поддержка route-based pricing.</li>
+        <li>Поддержка automated dispatch estimation.</li>
+        <li>Поддержка ML/rule-based pricing adjustments в будущем.</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
       </section>
 
     </div>
