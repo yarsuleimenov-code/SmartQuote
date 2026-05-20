@@ -523,6 +523,67 @@
 
       </section>
 
+            <!-- NYC / ZONE FEES -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+      
+        <div class="flex items-center gap-2 mb-4">
+          <h3 class="font-bold text-slate-800">NYC / Zone Fees</h3>
+      
+          <div class="relative group">
+            <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+      
+            <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+              <p><b>Назначение:</b> управлять дополнительными zone-based расходами.</p>
+              <p class="mt-2">Используется для tolls, parking, tickets и city surcharge.</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="text-left px-4 py-3">Zone / Rule</th>
+                <th class="text-left px-4 py-3">Value</th>
+                <th class="text-left px-4 py-3">Unit</th>
+                <th class="text-left px-4 py-3">Used In</th>
+              </tr>
+            </thead>
+      
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">NYC toll allowance</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="35" /></td>
+                <td class="px-4 py-3">$</td>
+                <td class="px-4 py-3 text-slate-500">Pickup / Delivery Stage</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">NYC parking allowance</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="25" /></td>
+                <td class="px-4 py-3">$</td>
+                <td class="px-4 py-3 text-slate-500">Access / Route Cost</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Ticket risk reserve</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="15" /></td>
+                <td class="px-4 py-3">$</td>
+                <td class="px-4 py-3 text-slate-500">NYC Risk Cost</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Zone surcharge</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="10" /></td>
+                <td class="px-4 py-3">%</td>
+                <td class="px-4 py-3 text-slate-500">Zone Pricing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      
+      </section>
+
       <!-- PRICING VARIABLES -->
       <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
 
@@ -661,6 +722,60 @@
 
       </section>
 
+          <!-- CONSOLIDATION DISCOUNTS -->
+    <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+    
+      <div class="flex items-center gap-2 mb-4">
+        <h3 class="font-bold text-slate-800">Consolidation Discounts</h3>
+    
+        <div class="relative group">
+          <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+    
+          <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+            <p><b>Назначение:</b> скидки при нескольких заказах с одного pickup или на один delivery address.</p>
+            <p class="mt-2">Логика должна применяться только если система видит совпадение адреса/остановки.</p>
+          </div>
+        </div>
+      </div>
+    
+      <div class="overflow-x-auto border border-slate-200 rounded-xl">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-500">
+            <tr>
+              <th class="text-left px-4 py-3">Discount Rule</th>
+              <th class="text-left px-4 py-3">Value</th>
+              <th class="text-left px-4 py-3">Unit</th>
+              <th class="text-left px-4 py-3">Condition</th>
+            </tr>
+          </thead>
+    
+          <tbody class="divide-y divide-slate-200">
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Same pickup address discount</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="10" /></td>
+              <td class="px-4 py-3">%</td>
+              <td class="px-4 py-3 text-slate-500">2+ orders from same pickup address</td>
+            </tr>
+    
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Same delivery address discount</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="10" /></td>
+              <td class="px-4 py-3">%</td>
+              <td class="px-4 py-3 text-slate-500">2+ orders to same delivery address</td>
+            </tr>
+    
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Shared route discount</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="5" /></td>
+              <td class="px-4 py-3">%</td>
+              <td class="px-4 py-3 text-slate-500">Orders share same route segment</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+    </section>
+
       <!-- PACKAGING VARIABLES -->
       <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
 
@@ -764,6 +879,67 @@
 
       </section>
 
+            <!-- CRATING VARIABLES -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+      
+        <div class="flex items-center gap-2 mb-4">
+          <h3 class="font-bold text-slate-800">Crating Variables</h3>
+      
+          <div class="relative group">
+            <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+      
+            <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+              <p><b>Назначение:</b> управлять формулой расчёта крейта.</p>
+              <p class="mt-2"><b>Формула:</b> Crate Cost = Material Cost + Labor Cost.</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="text-left px-4 py-3">Variable</th>
+                <th class="text-left px-4 py-3">Value</th>
+                <th class="text-left px-4 py-3">Unit</th>
+                <th class="text-left px-4 py-3">Used In</th>
+              </tr>
+            </thead>
+      
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Crate material cost per sq ft</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="4.5" /></td>
+                <td class="px-4 py-3">$/sq ft</td>
+                <td class="px-4 py-3 text-slate-500">Material Cost</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Crate labor minutes per sq ft</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="2.5" /></td>
+                <td class="px-4 py-3">min/sq ft</td>
+                <td class="px-4 py-3 text-slate-500">Labor Cost</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Minimum crate cost</td>
+                <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="140" /></td>
+                <td class="px-4 py-3">$</td>
+                <td class="px-4 py-3 text-slate-500">Crate Floor Price</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Crate non-stackable default</td>
+                <td class="px-4 py-3"><input type="checkbox" checked class="accent-teal-500" /></td>
+                <td class="px-4 py-3">boolean</td>
+                <td class="px-4 py-3 text-slate-500">Item Constraints</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      
+      </section>
+
       <!-- ACCESS / HANDLING -->
       <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
 
@@ -826,24 +1002,6 @@
                 </td>
               </tr>
 
-              <tr>
-                <td class="px-4 py-3 font-medium text-slate-800">
-                  Non-stackable coefficient
-                </td>
-
-                <td class="px-4 py-3">
-                  <input class="border rounded-lg px-3 py-2 w-24" value="1.8" />
-                </td>
-
-                <td class="px-4 py-3">
-                  coefficient
-                </td>
-
-                <td class="px-4 py-3 text-slate-500">
-                  Effective Volume
-                </td>
-              </tr>
-
             </tbody>
 
           </table>
@@ -851,6 +1009,67 @@
         </div>
 
       </section>
+
+          <!-- STACKABILITY / CONSTRAINTS -->
+    <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+    
+      <div class="flex items-center gap-2 mb-4">
+        <h3 class="font-bold text-slate-800">Stackability / Constraints</h3>
+    
+        <div class="relative group">
+          <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+    
+          <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+            <p><b>Назначение:</b> управлять коэффициентами effective volume.</p>
+            <p class="mt-2">Эти параметры влияют на vehicle fit и стоимость перевозки.</p>
+          </div>
+        </div>
+      </div>
+    
+      <div class="overflow-x-auto border border-slate-200 rounded-xl">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-500">
+            <tr>
+              <th class="text-left px-4 py-3">Constraint</th>
+              <th class="text-left px-4 py-3">Coefficient</th>
+              <th class="text-left px-4 py-3">Used In</th>
+              <th class="text-left px-4 py-3">Description</th>
+            </tr>
+          </thead>
+    
+          <tbody class="divide-y divide-slate-200">
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Standard stackable item</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="1.0" /></td>
+              <td class="px-4 py-3 text-slate-500">Effective Volume</td>
+              <td class="px-4 py-3 text-slate-500">Default coefficient</td>
+            </tr>
+    
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Fragile item</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="1.2" /></td>
+              <td class="px-4 py-3 text-slate-500">Effective Volume</td>
+              <td class="px-4 py-3 text-slate-500">Requires safer placement</td>
+            </tr>
+    
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Non-stackable item</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="1.8" /></td>
+              <td class="px-4 py-3 text-slate-500">Effective Volume</td>
+              <td class="px-4 py-3 text-slate-500">Counts air above the item</td>
+            </tr>
+    
+            <tr>
+              <td class="px-4 py-3 font-medium text-slate-800">Crated item</td>
+              <td class="px-4 py-3"><input class="border rounded-lg px-3 py-2 w-24" value="1.35" /></td>
+              <td class="px-4 py-3 text-slate-500">Effective Volume</td>
+              <td class="px-4 py-3 text-slate-500">Crate increases volume and handling complexity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+    </section>
 
       <!-- SYSTEM RULES -->
       <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
@@ -909,6 +1128,51 @@
 
         </div>
 
+      </section>
+
+            <!-- VERSION / AUDIT -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+      
+        <div class="flex items-center gap-2 mb-4">
+          <h3 class="font-bold text-slate-800">Version & Audit</h3>
+        </div>
+      
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500">
+              <tr>
+                <th class="text-left px-4 py-3">Version</th>
+                <th class="text-left px-4 py-3">Status</th>
+                <th class="text-left px-4 py-3">Updated By</th>
+                <th class="text-left px-4 py-3">Updated At</th>
+                <th class="text-left px-4 py-3">Comment</th>
+              </tr>
+            </thead>
+      
+            <tbody class="divide-y divide-slate-200">
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">v1.0</td>
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">Active</span>
+                </td>
+                <td class="px-4 py-3">Admin</td>
+                <td class="px-4 py-3">May 20, 2026</td>
+                <td class="px-4 py-3 text-slate-500">Current production pricing variables</td>
+              </tr>
+      
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">v1.1</td>
+                <td class="px-4 py-3">
+                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs">Draft</span>
+                </td>
+                <td class="px-4 py-3">Admin</td>
+                <td class="px-4 py-3">Not activated</td>
+                <td class="px-4 py-3 text-slate-500">Pending review</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      
       </section>
 
       <!-- BA NOTES -->
