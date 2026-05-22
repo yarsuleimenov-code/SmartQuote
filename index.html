@@ -136,7 +136,7 @@
             </div>
 
             <p class="text-sm text-slate-500 mt-1">
-              Broker-first workflow: enter route, add items, get quote fast.
+              Broker-first workflow: enter items first, then route and customer details.
             </p>
           </div>
 
@@ -161,26 +161,39 @@
 
         <!-- LEFT -->
         <div class="col-span-8 space-y-6">
-
-          <!-- CUSTOMER & ROUTE -->
+          <!-- LEAD & ROUTE -->
           <section class="bg-white rounded-xl border border-slate-200 p-5">
 
             <div class="flex items-center justify-between mb-4">
 
               <div class="flex items-center gap-2">
 
-                <h3 class="font-bold text-slate-800">Customer & Route</h3>
+                <h3 class="font-bold text-slate-800">
+                  Lead & Route
+                </h3>
 
                 <div class="relative group">
-                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                  <i data-lucide="info"
+                     class="w-4 h-4 text-slate-400 cursor-pointer">
+                  </i>
 
                   <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                    <p><b>Назначение:</b> базовая информация для quote.</p>
+
+                    <p>
+                      <b>Назначение:</b> минимально необходимая информация для расчёта quote.
+                    </p>
 
                     <p class="mt-2">
-                      Route data определяет pickup / delivery zones, distance, nearest route и regional pricing context.
+                      Pickup и Delivery являются приоритетными полями для pricing engine.
                     </p>
+
+                    <p class="mt-2">
+                      Customer details вторичны на этапе предварительного расчёта.
+                    </p>
+
                   </div>
+
                 </div>
 
               </div>
@@ -191,65 +204,166 @@
 
             </div>
 
-            <div class="grid grid-cols-3 gap-4 text-sm">
+            <!-- ROW 1 -->
+            <div class="grid grid-cols-12 gap-4 text-sm">
 
-              <div>
-                <label class="text-xs text-slate-400">Customer Name</label>
-                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="John Smith" />
+              <div class="col-span-2">
+                <label class="text-xs text-slate-400">
+                  Lead Name *
+                </label>
+
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  value="Concrete Table - LA"
+                />
+
+                <p class="text-[11px] text-slate-400 mt-1">
+                  CRM lead title
+                </p>
               </div>
 
-              <div>
-                <label class="text-xs text-slate-400">Phone</label>
-                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="+1 555 0147" />
+              <div class="col-span-5">
+                <label class="text-xs text-slate-400">
+                  Pickup Address
+                </label>
+
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  value="Brooklyn, NY"
+                />
               </div>
 
-              <div>
-                <label class="text-xs text-slate-400">Email</label>
-                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="john@email.com" />
-              </div>
+              <div class="col-span-5">
+                <label class="text-xs text-slate-400">
+                  Delivery Address
+                </label>
 
-              <div>
-                <label class="text-xs text-slate-400">Pickup Address</label>
-                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="Brooklyn, NY" />
-              </div>
-
-              <div>
-                <label class="text-xs text-slate-400">Delivery Address</label>
-                <input class="mt-1 w-full border rounded-lg px-3 py-2" value="Los Angeles, CA" />
-              </div>
-
-              <div>
-                <label class="text-xs text-slate-400">Delivery Type</label>
-
-                <select class="mt-1 w-full border rounded-lg px-3 py-2">
-                  <option>Consolidated route</option>
-                  <option>Requested delivery date</option>
-                  <option>Exclusive delivery</option>
-                </select>
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  value="Los Angeles, CA"
+                />
               </div>
 
             </div>
 
+            <!-- ROW 2 -->
+            <div class="grid grid-cols-12 gap-4 text-sm mt-4">
+
+              <div class="col-span-4">
+                <label class="text-xs text-slate-400">
+                  Customer Name
+                </label>
+
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  value="John Smith"
+                />
+              </div>
+
+              <div class="col-span-4">
+                <label class="text-xs text-slate-400">
+                  Phone
+                </label>
+
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  value="+1 555 0147"
+                />
+              </div>
+
+              <div class="col-span-4">
+                <label class="text-xs text-slate-400">
+                  Email
+                </label>
+
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  value="john@email.com"
+                />
+              </div>
+
+            </div>
+
+            <!-- ROW 3 -->
+            <div class="grid grid-cols-12 gap-4 text-sm mt-4">
+
+              <div class="col-span-4">
+                <label class="text-xs text-slate-400">
+                  Delivery Type
+                </label>
+
+                <select class="mt-1 w-full border rounded-lg px-3 py-2">
+                  <option>Consolidated Route</option>
+                  <option>Requested Delivery Date</option>
+                  <option>Exclusive Delivery</option>
+                </select>
+              </div>
+
+              <div class="col-span-4">
+                <label class="text-xs text-slate-400">
+                  Requested Date
+                </label>
+
+                <input
+                  type="date"
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                />
+              </div>
+
+              <div class="col-span-4">
+                <label class="text-xs text-slate-400">
+                  Sales Notes
+                </label>
+
+                <input
+                  class="mt-1 w-full border rounded-lg px-3 py-2"
+                  placeholder="Internal note"
+                />
+              </div>
+
+            </div>
+
+            <!-- ROUTE INFO -->
             <div class="grid grid-cols-4 gap-3 mt-4 text-sm">
 
               <div class="bg-slate-50 rounded-lg p-3">
-                <p class="text-xs text-slate-400">Pickup Zone</p>
-                <p class="font-semibold text-slate-800">NY Area</p>
+                <p class="text-xs text-slate-400">
+                  Pickup Zone
+                </p>
+
+                <p class="font-semibold text-slate-800">
+                  NY Area
+                </p>
               </div>
 
               <div class="bg-slate-50 rounded-lg p-3">
-                <p class="text-xs text-slate-400">Delivery Zone</p>
-                <p class="font-semibold text-slate-800">CA South</p>
+                <p class="text-xs text-slate-400">
+                  Delivery Zone
+                </p>
+
+                <p class="font-semibold text-slate-800">
+                  CA South
+                </p>
               </div>
 
               <div class="bg-slate-50 rounded-lg p-3">
-                <p class="text-xs text-slate-400">Distance</p>
-                <p class="font-semibold text-slate-800">2800 mi</p>
+                <p class="text-xs text-slate-400">
+                  Distance
+                </p>
+
+                <p class="font-semibold text-slate-800">
+                  2800 mi
+                </p>
               </div>
 
               <div class="bg-blue-50 rounded-lg p-3">
-                <p class="text-xs text-blue-600">Nearest Route</p>
-                <p class="font-semibold text-blue-700">May 24</p>
+                <p class="text-xs text-blue-600">
+                  Nearest Route
+                </p>
+
+                <p class="font-semibold text-blue-700">
+                  May 24
+                </p>
               </div>
 
             </div>
@@ -263,22 +377,32 @@
 
               <div class="flex items-center gap-2">
 
-                <h3 class="font-bold text-slate-800">Items</h3>
+                <h3 class="font-bold text-slate-800">
+                  Items
+                </h3>
 
                 <div class="relative group">
-                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                  <i data-lucide="info"
+                     class="w-4 h-4 text-slate-400 cursor-pointer">
+                  </i>
 
                   <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                    <p><b>Назначение:</b> основной рабочий блок брокера.</p>
 
-                    <p class="mt-2">
-                      Items вынесены сразу после route, чтобы брокер мог быстро заполнить груз и получить rough quote без лишних order-level настроек.
+                    <p>
+                      <b>Назначение:</b> основной рабочий блок брокера.
                     </p>
 
                     <p class="mt-2">
-                      Insurance, declared value, storage и packaging находятся на item-level, потому что применяются не всегда ко всему заказу.
+                      Item-level settings позволяют отдельно управлять insurance, storage, packaging и crating для каждого item.
                     </p>
+
+                    <p class="mt-2">
+                      Crew Need рассчитывается автоматически pricing engine.
+                    </p>
+
                   </div>
+
                 </div>
 
               </div>
@@ -291,65 +415,125 @@
 
             <div class="overflow-x-auto border border-slate-200 rounded-xl">
 
-              <table class="w-full text-sm min-w-[1900px]">
+              <table class="w-full text-sm min-w-[1800px]">
 
                 <thead class="bg-slate-50 text-slate-500">
+
                   <tr>
-                    <th class="text-left px-3 py-3">Item</th>
-                    <th class="text-left px-3 py-3">Category</th>
-                    <th class="text-left px-3 py-3">L</th>
-                    <th class="text-left px-3 py-3">W</th>
-                    <th class="text-left px-3 py-3">H</th>
-                    <th class="text-left px-3 py-3">Weight</th>
-                    <th class="text-left px-3 py-3">Qty</th>
-                    <th class="text-left px-3 py-3">Packaging</th>
-                    <th class="text-left px-3 py-3">Insurance</th>
-                    <th class="text-left px-3 py-3">Declared Value</th>
-                    <th class="text-left px-3 py-3">Storage Days</th>
-                    <th class="text-center px-3 py-3">Fragile</th>
-                    <th class="text-center px-3 py-3">Non-stack</th>
-                    <th class="text-center px-3 py-3">Crate</th>
-                    <th class="text-left px-3 py-3">Eff. Vol.</th>
-                    <th class="text-left px-3 py-3">Crew Need</th>
-                    <th class="text-left px-3 py-3">Comment</th>
+
+                    <th class="text-left px-3 py-3">
+                      Item
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      L
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      W
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      H
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Weight
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Qty
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Packaging
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Insurance
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Declared Value
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Storage Days
+                    </th>
+
+                    <th class="text-center px-3 py-3">
+                      Fragile
+                    </th>
+
+                    <th class="text-center px-3 py-3">
+                      Non-stack
+                    </th>
+
+                    <th class="text-center px-3 py-3">
+                      Crate
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Eff. Vol.
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Crew Need
+                    </th>
+
+                    <th class="text-left px-3 py-3">
+                      Comment
+                    </th>
+
                   </tr>
+
                 </thead>
 
                 <tbody class="divide-y divide-slate-200">
 
-                  <!-- Existing item -->
+                            <!-- ROW 1 -->
                   <tr>
+
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-52" value="Concrete Table" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-56"
+                        value="Concrete Table"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <select class="border rounded-lg px-2 py-2 w-32">
-                        <option>Furniture</option>
-                        <option>Electronics</option>
-                        <option>Art</option>
-                        <option>Appliance</option>
-                      </select>
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="140"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" value="140" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="50"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" value="50" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="20"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" value="20" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-20"
+                        value="500"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-20" value="500" />
-                    </td>
-
-                    <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" value="1" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="1"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
@@ -371,72 +555,254 @@
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-24" value="1500" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-28"
+                        value="1500"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-20" value="3" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-20"
+                        value="3"
+                      />
                     </td>
 
                     <td class="px-3 py-3 text-center">
-                      <input type="checkbox" checked class="accent-teal-500" />
+                      <input
+                        type="checkbox"
+                        checked
+                        class="accent-teal-500"
+                      />
                     </td>
 
                     <td class="px-3 py-3 text-center">
-                      <input type="checkbox" checked class="accent-teal-500" />
+                      <input
+                        type="checkbox"
+                        checked
+                        class="accent-teal-500"
+                      />
                     </td>
 
                     <td class="px-3 py-3 text-center">
-                      <input type="checkbox" checked class="accent-teal-500" />
+                      <input
+                        type="checkbox"
+                        checked
+                        class="accent-teal-500"
+                      />
                     </td>
-
-                    <td class="px-3 py-3 font-semibold text-amber-700">128</td>
 
                     <td class="px-3 py-3">
-                      <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs font-semibold">
-                        2 people
+
+                      <span class="font-semibold text-amber-700">
+                        128 cu ft
                       </span>
+
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-64" value="Requires 2 people" />
+
+                      <div class="relative group inline-block">
+
+                        <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs font-semibold cursor-help">
+                          Auto: 2 people
+                        </span>
+
+                        <div class="absolute hidden group-hover:block z-50 w-72 p-3 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-8">
+
+                          <p class="font-semibold text-slate-800 mb-2">
+                            Crew Calculation
+                          </p>
+
+                          <ul class="space-y-1">
+                            <li>• Heavy item: +1 mover</li>
+                            <li>• Non-stackable: enabled</li>
+                            <li>• Delivery stairs: floor 4</li>
+                            <li>• Long carry: 50 ft</li>
+                          </ul>
+
+                        </div>
+
+                      </div>
+
                     </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-64"
+                        value="Requires careful handling"
+                      />
+                    </td>
+
                   </tr>
 
-                  <!-- Empty row -->
+                  <!-- ROW 2 -->
                   <tr>
+
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-52" placeholder="Item name" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-56"
+                        value="Vintage Mirror"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <select class="border rounded-lg px-2 py-2 w-32 text-slate-500">
-                        <option>Select</option>
-                        <option>Furniture</option>
-                        <option>Electronics</option>
-                        <option>Art</option>
-                        <option>Appliance</option>
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="40"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="6"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="60"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-20"
+                        value="45"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="1"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <select class="border rounded-lg px-2 py-2 w-44">
+                        <option>Bubble Protection</option>
+                        <option>Blanket Wrap</option>
+                        <option>TV / Monitor Box</option>
+                        <option>Custom Crate</option>
+                        <option>None</option>
                       </select>
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" placeholder="L" />
+                      <select class="border rounded-lg px-2 py-2 w-44">
+                        <option>Basic Liability</option>
+                        <option>Full Coverage</option>
+                        <option>No Extra Coverage</option>
+                      </select>
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" placeholder="W" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-28"
+                        value="700"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" placeholder="H" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-20"
+                        value="0"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3 text-center">
+                      <input
+                        type="checkbox"
+                        checked
+                        class="accent-teal-500"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3 text-center">
+                      <input
+                        type="checkbox"
+                        class="accent-teal-500"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3 text-center">
+                      <input
+                        type="checkbox"
+                        class="accent-teal-500"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-20" placeholder="lb" />
+
+                      <span class="font-semibold text-slate-700">
+                        8 cu ft
+                      </span>
+
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-16" value="1" />
+
+                      <span class="px-2 py-1 rounded bg-slate-100 text-slate-700 text-xs font-semibold">
+                        Auto: 1 person
+                      </span>
+
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-64"
+                        value="Fragile antique item"
+                      />
+                    </td>
+
+                  </tr>
+
+                  <!-- EMPTY ROW -->
+                  <tr>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-56"
+                        placeholder="Item name"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        placeholder="L"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        placeholder="W"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        placeholder="H"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-20"
+                        placeholder="lb"
+                      />
+                    </td>
+
+                    <td class="px-3 py-3">
+                      <input
+                        class="border rounded-lg px-2 py-2 w-16"
+                        value="1"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
@@ -458,36 +824,59 @@
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-24" placeholder="$" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-28"
+                        placeholder="$"
+                      />
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-20" value="0" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-20"
+                        value="0"
+                      />
                     </td>
 
                     <td class="px-3 py-3 text-center">
-                      <input type="checkbox" class="accent-teal-500" />
+                      <input
+                        type="checkbox"
+                        class="accent-teal-500"
+                      />
                     </td>
 
                     <td class="px-3 py-3 text-center">
-                      <input type="checkbox" class="accent-teal-500" />
+                      <input
+                        type="checkbox"
+                        class="accent-teal-500"
+                      />
                     </td>
 
                     <td class="px-3 py-3 text-center">
-                      <input type="checkbox" class="accent-teal-500" />
+                      <input
+                        type="checkbox"
+                        class="accent-teal-500"
+                      />
                     </td>
 
-                    <td class="px-3 py-3 text-slate-400">auto</td>
+                    <td class="px-3 py-3 text-slate-400">
+                      auto
+                    </td>
 
                     <td class="px-3 py-3">
+
                       <span class="px-2 py-1 rounded bg-slate-100 text-slate-500 text-xs font-semibold">
                         auto
                       </span>
+
                     </td>
 
                     <td class="px-3 py-3">
-                      <input class="border rounded-lg px-2 py-2 w-64" placeholder="Comment" />
+                      <input
+                        class="border rounded-lg px-2 py-2 w-64"
+                        placeholder="Comment"
+                      />
                     </td>
+
                   </tr>
 
                 </tbody>
@@ -498,7 +887,7 @@
 
           </section>
 
-                    <!-- QUOTE OPTIONS -->
+          <!-- QUOTE OPTIONS -->
           <section class="bg-white rounded-xl border border-slate-200 p-5">
 
             <div class="flex items-center gap-2 mb-4">
@@ -508,57 +897,32 @@
               </h3>
 
               <div class="relative group">
-                <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                <i data-lucide="info"
+                   class="w-4 h-4 text-slate-400 cursor-pointer">
+                </i>
 
                 <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                  <p><b>Назначение:</b> order-level параметры quote.</p>
 
-                  <p class="mt-2">
-                    Здесь остаются только параметры, которые применяются ко всему заказу.
-                    Item-level параметры вынесены в таблицу Items.
+                  <p>
+                    <b>Назначение:</b> order-level параметры quote.
                   </p>
 
                   <p class="mt-2">
-                    Insurance, declared value, storage days и packaging задаются на item-level.
+                    Здесь остаются только параметры, относящиеся ко всему заказу.
                   </p>
+
+                  <p class="mt-2">
+                    Item-level services управляются внутри таблицы Items.
+                  </p>
+
                 </div>
+
               </div>
 
             </div>
 
-            <div class="grid grid-cols-3 gap-4 text-sm">
-
-              <div>
-                <label class="text-xs text-slate-400">
-                  Requested Date
-                </label>
-
-                <input type="date" class="mt-1 w-full border rounded-lg px-3 py-2" />
-              </div>
-
-              <div>
-                <label class="text-xs text-slate-400">
-                  Quote Priority
-                </label>
-
-                <select class="mt-1 w-full border rounded-lg px-3 py-2">
-                  <option>Standard</option>
-                  <option>Urgent</option>
-                  <option>Manual review required</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="text-xs text-slate-400">
-                  Sales Notes
-                </label>
-
-                <input class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Internal broker note" />
-              </div>
-
-            </div>
-
-            <div class="grid grid-cols-3 gap-3 mt-4 text-sm">
+            <div class="grid grid-cols-3 gap-3 text-sm">
 
               <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
                 <input type="checkbox" class="accent-teal-500" />
@@ -572,7 +936,7 @@
 
               <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
                 <input type="checkbox" class="accent-teal-500" />
-                Manual review
+                Manual review required
               </label>
 
             </div>
@@ -589,26 +953,37 @@
               </h3>
 
               <div class="relative group">
-                <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                <i data-lucide="info"
+                   class="w-4 h-4 text-slate-400 cursor-pointer">
+                </i>
 
                 <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                  <p><b>Назначение:</b> условия доступа на pickup и delivery.</p>
 
-                  <p class="mt-2">
-                    Access conditions влияют на labor cost, handling time, access fees и required crew size.
+                  <p>
+                    <b>Назначение:</b> условия доступа pickup и delivery.
                   </p>
 
                   <p class="mt-2">
-                    Crew size не является фиксированным параметром vehicle. Он рассчитывается от груза и условий доступа.
+                    Access conditions влияют на:
                   </p>
+
+                  <ul class="mt-2 space-y-1">
+                    <li>• labor cost</li>
+                    <li>• crew size</li>
+                    <li>• handling time</li>
+                    <li>• surcharge logic</li>
+                  </ul>
+
                 </div>
+
               </div>
 
             </div>
 
             <div class="grid grid-cols-2 gap-4 text-sm">
 
-              <!-- Pickup -->
+              <!-- PICKUP -->
               <div class="border border-slate-200 rounded-xl p-4">
 
                 <h4 class="font-semibold text-slate-800 mb-3">
@@ -632,7 +1007,10 @@
                       Floor
                     </label>
 
-                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="1" />
+                    <input
+                      class="mt-1 w-full border rounded-lg px-3 py-2"
+                      value="1"
+                    />
                   </div>
 
                   <div>
@@ -640,14 +1018,17 @@
                       Long carry, ft
                     </label>
 
-                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="0" />
+                    <input
+                      class="mt-1 w-full border rounded-lg px-3 py-2"
+                      value="0"
+                    />
                   </div>
 
                 </div>
 
               </div>
 
-              <!-- Delivery -->
+              <!-- DELIVERY -->
               <div class="border border-slate-200 rounded-xl p-4">
 
                 <h4 class="font-semibold text-slate-800 mb-3">
@@ -657,7 +1038,11 @@
                 <div class="grid grid-cols-2 gap-3">
 
                   <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3">
-                    <input type="checkbox" checked class="accent-teal-500" />
+                    <input
+                      type="checkbox"
+                      checked
+                      class="accent-teal-500"
+                    />
                     Stairs
                   </label>
 
@@ -671,7 +1056,10 @@
                       Floor
                     </label>
 
-                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="4" />
+                    <input
+                      class="mt-1 w-full border rounded-lg px-3 py-2"
+                      value="4"
+                    />
                   </div>
 
                   <div>
@@ -679,7 +1067,10 @@
                       Long carry, ft
                     </label>
 
-                    <input class="mt-1 w-full border rounded-lg px-3 py-2" value="50" />
+                    <input
+                      class="mt-1 w-full border rounded-lg px-3 py-2"
+                      value="50"
+                    />
                   </div>
 
                 </div>
@@ -708,18 +1099,20 @@
 
                 <div class="relative group">
 
-                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+                  <i data-lucide="info"
+                     class="w-4 h-4 text-slate-400 cursor-pointer">
+                  </i>
 
                   <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 right-0 top-6">
-                    <p><b>Назначение:</b> итоговая customer-facing стоимость estimate.</p>
 
-                    <p class="mt-2">
-                      Финальная сумма округляется вверх до ближайших $10.
+                    <p>
+                      <b>Назначение:</b> customer-facing итоговая стоимость estimate.
                     </p>
 
                     <p class="mt-2">
-                      Расчёт должен выполняться backend pricing engine.
+                      Rounded Final Price рассчитывается pricing engine и округляется вверх до ближайших $10.
                     </p>
+
                   </div>
 
                 </div>
@@ -778,21 +1171,31 @@
             <section class="bg-white rounded-xl border border-slate-200 p-5">
 
               <div class="flex items-center gap-2 mb-4">
+
                 <h3 class="font-bold text-slate-800">
                   Quote Summary
                 </h3>
 
                 <div class="relative group">
-                  <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+
+                  <i data-lucide="info"
+                     class="w-4 h-4 text-slate-400 cursor-pointer">
+                  </i>
 
                   <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 right-0 top-6">
-                    <p><b>Назначение:</b> быстрый summary расчётных параметров quote.</p>
+
+                    <p>
+                      <b>Назначение:</b> краткое operational summary quote.
+                    </p>
 
                     <p class="mt-2">
-                      Vehicle и crew должны рассчитываться автоматически на основании items и access conditions.
+                      Vehicle fit и Required Crew рассчитываются автоматически.
                     </p>
+
                   </div>
+
                 </div>
+
               </div>
 
               <div class="space-y-3 text-sm">
@@ -804,12 +1207,12 @@
 
                 <div class="flex justify-between">
                   <span>Total Weight</span>
-                  <b>500 lb</b>
+                  <b>545 lb</b>
                 </div>
 
                 <div class="flex justify-between">
                   <span>Effective Volume</span>
-                  <b class="text-amber-700">128 cu ft</b>
+                  <b class="text-amber-700">136 cu ft</b>
                 </div>
 
                 <div class="flex justify-between">
@@ -835,7 +1238,9 @@
               </div>
 
               <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
-                Heavy item requires 2-person handling. Crew size is calculated from item weight and access conditions.
+
+                Heavy item and delivery stairs require 2-person handling crew.
+
               </div>
 
             </section>
@@ -846,7 +1251,7 @@
 
       </div>
 
-            <!-- BA NOTES -->
+      <!-- BA NOTES -->
       <section class="mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden">
 
         <button
@@ -860,7 +1265,9 @@
               Business Analysis Notes
             </h3>
 
-            <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="file-text"
+               class="w-4 h-4 text-slate-400">
+            </i>
 
           </div>
 
@@ -871,92 +1278,129 @@
 
         </button>
 
-        <div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
+        <div id="baNotesContent"
+             class="hidden border-t border-slate-200 p-6">
 
           <div class="text-sm text-slate-600 space-y-6">
 
             <div>
+
               <h4 class="font-semibold text-slate-800 mb-2">
                 Цель страницы
               </h4>
 
               <p>
-                Index.html является основным рабочим экраном брокера для быстрого создания quote.
-                Главный приоритет страницы — скорость заполнения items и получение предварительной стоимости без лишней операционной детализации.
+                Index.html является основным рабочим экраном брокера для быстрого создания estimate.
               </p>
 
               <p class="mt-2">
-                Экран не должен превращаться в breakdown или dispatch tool. Детализация расчётов, audit и operational explanation вынесены на отдельные страницы.
+                Главный принцип:
+                брокер должен быстро вводить items и получать quote без необходимости разбираться в operational architecture.
               </p>
+
             </div>
 
             <div>
+
               <h4 class="font-semibold text-slate-800 mb-2">
-                Изменение после feedback CEO
+                Broker-first workflow
               </h4>
 
               <ul class="list-disc ml-5 space-y-2">
+
                 <li>
-                  Items перенесены выше quote options, потому что брокер должен быстро вводить груз и получать rough quote.
+                  Pickup / Delivery и Items являются основными inputs pricing engine.
                 </li>
 
                 <li>
-                  Insurance, declared value, storage и packaging перенесены на item-level.
+                  Customer information вторична на этапе предварительного расчёта.
                 </li>
 
                 <li>
-                  Order-level options оставлены только для параметров, которые относятся ко всему заказу.
+                  Item-level settings позволяют управлять услугами отдельно для каждого item.
                 </li>
 
                 <li>
-                  Required Crew считается от item weight, dimensions, flags и access conditions, а не задаётся фиксировано в vehicle settings.
+                  Operational explanation и detailed formulas вынесены в Breakdown.
                 </li>
+
               </ul>
+
             </div>
 
             <div>
+
               <h4 class="font-semibold text-slate-800 mb-2">
                 Item-level logic
               </h4>
 
               <p>
-                Один заказ может содержать несколько items с разными условиями.
-                Например, один item может храниться на складе, другой может быть застрахован по Full Coverage,
-                третий может требовать crating, а остальные могут перевозиться без дополнительных услуг.
+                Insurance, storage, packaging и crating работают на уровне item, а не всего заказа.
               </p>
 
               <p class="mt-2">
-                Поэтому item-level параметры должны быть частью строки item, а не только общими настройками заказа.
+                Один заказ может содержать:
               </p>
+
+              <ul class="list-disc ml-5 mt-2 space-y-1">
+
+                <li>item с storage;</li>
+                <li>item с full insurance;</li>
+                <li>item requiring custom crate;</li>
+                <li>обычные items без дополнительных услуг.</li>
+
+              </ul>
+
             </div>
 
             <div>
+
               <h4 class="font-semibold text-slate-800 mb-2">
-                Crew calculation logic
+                Crew calculation
               </h4>
 
               <p>
-                Количество членов команды не должно быть фиксированным свойством vehicle.
-                Required Crew должен рассчитываться pricing engine на основании груза и условий доступа.
+                Crew size не задаётся вручную и не является фиксированным свойством vehicle.
+              </p>
+
+              <p class="mt-2">
+                Crew Need рассчитывается pricing engine автоматически.
               </p>
 
               <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 text-xs space-y-2 mt-3">
+
                 <p>
                   Required Crew =
-                  MAX(Base Crew, Heavy Item Requirement, Access Complexity Requirement)
+                  MAX(
+                  Base Crew,
+                  Heavy Item Requirement,
+                  Access Complexity Requirement
+                  )
                 </p>
 
                 <p>
-                  Heavy Item Requirement зависит от item weight и handling thresholds.
+                  Heavy Item Requirement зависит от веса и handling thresholds.
                 </p>
 
                 <p>
-                  Access Complexity Requirement зависит от stairs, floor, elevator availability и long carry.
+                  Access Complexity Requirement зависит от:
                 </p>
+
+                <ul class="list-disc ml-5 space-y-1">
+
+                  <li>stairs;</li>
+                  <li>floor;</li>
+                  <li>elevator availability;</li>
+                  <li>long carry distance.</li>
+
+                </ul>
+
               </div>
+
             </div>
 
             <div>
+
               <h4 class="font-semibold text-slate-800 mb-2">
                 Automated calculations
               </h4>
@@ -984,18 +1428,8 @@
                 </p>
 
                 <p>
-                  Required Crew =
-                  calculated from item weight and access conditions
-                </p>
-
-                <p>
                   Item Charges =
-                  packaging + crating + storage + insurance
-                </p>
-
-                <p>
-                  Order Charges =
-                  exclusive delivery + requested date priority + other order-level charges
+                  packaging + crating + insurance + storage
                 </p>
 
                 <p>
@@ -1004,34 +1438,39 @@
                 </p>
 
               </div>
+
             </div>
 
             <div>
+
               <h4 class="font-semibold text-slate-800 mb-2">
-                Scope boundary
+                Scope boundaries
               </h4>
 
               <ul class="list-disc ml-5 space-y-2">
+
                 <li>
-                  Index.html отвечает за quote creation.
+                  Index.html отвечает за quote creation workflow.
                 </li>
 
                 <li>
-                  Breakdown.html отвечает за explanation и audit расчёта.
+                  Breakdown.html отвечает за audit и operational explanation.
                 </li>
 
                 <li>
-                  Variables.html отвечает за coefficients и formula governance.
+                  Variables.html отвечает за formula governance.
                 </li>
 
                 <li>
-                  References.html отвечает за справочники: vehicles, packaging, item catalog, service areas.
+                  References.html отвечает за operational reference data.
                 </li>
 
                 <li>
-                  Orders/eBOL отвечают за operational execution после approval.
+                  Orders/eBOL отвечают за execution workflow после approval.
                 </li>
+
               </ul>
+
             </div>
 
           </div>
@@ -1047,15 +1486,19 @@
 </div>
 
 <script>
+
   function toggleBANotes() {
+
     const content = document.getElementById('baNotesContent');
     const chevron = document.getElementById('baNotesChevron');
 
     content.classList.toggle('hidden');
     chevron.classList.toggle('rotate-180');
+
   }
 
   lucide.createIcons();
+
 </script>
 
 </body>
