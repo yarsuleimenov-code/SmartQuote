@@ -219,20 +219,17 @@
                 Pickup
               </label>
 
-              <input
-                class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold"
-                value="Brooklyn, NY"
-              />
+              <select class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold bg-white">
+                <option>NY Area</option>
+                <option>NYC</option>
+                <option>Boston</option>
+                <option>Washington DC</option>
+                <option>CA South</option>
+              </select>
 
               <div class="flex items-center gap-2 mt-3 text-sm">
 
-                <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
-                  NY Area
-                </span>
 
-                <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
-                  East Coast
-                </span>
 
               </div>
 
@@ -274,20 +271,15 @@
                 Delivery
               </label>
 
-              <input
-                class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold"
-                value="Los Angeles, CA"
-              />
+              <select class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold bg-white">
+                <option>CA South</option>
+                <option>NY Area</option>
+                <option>NYC</option>
+                <option>Boston</option>
+                <option>Washington DC</option>
+              </select>
 
               <div class="flex items-center gap-2 mt-3 text-sm">
-
-                <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
-                  CA South
-                </span>
-
-                <span class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">
-                  West Coast
-                </span>
 
               </div>
 
@@ -420,15 +412,24 @@
 
                   <div class="col-span-2">
                     <label class="text-xs text-slate-400">
-                      Approx. Size
+                      Approx. Volume, cu ft
                     </label>
 
-                    <select class="mt-1 w-full border rounded-xl px-3 py-3">
-                      <option>Large</option>
-                      <option>Small</option>
-                      <option>Medium</option>
-                      <option>Oversized</option>
-                    </select>
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      value="140"
+                    />
+                  </div>
+
+                  <div class="col-span-2">
+                    <label class="text-xs text-slate-400">
+                      Approx. Weight, lb
+                    </label>
+
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      value="500"
+                    />
                   </div>
 
                   <div class="col-span-1">
@@ -440,19 +441,6 @@
                       class="mt-1 w-full border rounded-xl px-3 py-3"
                       value="1"
                     />
-                  </div>
-
-                  <div class="col-span-2">
-                    <label class="text-xs text-slate-400">
-                      Approx. Weight
-                    </label>
-
-                    <select class="mt-1 w-full border rounded-xl px-3 py-3">
-                      <option>Heavy</option>
-                      <option>Light</option>
-                      <option>Medium</option>
-                      <option>Very Heavy</option>
-                    </select>
                   </div>
 
                   <div class="col-span-4">
@@ -478,7 +466,6 @@
                       </label>
 
                     </div>
-
                   </div>
 
                 </div>
@@ -486,8 +473,8 @@
                 <div class="grid grid-cols-4 gap-3 mt-4 text-xs">
 
                   <div class="bg-white border border-slate-200 rounded-xl p-3">
-                    <p class="text-slate-400">Estimated Volume</p>
-                    <p class="font-bold text-slate-800 mt-1">120–150 cu ft</p>
+                    <p class="text-slate-400">Input Volume</p>
+                    <p class="font-bold text-slate-800 mt-1">140 cu ft</p>
                   </div>
 
                   <div class="bg-white border border-slate-200 rounded-xl p-3">
