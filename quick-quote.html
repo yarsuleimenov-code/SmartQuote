@@ -111,13 +111,8 @@
           Calculate Range
         </button>
 
-        <a
-          href="index.html"
-          class="block w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl py-4 font-semibold text-lg transition text-center"
-        >
-        
+        <a href="index.html" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
           Convert to Full Quote
-        
         </a>
 
       </div>
@@ -142,7 +137,7 @@
             </div>
 
             <p class="text-sm text-slate-500 mt-1">
-              Minimum input for fast price range. Used before full estimate preparation.
+              Быстрый предварительный расчёт по минимальному набору данных.
             </p>
           </div>
 
@@ -168,196 +163,179 @@
         <!-- LEFT -->
         <div class="col-span-8 space-y-6">
 
-      <!-- QUICK ROUTE -->
-      <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+          <!-- QUICK ROUTE -->
+          <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
 
-        <!-- HEADER -->
-        <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
+            <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
 
-          <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2">
 
-            <h3 class="text-xl font-bold text-slate-800">
-              Quick Route
-            </h3>
+                <h3 class="text-xl font-bold text-slate-800">
+                  Quick Route
+                </h3>
 
-            <div class="relative group">
+                <div class="relative group">
 
-              <i data-lucide="info"
-                 class="w-4 h-4 text-slate-400 cursor-pointer">
-              </i>
-
-              <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-
-                <p>
-                  <b>Quick Quote purpose:</b> fast preliminary pricing before full operational estimate.
-                </p>
-
-                <p class="mt-2">
-                  Only minimum routing and cargo information is required.
-                </p>
-
-                <p class="mt-2">
-                  The result is an estimated price range, not a final operational quote.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">
-            Approximate Pricing
-          </span>
-
-        </div>
-
-        <!-- MAIN ROUTE -->
-        <div class="p-6">
-
-          <div class="grid grid-cols-12 gap-6 items-center">
-
-            <!-- PICKUP -->
-            <div class="col-span-5">
-
-              <label class="text-xs uppercase tracking-wide text-slate-400">
-                Pickup
-              </label>
-
-              <select class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold bg-white">
-                <option>NY Area</option>
-                <option>NYC</option>
-                <option>Boston</option>
-                <option>Washington DC</option>
-                <option>CA South</option>
-              </select>
-
-              <div class="flex items-center gap-2 mt-3 text-sm">
-
-
-
-              </div>
-
-            </div>
-
-            <!-- CENTER -->
-            <div class="col-span-2 text-center">
-
-              <div class="flex items-center justify-center gap-2">
-
-                <div class="h-[3px] w-10 bg-slate-300 rounded-full"></div>
-
-                <div class="w-16 h-16 rounded-full bg-teal-500 flex items-center justify-center shadow-lg">
-
-                  <i data-lucide="truck"
-                     class="w-7 h-7 text-white">
+                  <i data-lucide="info"
+                     class="w-4 h-4 text-slate-400 cursor-pointer">
                   </i>
+
+                  <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
+                    <p>
+                      <b>Назначение:</b> быстрый выбор зон для предварительного расчёта.
+                    </p>
+
+                    <p class="mt-2">
+                      Точные адреса можно заполнить позже в Full Quote.
+                    </p>
+                  </div>
 
                 </div>
 
-                <div class="h-[3px] w-10 bg-slate-300 rounded-full"></div>
+              </div>
+
+              <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">
+                Ориентировочная цена
+              </span>
+
+            </div>
+
+            <div class="p-6">
+
+              <div class="grid grid-cols-12 gap-6 items-center">
+
+                <!-- PICKUP -->
+                <div class="col-span-5">
+
+                  <label class="text-xs uppercase tracking-wide text-slate-400">
+                    Pickup Zone
+                  </label>
+
+                  <select class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold bg-white">
+                    <option>NY Area</option>
+                    <option>NYC</option>
+                    <option>Boston</option>
+                    <option>Washington DC</option>
+                    <option>CA South</option>
+                  </select>
+
+                  <p class="text-xs text-slate-400 mt-3">
+                    Для быстрого расчёта достаточно зоны.
+                  </p>
+
+                </div>
+
+                <!-- CENTER -->
+                <div class="col-span-2 text-center">
+
+                  <div class="flex items-center justify-center gap-2">
+
+                    <div class="h-[3px] w-10 bg-slate-300 rounded-full"></div>
+
+                    <div class="w-16 h-16 rounded-full bg-teal-500 flex items-center justify-center shadow-lg">
+                      <i data-lucide="truck" class="w-7 h-7 text-white"></i>
+                    </div>
+
+                    <div class="h-[3px] w-10 bg-slate-300 rounded-full"></div>
+
+                  </div>
+
+                  <p class="mt-4 text-3xl font-bold text-slate-900">
+                    2800
+                  </p>
+
+                  <p class="text-sm text-slate-500">
+                    interstate miles
+                  </p>
+
+                </div>
+
+                <!-- DELIVERY -->
+                <div class="col-span-5">
+
+                  <label class="text-xs uppercase tracking-wide text-slate-400">
+                    Delivery Zone
+                  </label>
+
+                  <select class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold bg-white">
+                    <option>CA South</option>
+                    <option>NY Area</option>
+                    <option>NYC</option>
+                    <option>Boston</option>
+                    <option>Washington DC</option>
+                  </select>
+
+                  <p class="text-xs text-slate-400 mt-3">
+                    Точный delivery address заполняется в Full Quote.
+                  </p>
+
+                </div>
 
               </div>
 
-              <p class="mt-4 text-3xl font-bold text-slate-900">
-                2800
-              </p>
+              <!-- QUICK INFO -->
+              <div class="grid grid-cols-4 gap-4 mt-8">
 
-              <p class="text-sm text-slate-500">
-                interstate miles
-              </p>
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
 
-            </div>
+                  <p class="text-xs uppercase tracking-wide text-slate-400">
+                    Lead Name
+                  </p>
 
-            <!-- DELIVERY -->
-            <div class="col-span-5">
+                  <input
+                    class="mt-3 w-full border rounded-xl px-3 py-3 font-semibold"
+                    value="Concrete Table - LA"
+                  />
 
-              <label class="text-xs uppercase tracking-wide text-slate-400">
-                Delivery
-              </label>
+                </div>
 
-              <select class="mt-2 w-full border-2 border-slate-200 rounded-2xl px-5 py-5 text-2xl font-bold bg-white">
-                <option>CA South</option>
-                <option>NY Area</option>
-                <option>NYC</option>
-                <option>Boston</option>
-                <option>Washington DC</option>
-              </select>
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
 
-              <div class="flex items-center gap-2 mt-3 text-sm">
+                  <p class="text-xs uppercase tracking-wide text-slate-400">
+                    Customer
+                  </p>
+
+                  <input
+                    class="mt-3 w-full border rounded-xl px-3 py-3"
+                    value="John Smith"
+                  />
+
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+
+                  <p class="text-xs uppercase tracking-wide text-slate-400">
+                    Phone
+                  </p>
+
+                  <input
+                    class="mt-3 w-full border rounded-xl px-3 py-3"
+                    value="+1 555 0147"
+                  />
+
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+
+                  <p class="text-xs uppercase tracking-wide text-slate-400">
+                    Delivery Priority
+                  </p>
+
+                  <select class="mt-3 w-full border rounded-xl px-3 py-3">
+                    <option>Standard Route</option>
+                    <option>Flexible Delivery</option>
+                    <option>Requested Date</option>
+                    <option>Exclusive Delivery</option>
+                  </select>
+
+                </div>
 
               </div>
 
             </div>
 
-          </div>
-
-          <!-- QUICK INFO -->
-          <div class="grid grid-cols-4 gap-4 mt-8">
-
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-
-              <p class="text-xs uppercase tracking-wide text-slate-400">
-                Lead Name
-              </p>
-
-              <input
-                class="mt-3 w-full border rounded-xl px-3 py-3 font-semibold"
-                value="Concrete Table - LA"
-              />
-
-            </div>
-
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-
-              <p class="text-xs uppercase tracking-wide text-slate-400">
-                Customer
-              </p>
-
-              <input
-                class="mt-3 w-full border rounded-xl px-3 py-3"
-                value="John Smith"
-              />
-
-            </div>
-
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-
-              <p class="text-xs uppercase tracking-wide text-slate-400">
-                Phone
-              </p>
-
-              <input
-                class="mt-3 w-full border rounded-xl px-3 py-3"
-                value="+1 555 0147"
-              />
-
-            </div>
-
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
-
-              <p class="text-xs uppercase tracking-wide text-slate-400">
-                Delivery Priority
-              </p>
-
-              <select class="mt-3 w-full border rounded-xl px-3 py-3">
-
-                <option>Standard Route</option>
-                <option>Flexible Delivery</option>
-                <option>Requested Date</option>
-                <option>Exclusive Delivery</option>
-
-              </select>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-             <!-- QUICK ITEMS -->
+          </section>
+          <!-- QUICK ITEMS -->
           <section class="bg-white rounded-2xl border border-slate-200 p-6">
 
             <div class="flex items-center justify-between mb-5">
@@ -375,16 +353,13 @@
                   </i>
 
                   <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-
                     <p>
                       <b>Назначение:</b> быстрый ввод груза для предварительного диапазона цены.
                     </p>
 
                     <p class="mt-2">
-                      В Quick Quote не требуется полная item-level детализация.
-                      Достаточно approximate size, quantity и основных risk flags.
+                      Указываются только название item, примерный объём, вес и основные признаки риска.
                     </p>
-
                   </div>
 
                 </div>
@@ -397,7 +372,7 @@
 
             </div>
 
-            <div class="grid grid-cols-1 gap-4">
+            <div class="space-y-4">
 
               <!-- ITEM CARD 1 -->
               <div class="border border-slate-200 rounded-2xl p-5 bg-slate-50">
@@ -471,30 +446,7 @@
                       </label>
 
                     </div>
-                  </div>
 
-                </div>
-
-                <div class="grid grid-cols-4 gap-3 mt-4 text-xs">
-
-                  <div class="bg-white border border-slate-200 rounded-xl p-3">
-                    <p class="text-slate-400">Input Volume</p>
-                    <p class="font-bold text-slate-800 mt-1">140 cu ft</p>
-                  </div>
-
-                  <div class="bg-white border border-slate-200 rounded-xl p-3">
-                    <p class="text-slate-400">Handling Risk</p>
-                    <p class="font-bold text-amber-700 mt-1">High</p>
-                  </div>
-
-                  <div class="bg-white border border-slate-200 rounded-xl p-3">
-                    <p class="text-slate-400">Crew Need</p>
-                    <p class="font-bold text-amber-700 mt-1">2 people</p>
-                  </div>
-
-                  <div class="bg-white border border-slate-200 rounded-xl p-3">
-                    <p class="text-slate-400">Accuracy</p>
-                    <p class="font-bold text-blue-700 mt-1">Approximate</p>
                   </div>
 
                 </div>
@@ -519,15 +471,24 @@
 
                   <div class="col-span-2">
                     <label class="text-xs text-slate-400">
-                      Approx. Size
+                      Approx. Volume, cu ft
                     </label>
 
-                    <select class="mt-1 w-full border rounded-xl px-3 py-3">
-                      <option>Medium</option>
-                      <option>Small</option>
-                      <option>Large</option>
-                      <option>Oversized</option>
-                    </select>
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      value="25"
+                    />
+                  </div>
+
+                  <div class="col-span-2">
+                    <label class="text-xs text-slate-400">
+                      Approx. Weight, lb
+                    </label>
+
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      value="45"
+                    />
                   </div>
 
                   <div class="col-span-1">
@@ -539,19 +500,6 @@
                       class="mt-1 w-full border rounded-xl px-3 py-3"
                       value="1"
                     />
-                  </div>
-
-                  <div class="col-span-2">
-                    <label class="text-xs text-slate-400">
-                      Approx. Weight
-                    </label>
-
-                    <select class="mt-1 w-full border rounded-xl px-3 py-3">
-                      <option>Light</option>
-                      <option>Medium</option>
-                      <option>Heavy</option>
-                      <option>Very Heavy</option>
-                    </select>
                   </div>
 
                   <div class="col-span-4">
@@ -584,11 +532,90 @@
 
               </div>
 
-            </div>
+              <!-- EMPTY ITEM CARD -->
+              <div class="border border-dashed border-slate-300 rounded-2xl p-5 bg-white">
 
-          </section>   
+                <div class="grid grid-cols-12 gap-4 items-end text-sm">
+
+                  <div class="col-span-3">
+                    <label class="text-xs text-slate-400">
+                      Item
+                    </label>
+
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      placeholder="Item name"
+                    />
+                  </div>
+
+                  <div class="col-span-2">
+                    <label class="text-xs text-slate-400">
+                      Approx. Volume, cu ft
+                    </label>
+
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      placeholder="cu ft"
+                    />
+                  </div>
+
+                  <div class="col-span-2">
+                    <label class="text-xs text-slate-400">
+                      Approx. Weight, lb
+                    </label>
+
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      placeholder="lb"
+                    />
+                  </div>
+
+                  <div class="col-span-1">
+                    <label class="text-xs text-slate-400">
+                      Qty
+                    </label>
+
+                    <input
+                      class="mt-1 w-full border rounded-xl px-3 py-3"
+                      value="1"
+                    />
+                  </div>
+
+                  <div class="col-span-4">
+                    <label class="text-xs text-slate-400">
+                      Fast Flags
+                    </label>
+
+                    <div class="mt-1 grid grid-cols-3 gap-2">
+
+                      <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-3">
+                        <input type="checkbox" class="accent-teal-500" />
+                        Fragile
+                      </label>
+
+                      <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-3">
+                        <input type="checkbox" class="accent-teal-500" />
+                        Non-stack
+                      </label>
+
+                      <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-3">
+                        <input type="checkbox" class="accent-teal-500" />
+                        Crate likely
+                      </label>
+
+                    </div>
 
                   </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
 
         <!-- RIGHT -->
         <aside class="col-span-4">
@@ -598,56 +625,40 @@
             <!-- ESTIMATED RANGE -->
             <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
 
-              <!-- HEADER -->
-              <div class="px-6 py-5 border-b border-slate-200">
+              <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
 
-                <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
 
-                  <div class="flex items-center gap-2">
+                  <h3 class="text-xl font-bold text-slate-800">
+                    Estimated Range
+                  </h3>
 
-                    <h3 class="text-xl font-bold text-slate-800">
-                      Estimated Range
-                    </h3>
+                  <div class="relative group">
 
-                    <div class="relative group">
+                    <i data-lucide="info"
+                       class="w-4 h-4 text-slate-400 cursor-pointer">
+                    </i>
 
-                      <i data-lucide="info"
-                         class="w-4 h-4 text-slate-400 cursor-pointer">
-                      </i>
+                    <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 right-0 top-6">
+                      <p>
+                        <b>Назначение:</b> ориентировочная стоимость для первичного разговора с клиентом.
+                      </p>
 
-                      <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 right-0 top-6">
-
-                        <p>
-                          <b>Quick Quote output:</b> approximate customer-facing pricing range.
-                        </p>
-
-                        <p class="mt-2">
-                          Final operational estimate may change after:
-                        </p>
-
-                        <ul class="mt-2 space-y-1">
-                          <li>• exact measurements</li>
-                          <li>• access conditions</li>
-                          <li>• storage</li>
-                          <li>• insurance</li>
-                          <li>• packaging</li>
-                        </ul>
-
-                      </div>
-
+                      <p class="mt-2">
+                        Финальная цена формируется только после Full Quote.
+                      </p>
                     </div>
 
                   </div>
 
-                  <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
-                    Preliminary
-                  </span>
-
                 </div>
+
+                <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">
+                  Preliminary
+                </span>
 
               </div>
 
-              <!-- PRICE -->
               <div class="p-6 text-center">
 
                 <p class="text-sm text-slate-500">
@@ -655,86 +666,45 @@
                 </p>
 
                 <div class="mt-4">
-
-                  <p class="text-5xl font-bold text-slate-900">
-                    $1,050
-                  </p>
-
-                  <p class="text-slate-400 text-xl mt-1">
-                    —
-                  </p>
-
-                  <p class="text-5xl font-bold text-slate-900 mt-1">
-                    $1,250
-                  </p>
-
+                  <p class="text-5xl font-bold text-slate-900">$1,050</p>
+                  <p class="text-slate-400 text-xl mt-1">—</p>
+                  <p class="text-5xl font-bold text-slate-900 mt-1">$1,250</p>
                 </div>
 
                 <div class="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-100 text-amber-700 text-sm font-semibold">
-
-                  <i data-lucide="alert-triangle"
-                     class="w-4 h-4">
-                  </i>
-
-                  Final quote requires detailed review
-
+                  <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                  Требуется Full Quote для точной цены
                 </div>
 
               </div>
 
-              <!-- QUICK SUMMARY -->
               <div class="border-t border-slate-200 p-5">
 
                 <div class="space-y-4 text-sm">
 
                   <div class="flex justify-between items-center">
-                    <span class="text-slate-500">
-                      Estimated Vehicle
-                    </span>
-
-                    <b class="text-slate-800">
-                      Sprinter 488
-                    </b>
+                    <span class="text-slate-500">Estimated Vehicle</span>
+                    <b class="text-slate-800">Sprinter 488</b>
                   </div>
 
                   <div class="flex justify-between items-center">
-                    <span class="text-slate-500">
-                      Estimated Crew
-                    </span>
-
-                    <b class="text-amber-700">
-                      2 people
-                    </b>
+                    <span class="text-slate-500">Estimated Crew</span>
+                    <b class="text-amber-700">2 people</b>
                   </div>
 
                   <div class="flex justify-between items-center">
-                    <span class="text-slate-500">
-                      Estimated Volume
-                    </span>
-
-                    <b class="text-slate-800">
-                      130–160 cu ft
-                    </b>
+                    <span class="text-slate-500">Estimated Volume</span>
+                    <b class="text-slate-800">165 cu ft</b>
                   </div>
 
                   <div class="flex justify-between items-center">
-                    <span class="text-slate-500">
-                      Route Type
-                    </span>
-
-                    <b class="text-slate-800">
-                      Interstate
-                    </b>
+                    <span class="text-slate-500">Route Type</span>
+                    <b class="text-slate-800">Interstate</b>
                   </div>
 
                   <div class="flex justify-between items-center">
-                    <span class="text-slate-500">
-                      Nearest Route
-                    </span>
-
-                    <b class="text-blue-700">
-                      May 24
-                    </b>
+                    <span class="text-slate-500">Nearest Route</span>
+                    <b class="text-blue-700">May 24</b>
                   </div>
 
                 </div>
@@ -759,18 +729,13 @@
                   </i>
 
                   <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 right-0 top-6">
-
                     <p>
-                      Qualification logic helps broker identify:
+                      <b>Назначение:</b> помогает понять, нужен ли полный расчёт.
                     </p>
 
-                    <ul class="mt-2 space-y-1">
-                      <li>• risky shipments</li>
-                      <li>• complex handling</li>
-                      <li>• likely operational escalations</li>
-                      <li>• quotes requiring Full Workflow</li>
-                    </ul>
-
+                    <p class="mt-2">
+                      Если груз тяжёлый, хрупкий или требует крейта, quote нужно переводить в Full Quote.
+                    </p>
                   </div>
 
                 </div>
@@ -779,64 +744,50 @@
 
               <div class="space-y-3">
 
-                <!-- WARNING -->
                 <div class="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4">
 
                   <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-
-                    <i data-lucide="alert-triangle"
-                       class="w-5 h-5 text-amber-700">
-                    </i>
-
+                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-700"></i>
                   </div>
 
                   <div>
-
                     <p class="font-semibold text-amber-800">
                       Heavy fragile item detected
                     </p>
 
                     <p class="text-sm text-amber-700 mt-1">
-                      Custom crating and 2-person crew likely required.
+                      Вероятно потребуется крейт и команда из 2 человек.
                     </p>
-
                   </div>
 
                 </div>
 
-                <!-- INFO -->
                 <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-2xl p-4">
 
                   <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-
-                    <i data-lucide="info"
-                       class="w-5 h-5 text-blue-700">
-                    </i>
-
+                    <i data-lucide="info" class="w-5 h-5 text-blue-700"></i>
                   </div>
 
                   <div>
-
                     <p class="font-semibold text-blue-800">
                       Recommended next step
                     </p>
 
                     <p class="text-sm text-blue-700 mt-1">
-                      Convert this draft into Full Quote for operational validation.
+                      Перевести draft в Full Quote для точного operational расчёта.
                     </p>
-
                   </div>
 
                 </div>
 
               </div>
 
-              <!-- CTA -->
-              <button class="w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl py-4 font-semibold text-lg transition">
-
+              <a
+                href="index.html"
+                class="block w-full mt-6 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl py-4 font-semibold text-lg transition text-center"
+              >
                 Convert to Full Quote
-
-              </button>
+              </a>
 
             </section>
 
@@ -876,194 +827,75 @@
         <div id="baNotesContent"
              class="hidden border-t border-slate-200 p-6">
 
-          <div class="text-sm text-slate-600 space-y-6">
+          <div class="text-sm text-slate-600 space-y-5">
 
             <div>
-
               <h4 class="font-semibold text-slate-800 mb-2">
-                Цель страницы
+                Назначение страницы
               </h4>
 
               <p>
-                Quick Quote является альтернативным workflow по сравнению с Full Quote.
+                Quick Quote нужен для быстрого первичного расчёта, когда клиент ещё не готов предоставить все детали для полноценного estimate.
               </p>
-
-              <p class="mt-2">
-                Основная цель:
-                быстро назвать клиенту ориентировочную стоимость до детальной operational validation.
-              </p>
-
             </div>
 
             <div>
-
               <h4 class="font-semibold text-slate-800 mb-2">
-                Architectural Difference
-              </h4>
-
-              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-2">
-
-                <p>
-                  <b>Quick Quote:</b>
-                  fast presales qualification workflow.
-                </p>
-
-                <p>
-                  <b>Full Quote:</b>
-                  operationally validated estimate workflow.
-                </p>
-
-              </div>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-semibold text-slate-800 mb-2">
-                Why Quick Quote exists
+                Когда использовать
               </h4>
 
               <ul class="list-disc ml-5 space-y-2">
-
-                <li>
-                  Клиенты часто не готовы сразу предоставить точные размеры и operational details.
-                </li>
-
-                <li>
-                  Брокеру нужен быстрый инструмент qualification лида.
-                </li>
-
-                <li>
-                  Большая часть лидов не требует полного operational estimate на первом контакте.
-                </li>
-
-                <li>
-                  Full Quote workflow слишком тяжёлый для первичного разговора.
-                </li>
-
+                <li>Первичный звонок или переписка с клиентом.</li>
+                <li>Нужно быстро понять примерный диапазон цены.</li>
+                <li>Нет точных размеров, адресов или условий доступа.</li>
+                <li>Нужно квалифицировать lead перед детальной проработкой.</li>
               </ul>
-
             </div>
 
             <div>
-
               <h4 class="font-semibold text-slate-800 mb-2">
-                Simplified Input Logic
+                Чем отличается от Full Quote
               </h4>
 
-              <p>
-                В Quick Quote intentionally отсутствуют:
-              </p>
+              <div class="grid grid-cols-2 gap-4 text-xs">
 
-              <ul class="list-disc ml-5 mt-2 space-y-1">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <p class="font-semibold text-slate-800 mb-2">
+                    Quick Quote
+                  </p>
 
-                <li>точные dimensions;</li>
-                <li>declared value;</li>
-                <li>insurance setup;</li>
-                <li>storage setup;</li>
-                <li>access conditions;</li>
-                <li>full packaging configuration.</li>
+                  <ul class="list-disc ml-4 space-y-1">
+                    <li>Быстрый ввод.</li>
+                    <li>Зоны вместо точных адресов.</li>
+                    <li>Примерный volume и weight.</li>
+                    <li>Диапазон цены.</li>
+                  </ul>
+                </div>
 
-              </ul>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <p class="font-semibold text-slate-800 mb-2">
+                    Full Quote
+                  </p>
 
-              <p class="mt-3">
-                Вместо этого используются:
-              </p>
-
-              <ul class="list-disc ml-5 mt-2 space-y-1">
-
-                <li>approximate size;</li>
-                <li>approximate weight;</li>
-                <li>risk flags;</li>
-                <li>route information.</li>
-
-              </ul>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-semibold text-slate-800 mb-2">
-                Pricing Logic
-              </h4>
-
-              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-2">
-
-                <p>
-                  Quick Quote returns estimated pricing range instead of exact operational price.
-                </p>
-
-                <p>
-                  Estimated Range =
-                  Base Route Cost ± uncertainty buffer
-                </p>
-
-                <p>
-                  Uncertainty buffer depends on:
-                </p>
-
-                <ul class="list-disc ml-5 space-y-1">
-
-                  <li>approximate item size;</li>
-                  <li>fragile risk;</li>
-                  <li>heavy item risk;</li>
-                  <li>possible crating requirement.</li>
-
-                </ul>
+                  <ul class="list-disc ml-4 space-y-1">
+                    <li>Точные адреса.</li>
+                    <li>Детальные items.</li>
+                    <li>Упаковка, страховка, storage.</li>
+                    <li>Финальный estimate.</li>
+                  </ul>
+                </div>
 
               </div>
-
             </div>
 
             <div>
-
               <h4 class="font-semibold text-slate-800 mb-2">
-                Qualification Workflow
+                Важное ограничение
               </h4>
 
               <p>
-                Quick Quote также выполняет функцию qualification engine.
+                Quick Quote не должен восприниматься как финальная цена. Это предварительный диапазон для принятия решения, стоит ли переводить lead в полноценный расчёт.
               </p>
-
-              <p class="mt-2">
-                Система должна автоматически выявлять:
-              </p>
-
-              <ul class="list-disc ml-5 mt-2 space-y-1">
-
-                <li>heavy handling risk;</li>
-                <li>fragile cargo risk;</li>
-                <li>likely custom crating;</li>
-                <li>need for Full Quote escalation.</li>
-
-              </ul>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-semibold text-slate-800 mb-2">
-                Product Strategy
-              </h4>
-
-              <p>
-                Наличие двух workflows демонстрирует product separation:
-              </p>
-
-              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-2 mt-3">
-
-                <p>
-                  <b>Quick Quote</b> →
-                  speed-first presales UX.
-                </p>
-
-                <p>
-                  <b>Full Quote</b> →
-                  operations-aware estimate workflow.
-                </p>
-
-              </div>
-
             </div>
 
           </div>
@@ -1096,4 +928,5 @@
 
 </body>
 </html>
+      
           
