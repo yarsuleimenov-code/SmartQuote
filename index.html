@@ -161,213 +161,268 @@
 
         <!-- LEFT -->
         <div class="col-span-8 space-y-6">
+          
           <!-- LEAD & ROUTE -->
           <section class="bg-white rounded-xl border border-slate-200 p-5">
 
-            <div class="flex items-center justify-between mb-4">
-
+            <div class="flex items-center justify-between mb-5">
+            
               <div class="flex items-center gap-2">
-
+            
                 <h3 class="font-bold text-slate-800">
-                  Lead & Route
+                  Shipment Route
                 </h3>
-
+            
                 <div class="relative group">
-
+            
                   <i data-lucide="info"
                      class="w-4 h-4 text-slate-400 cursor-pointer">
                   </i>
-
+            
                   <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-
+            
                     <p>
-                      <b>Назначение:</b> минимально необходимая информация для расчёта quote.
+                      <b>Назначение:</b> основной routing block для quote calculation.
                     </p>
-
+            
                     <p class="mt-2">
-                      Pickup и Delivery являются приоритетными полями для pricing engine.
+                      Route является главным operational input pricing engine.
                     </p>
-
-                    <p class="mt-2">
-                      Customer details вторичны на этапе предварительного расчёта.
-                    </p>
-
+            
                   </div>
-
+            
                 </div>
-
+            
               </div>
-
+            
               <button class="text-sm text-teal-600 font-semibold">
                 Open Kommo Lead
               </button>
-
+            
             </div>
-
-            <!-- ROW 1 -->
+            
+            <!-- ROUTE HERO -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-5">
+            
+              <div class="grid grid-cols-12 gap-4 items-center">
+            
+                <!-- PICKUP -->
+                <div class="col-span-4">
+            
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">
+                    Pickup
+                  </p>
+            
+                  <input
+                    class="w-full border rounded-xl px-4 py-3 text-lg font-semibold"
+                    value="Brooklyn, NY"
+                  />
+            
+                  <p class="text-xs text-slate-400 mt-2">
+                    Zone: NY Area
+                  </p>
+            
+                </div>
+            
+                <!-- CENTER -->
+                <div class="col-span-4 text-center">
+            
+                  <div class="flex items-center justify-center gap-3">
+            
+                    <div class="h-[2px] w-16 bg-slate-300"></div>
+            
+                    <div class="w-12 h-12 rounded-full bg-teal-500 flex items-center justify-center">
+            
+                      <i data-lucide="truck"
+                         class="w-5 h-5 text-white">
+                      </i>
+            
+                    </div>
+            
+                    <div class="h-[2px] w-16 bg-slate-300"></div>
+            
+                  </div>
+            
+                  <p class="mt-3 text-2xl font-bold text-slate-800">
+                    2800 mi
+                  </p>
+            
+                  <p class="text-sm text-slate-500">
+                    Interstate Route
+                  </p>
+            
+                </div>
+            
+                <!-- DELIVERY -->
+                <div class="col-span-4">
+            
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">
+                    Delivery
+                  </p>
+            
+                  <input
+                    class="w-full border rounded-xl px-4 py-3 text-lg font-semibold"
+                    value="Los Angeles, CA"
+                  />
+            
+                  <p class="text-xs text-slate-400 mt-2">
+                    Zone: CA South
+                  </p>
+            
+                </div>
+            
+              </div>
+            
+              <!-- ROUTE INFO -->
+              <div class="grid grid-cols-3 gap-3 mt-5">
+            
+                <div class="bg-white border border-slate-200 rounded-xl p-4">
+            
+                  <p class="text-xs text-slate-400">
+                    Nearest Route
+                  </p>
+            
+                  <p class="text-lg font-bold text-blue-700 mt-1">
+                    May 24
+                  </p>
+            
+                </div>
+            
+                <div class="bg-white border border-slate-200 rounded-xl p-4">
+            
+                  <p class="text-xs text-slate-400">
+                    Vehicle Fit
+                  </p>
+            
+                  <p class="text-lg font-bold text-slate-800 mt-1">
+                    Sprinter 488
+                  </p>
+            
+                </div>
+            
+                <div class="bg-white border border-slate-200 rounded-xl p-4">
+            
+                  <p class="text-xs text-slate-400">
+                    Required Crew
+                  </p>
+            
+                  <p class="text-lg font-bold text-amber-700 mt-1">
+                    2 people
+                  </p>
+            
+                </div>
+            
+              </div>
+            
+            </div>
+            
+            <!-- CRM DETAILS -->
             <div class="grid grid-cols-12 gap-4 text-sm">
-
-              <div class="col-span-2">
+            
+              <div class="col-span-3">
+            
                 <label class="text-xs text-slate-400">
                   Lead Name *
                 </label>
-
+            
                 <input
                   class="mt-1 w-full border rounded-lg px-3 py-2"
                   value="Concrete Table - LA"
                 />
-
+            
                 <p class="text-[11px] text-slate-400 mt-1">
-                  CRM lead title
+                  CRM operational identifier
                 </p>
+            
               </div>
-
-              <div class="col-span-5">
-                <label class="text-xs text-slate-400">
-                  Pickup Address
-                </label>
-
-                <input
-                  class="mt-1 w-full border rounded-lg px-3 py-2"
-                  value="Brooklyn, NY"
-                />
-              </div>
-
-              <div class="col-span-5">
-                <label class="text-xs text-slate-400">
-                  Delivery Address
-                </label>
-
-                <input
-                  class="mt-1 w-full border rounded-lg px-3 py-2"
-                  value="Los Angeles, CA"
-                />
-              </div>
-
-            </div>
-
-            <!-- ROW 2 -->
-            <div class="grid grid-cols-12 gap-4 text-sm mt-4">
-
-              <div class="col-span-4">
+            
+              <div class="col-span-3">
+            
                 <label class="text-xs text-slate-400">
                   Customer Name
                 </label>
-
+            
                 <input
                   class="mt-1 w-full border rounded-lg px-3 py-2"
                   value="John Smith"
                 />
+            
               </div>
-
-              <div class="col-span-4">
+            
+              <div class="col-span-3">
+            
                 <label class="text-xs text-slate-400">
                   Phone
                 </label>
-
+            
                 <input
                   class="mt-1 w-full border rounded-lg px-3 py-2"
                   value="+1 555 0147"
                 />
+            
               </div>
-
-              <div class="col-span-4">
+            
+              <div class="col-span-3">
+            
                 <label class="text-xs text-slate-400">
                   Email
                 </label>
-
+            
                 <input
                   class="mt-1 w-full border rounded-lg px-3 py-2"
                   value="john@email.com"
                 />
+            
               </div>
-
+            
             </div>
-
-            <!-- ROW 3 -->
-            <div class="grid grid-cols-12 gap-4 text-sm mt-4">
-
-              <div class="col-span-4">
+            
+            <!-- QUOTE DETAILS -->
+            <div class="grid grid-cols-3 gap-4 text-sm mt-4">
+            
+              <div>
+            
                 <label class="text-xs text-slate-400">
                   Delivery Type
                 </label>
-
+            
                 <select class="mt-1 w-full border rounded-lg px-3 py-2">
+            
                   <option>Consolidated Route</option>
                   <option>Requested Delivery Date</option>
                   <option>Exclusive Delivery</option>
+            
                 </select>
+            
               </div>
-
-              <div class="col-span-4">
+            
+              <div>
+            
                 <label class="text-xs text-slate-400">
                   Requested Date
                 </label>
-
+            
                 <input
                   type="date"
                   class="mt-1 w-full border rounded-lg px-3 py-2"
                 />
+            
               </div>
-
-              <div class="col-span-4">
+            
+              <div>
+            
                 <label class="text-xs text-slate-400">
                   Sales Notes
                 </label>
-
+            
                 <input
                   class="mt-1 w-full border rounded-lg px-3 py-2"
-                  placeholder="Internal note"
+                  placeholder="Internal broker note"
                 />
+            
               </div>
-
+            
             </div>
-
-            <!-- ROUTE INFO -->
-            <div class="grid grid-cols-4 gap-3 mt-4 text-sm">
-
-              <div class="bg-slate-50 rounded-lg p-3">
-                <p class="text-xs text-slate-400">
-                  Pickup Zone
-                </p>
-
-                <p class="font-semibold text-slate-800">
-                  NY Area
-                </p>
-              </div>
-
-              <div class="bg-slate-50 rounded-lg p-3">
-                <p class="text-xs text-slate-400">
-                  Delivery Zone
-                </p>
-
-                <p class="font-semibold text-slate-800">
-                  CA South
-                </p>
-              </div>
-
-              <div class="bg-slate-50 rounded-lg p-3">
-                <p class="text-xs text-slate-400">
-                  Distance
-                </p>
-
-                <p class="font-semibold text-slate-800">
-                  2800 mi
-                </p>
-              </div>
-
-              <div class="bg-blue-50 rounded-lg p-3">
-                <p class="text-xs text-blue-600">
-                  Nearest Route
-                </p>
-
-                <p class="font-semibold text-blue-700">
-                  May 24
-                </p>
-              </div>
-
-            </div>
-
           </section>
 
           <!-- ITEMS -->
