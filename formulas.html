@@ -2,49 +2,40 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Zaberman | Formulas</title>
+  <title>Zaberman Broker Calculator MVP | Formulas</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-
 </head>
 
 <body class="bg-slate-100 text-slate-700">
 
-<div class="flex min-h-screen">
+<div class="min-h-screen flex">
 
-  <!-- SIDEBAR -->
-<div id="sidebar"></div>
+  <div id="sidebar"></div>
 
   <!-- MAIN -->
   <main class="ml-64 w-full">
 
     <!-- TOPBAR -->
-    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
 
       <div>
-
-        <p class="text-xs text-slate-400">
-          Zaberman › Broker Calculator
-        </p>
-
-        <h2 class="text-lg font-semibold text-slate-800">
-          Formula Reference
-        </h2>
-
+        <p class="text-xs text-slate-400">Zaberman › Broker Calculator</p>
+        <h2 class="text-lg font-semibold text-slate-800">Formula Reference</h2>
       </div>
 
       <div class="flex items-center gap-3">
 
-        <a
-          href="variables.html"
-          class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm"
-        >
+        <a href="variables.html" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
           Back to Variables
+        </a>
+
+        <a href="breakdown.html" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
+          Open Breakdown
         </a>
 
       </div>
@@ -52,663 +43,1337 @@
     </header>
 
     <!-- PAGE -->
-    <div class="p-6 max-w-6xl">
+    <div class="p-6">
 
-      <!-- INTRO -->
-      <section class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
+      <!-- PAGE HEADER -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
 
-        <h1 class="text-2xl font-bold text-slate-800">
-          Pricing Engine Formulas
-        </h1>
+        <div class="flex justify-between items-start gap-6">
 
-        <p class="text-sm text-slate-500 mt-3 leading-6">
+          <div>
 
-          Страница фиксирует бизнес-логику калькулятора Zaberman.
-          Используется как reference для бизнеса, аналитики и разработки.
+            <div class="flex items-center gap-3">
+              <h1 class="text-2xl font-bold text-slate-800">Pricing Engine Formulas</h1>
 
-        </p>
+              <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-semibold">
+                Formula v1.1
+              </span>
 
-        <div class="mt-5 text-sm text-slate-600 space-y-1">
+              <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">
+                Reference
+              </span>
+            </div>
 
-          <p>
-            • pricing formulas
-          </p>
+            <p class="text-sm text-slate-500 mt-2 max-w-5xl">
+              Справочник формул и переменных для pricing engine. Страница используется для согласования бизнес-логики,
+              разработки backend pricing engine, QA проверки и объяснения расчёта.
+            </p>
 
-          <p>
-            • operational logic
-          </p>
+          </div>
 
-          <p>
-            • crew calculations
-          </p>
-
-          <p>
-            • access fees
-          </p>
-
-          <p>
-            • interstate route logic
-          </p>
-
-          <p>
-            • eBOL execution logic
-          </p>
+          <div class="text-right text-sm text-slate-500 min-w-[220px]">
+            <p>Current demo estimate: <b class="text-slate-700">$1,130</b></p>
+            <p>Rounding rule: <b class="text-slate-700">UP to nearest $10</b></p>
+          </div>
 
         </div>
 
       </section>
 
-      <!-- CONTENTS -->
-      <section class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
+      <!-- INTRO -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
 
-        <h3 class="font-semibold text-slate-800 mb-4">
-          Sections
-        </h3>
+        <h3 class="font-bold text-slate-800 mb-3">Назначение страницы</h3>
 
-        <div class="grid grid-cols-2 gap-3 text-sm">
+        <div class="grid grid-cols-2 gap-6 text-sm text-slate-600 leading-6">
 
-          <a href="#core-pricing" class="text-blue-600 hover:underline">
-            Core Pricing
+          <div>
+            <p>
+              Formulas.html фиксирует целевую бизнес-логику расчёта.
+              Это не production pricing engine, а reference-документ внутри интерфейса MVP.
+            </p>
+
+            <p class="mt-2">
+              Формулы должны быть достаточно подробными, чтобы backend-разработка понимала состав каждого cost component.
+            </p>
+          </div>
+
+          <div>
+            <p>
+              Основной принцип: агрегированные значения не должны быть “чёрными ящиками”.
+              Если формула использует компонент вроде Route Expenses или Access Complexity, его состав должен быть раскрыт ниже.
+            </p>
+
+            <p class="mt-2">
+              Pricing logic в production должна быть реализована на backend, UI только отображает результат.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- NAVIGATION -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+
+        <h3 class="font-bold text-slate-800 mb-4">Разделы справочника</h3>
+
+        <div class="grid grid-cols-3 gap-3 text-sm">
+
+          <a href="#core-volume" class="px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-blue-700 font-semibold">
+            Core Volume & Item Logic
           </a>
 
-          <a href="#route-logic" class="text-blue-600 hover:underline">
-            Route & Vehicle Logic
+          <a href="#route-cost" class="px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-blue-700 font-semibold">
+            Route & Interstate Cost
           </a>
 
-          <a href="#service-charges" class="text-blue-600 hover:underline">
+          <a href="#access-labor" class="px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-blue-700 font-semibold">
+            Access & Labor Logic
+          </a>
+
+          <a href="#service-charges" class="px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-blue-700 font-semibold">
             Service Charges
           </a>
 
-          <a href="#crew-logic" class="text-blue-600 hover:underline">
-            Access & Crew Logic
+          <a href="#pricing-margin" class="px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-blue-700 font-semibold">
+            Pricing & Margin
           </a>
 
-          <a href="#ebol-logic" class="text-blue-600 hover:underline">
-            eBOL Logic
-          </a>
-
-          <a href="#business-notes" class="text-blue-600 hover:underline">
-            Business Notes
+          <a href="#snapshot-ebol" class="px-4 py-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-blue-700 font-semibold">
+            Snapshot & eBOL Logic
           </a>
 
         </div>
 
       </section>
 
-      <!-- CORE PRICING -->
-      <section
-        id="core-pricing"
-        class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-6"
-      >
+            <!-- CORE VOLUME & ITEM LOGIC -->
+      <section id="core-volume" class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
 
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
-
-          <h3 class="font-bold text-slate-800">
-            Core Pricing
-          </h3>
-
+        <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <h3 class="font-bold text-slate-800">Core Volume & Item Logic</h3>
           <p class="text-sm text-slate-500 mt-1">
-            Основные формулы расчёта quote.
+            Базовые формулы item-level логики, объёма, веса и stackability.
           </p>
-
         </div>
-                <div class="divide-y divide-slate-200">
 
-          <!-- FORMULA -->
-          <div class="p-6">
+        <div class="overflow-x-auto">
 
-            <h4 class="font-semibold text-slate-800">
-              Physical Volume
-            </h4>
+          <table class="w-full text-sm min-w-[1400px]">
 
-            <p class="text-sm text-slate-500 mt-1">
-              Расчёт физического объёма item.
-            </p>
+            <thead class="bg-slate-100 text-slate-600">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Physical Volume = (Length × Width × Height × Quantity) / 1728
-              </code>
-            </div>
+              <tr>
 
-          </div>
+                <th class="text-left px-4 py-3 font-semibold">Formula / Variable</th>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <th class="text-left px-4 py-3 font-semibold">Formula</th>
 
-            <h4 class="font-semibold text-slate-800">
-              Effective Volume
-            </h4>
+                <th class="text-left px-4 py-3 font-semibold">Description</th>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Operational volume с учётом stackability.
-            </p>
+                <th class="text-left px-4 py-3 font-semibold">Level</th>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Effective Volume = Physical Volume × Stackability Coefficient
-              </code>
-            </div>
+                <th class="text-left px-4 py-3 font-semibold">Used In</th>
 
-          </div>
+              </tr>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+            </thead>
 
-            <h4 class="font-semibold text-slate-800">
-              Total Effective Volume
-            </h4>
+            <tbody class="divide-y divide-slate-200">
 
-            <p class="text-sm text-slate-500 mt-1">
-              Общий operational volume заказа.
-            </p>
+              <tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Total Effective Volume = SUM(Item Effective Volume)
-              </code>
-            </div>
+                <td class="px-4 py-3 font-semibold text-slate-800">Physical Volume</td>
 
-          </div>
+                <td class="px-4 py-3 font-mono text-xs">
+                  (Length × Width × Height) / 1728
+                </td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3">
+                  Физический объём item в cubic feet.
+                </td>
 
-            <h4 class="font-semibold text-slate-800">
-              Total Weight
-            </h4>
+                <td class="px-4 py-3">Item</td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Общий вес заказа.
-            </p>
+                <td class="px-4 py-3">Effective Volume, Vehicle Fit</td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Total Weight = SUM(Item Weight × Item Quantity)
-              </code>
-            </div>
+              </tr>
 
-          </div>
+              <tr>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3 font-semibold text-slate-800">Item Total Volume</td>
 
-            <h4 class="font-semibold text-slate-800">
-              Operational Cost
-            </h4>
+                <td class="px-4 py-3 font-mono text-xs">
+                  Physical Volume × Quantity
+                </td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Основной operational cost interstate move.
-            </p>
+                <td class="px-4 py-3">
+                  Общий физический объём item с учётом количества.
+                </td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Operational Cost = Pickup Cost + Interstate Cost + Delivery Cost
-              </code>
-            </div>
+                <td class="px-4 py-3">Item</td>
 
-          </div>
+                <td class="px-4 py-3">Total Shipment Volume</td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+              </tr>
 
-            <h4 class="font-semibold text-slate-800">
-              Additional Charges
-            </h4>
+              <tr>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Дополнительные услуги и fees.
-            </p>
+                <td class="px-4 py-3 font-semibold text-slate-800">Total Shipment Volume</td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Additional Charges = Packaging + Crating + Storage + Insurance + Access Fees + COI + Helpers
-              </code>
-            </div>
+                <td class="px-4 py-3 font-mono text-xs">
+                  SUM(All Item Volumes)
+                </td>
 
-          </div>
+                <td class="px-4 py-3">
+                  Суммарный физический объём shipment.
+                </td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3">Order</td>
 
-            <h4 class="font-semibold text-slate-800">
-              Margin
-            </h4>
+                <td class="px-4 py-3">Vehicle Fit, Pricing</td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Расчёт profitability.
-            </p>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Margin = (Operational Cost + Additional Charges - Discounts) × Margin Rate
-              </code>
-            </div>
+              <tr>
 
-          </div>
+                <td class="px-4 py-3 font-semibold text-slate-800">Effective Volume</td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3 font-mono text-xs">
+                  Physical Volume × Stackability Coefficient
+                </td>
 
-            <h4 class="font-semibold text-slate-800">
-              Final Price
-            </h4>
+                <td class="px-4 py-3">
+                  Эффективный operational volume с учётом stackability и handling complexity.
+                </td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Финальная customer-facing цена.
-            </p>
+                <td class="px-4 py-3">Item</td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Final Price = CEILING(MAX(Raw Final Price, Minimum Quote), Rounding Rule)
-              </code>
-            </div>
+                <td class="px-4 py-3">Vehicle Fit, Operational Cost</td>
 
-          </div>
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Total Effective Volume</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  SUM(All Effective Volumes)
+                </td>
+
+                <td class="px-4 py-3">
+                  Общий effective volume всего shipment.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Vehicle Fit, Crew Logic</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Total Weight</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  SUM(Item Weight × Quantity)
+                </td>
+
+                <td class="px-4 py-3">
+                  Общий вес shipment.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Crew Logic, Vehicle Fit</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Stackability Coefficient</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Base Coefficient + Fragile Impact + Non-Stackable Impact
+                </td>
+
+                <td class="px-4 py-3">
+                  Коэффициент, влияющий на effective volume.
+                </td>
+
+                <td class="px-4 py-3">Item</td>
+
+                <td class="px-4 py-3">Effective Volume</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Fragile Flag</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Fragile = TRUE/FALSE
+                </td>
+
+                <td class="px-4 py-3">
+                  Увеличивает handling complexity и effective volume.
+                </td>
+
+                <td class="px-4 py-3">Item</td>
+
+                <td class="px-4 py-3">Effective Volume, Labor</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Heavy Item Flag</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Item Weight > Heavy Threshold
+                </td>
+
+                <td class="px-4 py-3">
+                  Активирует helper logic и дополнительную labor complexity.
+                </td>
+
+                <td class="px-4 py-3">Item</td>
+
+                <td class="px-4 py-3">Crew Logic</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Oversized Item Flag</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Dimensions > Oversized Threshold
+                </td>
+
+                <td class="px-4 py-3">
+                  Влияет на vehicle fit и operational restrictions.
+                </td>
+
+                <td class="px-4 py-3">Item</td>
+
+                <td class="px-4 py-3">Vehicle Logic</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Declared Value</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  SUM(Item Declared Values)
+                </td>
+
+                <td class="px-4 py-3">
+                  Используется для insurance logic и high value handling.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Insurance Fee</td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
       </section>
+            <!-- ROUTE & INTERSTATE COST -->
+      <section id="route-cost" class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
 
-      <!-- ROUTE & VEHICLE -->
-      <section
-        id="route-logic"
-        class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-6"
-      >
-
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
-
-          <h3 class="font-bold text-slate-800">
-            Route & Vehicle Logic
-          </h3>
-
+        <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <h3 class="font-bold text-slate-800">Route & Interstate Cost</h3>
           <p class="text-sm text-slate-500 mt-1">
-            Interstate route calculations и vehicle selection.
+            Формулы interstate логики, mileage, топлива, vehicle fit и route expenses.
           </p>
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full text-sm min-w-[1400px]">
+
+            <thead class="bg-slate-100 text-slate-600">
+
+              <tr>
+
+                <th class="text-left px-4 py-3 font-semibold">Formula / Variable</th>
+
+                <th class="text-left px-4 py-3 font-semibold">Formula</th>
+
+                <th class="text-left px-4 py-3 font-semibold">Description</th>
+
+                <th class="text-left px-4 py-3 font-semibold">Level</th>
+
+                <th class="text-left px-4 py-3 font-semibold">Used In</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody class="divide-y divide-slate-200">
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Route Miles</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Maps API Distance OR Internal Route Matrix
+                </td>
+
+                <td class="px-4 py-3">
+                  Interstate mileage между Pickup ZIP и Delivery ZIP.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Mileage Cost, Fuel Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Internal Fuel Price</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Current Fuel Rate × Internal Fuel Multiplier
+                </td>
+
+                <td class="px-4 py-3">
+                  Внутренняя стоимость топлива для pricing engine.
+                </td>
+
+                <td class="px-4 py-3">Pricing</td>
+
+                <td class="px-4 py-3">Fuel Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Fuel Cost</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Route Miles × Fuel Consumption × Internal Fuel Price
+                </td>
+
+                <td class="px-4 py-3">
+                  Interstate fuel expenses.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Interstate Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Mileage Cost</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Route Miles × Vehicle Cost Per Mile
+                </td>
+
+                <td class="px-4 py-3">
+                  Стоимость mileage без labor и fuel.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Interstate Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Driver Hours</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  (Route Miles / Average Speed) + Buffer Time
+                </td>
+
+                <td class="px-4 py-3">
+                  Предполагаемое driver operational time.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Driver Labor</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Driver Labor</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Driver Hours × Driver Hourly Rate
+                </td>
+
+                <td class="px-4 py-3">
+                  Labor cost interstate stage.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Interstate Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Tolls</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Route Toll Estimation
+                </td>
+
+                <td class="px-4 py-3">
+                  Toll roads, bridges и tunnel expenses.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Route Expenses</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Parking</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Pickup Parking + Delivery Parking
+                </td>
+
+                <td class="px-4 py-3">
+                  Parking expenses во время pickup/delivery.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Route Expenses</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Route Expenses</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Tolls + Parking + Overnight + Permit Fees + Ferry Fees
+                </td>
+
+                <td class="px-4 py-3">
+                  Дополнительные interstate route expenses.
+                </td>
+
+                <td class="px-4 py-3">Route</td>
+
+                <td class="px-4 py-3">Interstate Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Interstate Cost</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Fuel Cost + Mileage Cost + Driver Labor + Route Expenses
+                </td>
+
+                <td class="px-4 py-3">
+                  Основная interstate часть operational cost.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Operational Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Customer Route Share</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Customer Volume / Vehicle Capacity
+                </td>
+
+                <td class="px-4 py-3">
+                  Доля маршрута, занимаемая shipment.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Shared Route Pricing</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Vehicle Fit</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Effective Volume + Total Weight + Route Constraints
+                </td>
+
+                <td class="px-4 py-3">
+                  Логика выбора vehicle type pricing engine.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Vehicle Selection</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Vehicle Count</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  CEILING(Total Effective Volume / Vehicle Capacity)
+                </td>
+
+                <td class="px-4 py-3">
+                  Количество необходимых vehicles.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Operational Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Dedicated Route Flag</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Exclusive Delivery = TRUE/FALSE
+                </td>
+
+                <td class="px-4 py-3">
+                  Определяет dedicated interstate route.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Dedicated Pricing</td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
-        <div class="divide-y divide-slate-200">
+      </section>
+            <!-- ACCESS & LABOR LOGIC -->
+      <section id="access-labor" class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
 
-          <!-- FORMULA -->
-          <div class="p-6">
+        <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <h3 class="font-bold text-slate-800">Access & Labor Logic</h3>
+          <p class="text-sm text-slate-500 mt-1">
+            Формулы labor cost, access complexity, helper logic и address handling.
+          </p>
+        </div>
 
-            <h4 class="font-semibold text-slate-800">
-              Internal Fuel Price
-            </h4>
+        <div class="overflow-x-auto">
 
-            <p class="text-sm text-slate-500 mt-1">
-              Внутренняя цена топлива.
-            </p>
+          <table class="w-full text-sm min-w-[1400px]">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Internal Fuel Price = Current Avg × (1 + Fuel Surcharge % / 100)
-              </code>
-            </div>
+            <thead class="bg-slate-100 text-slate-600">
 
-          </div>
+              <tr>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <th class="text-left px-4 py-3 font-semibold">Formula / Variable</th>
 
-            <h4 class="font-semibold text-slate-800">
-              Fuel Cost
-            </h4>
+                <th class="text-left px-4 py-3 font-semibold">Formula</th>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Стоимость топлива interstate route.
-            </p>
+                <th class="text-left px-4 py-3 font-semibold">Description</th>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Fuel Cost = (Route Miles / Vehicle MPG) × Internal Fuel Price
-              </code>
-            </div>
+                <th class="text-left px-4 py-3 font-semibold">Level</th>
 
-          </div>
+                <th class="text-left px-4 py-3 font-semibold">Used In</th>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+              </tr>
 
-            <h4 class="font-semibold text-slate-800">
-              Interstate Cost
-            </h4>
+            </thead>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Полная interstate transportation cost.
-            </p>
+            <tbody class="divide-y divide-slate-200">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Interstate Cost = Fuel Cost + Mileage Cost + Driver Labor + Tolls + Parking + Route Expenses
-              </code>
-            </div>
+              <tr>
 
-          </div>
+                <td class="px-4 py-3 font-semibold text-slate-800">Pickup Cost</td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3 font-mono text-xs">
+                  Pickup Labor + Pickup Access Fees + Pickup Local Expenses
+                </td>
 
-            <h4 class="font-semibold text-slate-800">
-              Vehicle Selection
-            </h4>
+                <td class="px-4 py-3">
+                  Общая стоимость pickup stage.
+                </td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Автоматический подбор машины.
-            </p>
+                <td class="px-4 py-3">Pickup</td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Vehicle Selected = First Active Vehicle Where Capacity ≥ Total Effective Volume AND Max Weight ≥ Total Weight
-              </code>
-            </div>
+                <td class="px-4 py-3">Operational Cost</td>
 
-          </div>
+              </tr>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+              <tr>
 
-            <h4 class="font-semibold text-slate-800">
-              Vehicle Fit
-            </h4>
+                <td class="px-4 py-3 font-semibold text-slate-800">Delivery Cost</td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Проверка возможности загрузки.
-            </p>
+                <td class="px-4 py-3 font-mono text-xs">
+                  Delivery Labor + Delivery Access Fees + Delivery Local Expenses
+                </td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Vehicle Fit = Volume Fit AND Weight Fit AND Length Fit AND Stackability Fit
-              </code>
-            </div>
+                <td class="px-4 py-3">
+                  Общая стоимость delivery stage.
+                </td>
 
-          </div>
+                <td class="px-4 py-3">Delivery</td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3">Operational Cost</td>
 
-            <h4 class="font-semibold text-slate-800">
-              Vehicle Count
-            </h4>
+              </tr>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Required vehicles count.
-            </p>
+              <tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Vehicle Count = CEILING(Total Effective Volume / Vehicle Capacity)
-              </code>
-            </div>
+                <td class="px-4 py-3 font-semibold text-slate-800">Access Complexity</td>
 
-          </div>
+                <td class="px-4 py-3 font-mono text-xs">
+                  Address Multiplier + Stairs + Long Carry + Narrow Access
+                </td>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3">
+                  Общий коэффициент сложности доступа.
+                </td>
 
-            <h4 class="font-semibold text-slate-800">
-              Consolidated Route Share
-            </h4>
+                <td class="px-4 py-3">Access</td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Доля клиента в route cost.
-            </p>
+                <td class="px-4 py-3">Labor, Access Fees</td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Customer Route Share = Customer Effective Volume / Total Route Effective Volume
-              </code>
-            </div>
+              </tr>
 
-          </div>
+              <tr>
 
-          <!-- FORMULA -->
-          <div class="p-6">
+                <td class="px-4 py-3 font-semibold text-slate-800">Address Type Multiplier</td>
 
-            <h4 class="font-semibold text-slate-800">
-              Nearest Route
-            </h4>
+                <td class="px-4 py-3 font-mono text-xs">
+                  Based on Address Type
+                </td>
 
-            <p class="text-sm text-slate-500 mt-1">
-              Ближайший route с доступной capacity.
-            </p>
+                <td class="px-4 py-3">
+                  Коэффициент сложности адреса.
+                </td>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Nearest Route = MIN(Route Departure Date) WHERE Available Capacity ≥ Required Capacity
-              </code>
-            </div>
+                <td class="px-4 py-3">Access</td>
 
-          </div>
+                <td class="px-4 py-3">Access Complexity</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Address Types</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  House / Apartment / Warehouse / Office / Storage
+                </td>
+
+                <td class="px-4 py-3">
+                  Категории operational address types.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Operational Logic</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Floor Impact</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Floor Count × Stair Coefficient
+                </td>
+
+                <td class="px-4 py-3">
+                  Дополнительная labor complexity по этажам.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Labor Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Elevator Impact</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Elevator Available = TRUE/FALSE
+                </td>
+
+                <td class="px-4 py-3">
+                  Уменьшает stairs complexity.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Access Complexity</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Long Carry Fee</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Long Carry Distance × Carry Rate
+                </td>
+
+                <td class="px-4 py-3">
+                  Дополнительная стоимость длинного переноса.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Access Fees</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Narrow Access Impact</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Narrow Access = TRUE/FALSE
+                </td>
+
+                <td class="px-4 py-3">
+                  Увеличивает handling complexity.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Labor Logic</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">COI Fee</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Pickup COI Fee + Delivery COI Fee
+                </td>
+
+                <td class="px-4 py-3">
+                  Certificate of Insurance processing fee.
+                </td>
+
+                <td class="px-4 py-3">Access</td>
+
+                <td class="px-4 py-3">Additional Charges</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Required Crew</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Weight + Effective Volume + Access Complexity
+                </td>
+
+                <td class="px-4 py-3">
+                  Required operational crew size.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Labor Logic</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Extra Helper Cost</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Helper Count × Hourly Rate × MAX(Hours, 2)
+                </td>
+
+                <td class="px-4 py-3">
+                  Additional helper labor с minimum 2 billable hours.
+                </td>
+
+                <td class="px-4 py-3">Labor</td>
+
+                <td class="px-4 py-3">Operational Cost</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Loading Time</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Item Count × Average Load Time
+                </td>
+
+                <td class="px-4 py-3">
+                  Предполагаемое время loading stage.
+                </td>
+
+                <td class="px-4 py-3">Pickup</td>
+
+                <td class="px-4 py-3">Driver Hours</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Unloading Time</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Item Count × Average Unload Time
+                </td>
+
+                <td class="px-4 py-3">
+                  Предполагаемое время unloading stage.
+                </td>
+
+                <td class="px-4 py-3">Delivery</td>
+
+                <td class="px-4 py-3">Driver Hours</td>
+
+              </tr>
+
+              <tr>
+
+                <td class="px-4 py-3 font-semibold text-slate-800">Operational Labor Cost</td>
+
+                <td class="px-4 py-3 font-mono text-xs">
+                  Driver Labor + Crew Labor + Helper Cost
+                </td>
+
+                <td class="px-4 py-3">
+                  Общая labor часть operational pricing.
+                </td>
+
+                <td class="px-4 py-3">Order</td>
+
+                <td class="px-4 py-3">Operational Cost</td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
       </section>
             <!-- SERVICE CHARGES -->
-      <section id="service-charges" class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-6">
+      <section id="service-charges" class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
 
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
-          <h3 class="font-bold text-slate-800">
-            Service Charges
-          </h3>
-
+        <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <h3 class="font-bold text-slate-800">Service Charges</h3>
           <p class="text-sm text-slate-500 mt-1">
-            Дополнительные услуги и item-level charges.
+            Формулы дополнительных услуг, которые считаются отдельно от base operational cost.
           </p>
         </div>
 
-        <div class="divide-y divide-slate-200">
+        <div class="overflow-x-auto">
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Packaging Cost</h4>
-            <p class="text-sm text-slate-500 mt-1">Упаковка считается на уровне item.</p>
+          <table class="w-full text-sm min-w-[1400px]">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Packaging Cost = SUM((Packaging Base Price × Item Qty) + (Packaging Price / cu ft × Item Effective Volume))
-              </code>
-            </div>
-          </div>
+            <thead class="bg-slate-100 text-slate-600">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold">Formula / Variable</th>
+                <th class="text-left px-4 py-3 font-semibold">Formula</th>
+                <th class="text-left px-4 py-3 font-semibold">Description</th>
+                <th class="text-left px-4 py-3 font-semibold">Level</th>
+                <th class="text-left px-4 py-3 font-semibold">Used In</th>
+              </tr>
+            </thead>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Crate Cost</h4>
-            <p class="text-sm text-slate-500 mt-1">Стоимость крейта для item.</p>
+            <tbody class="divide-y divide-slate-200">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Crate Cost = Base Crate Price + (Crate Price / cu ft × Item Effective Volume)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Packaging Cost</td>
+                <td class="px-4 py-3 font-mono text-xs">SUM(Item Packaging Base + Item Effective Volume × Packaging Rate)</td>
+                <td class="px-4 py-3">Packaging считается на уровне item, а не фиксированной ставкой на весь order.</td>
+                <td class="px-4 py-3">Item</td>
+                <td class="px-4 py-3">Additional Charges</td>
+              </tr>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Storage Cost</h4>
-            <p class="text-sm text-slate-500 mt-1">Хранение может применяться к отдельным items.</p>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Packaging Base</td>
+                <td class="px-4 py-3 font-mono text-xs">Packaging Type Base Price × Quantity</td>
+                <td class="px-4 py-3">Базовая стоимость выбранного типа упаковки.</td>
+                <td class="px-4 py-3">Item</td>
+                <td class="px-4 py-3">Packaging Cost</td>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Storage Cost = SUM(Item Effective Volume × Storage Days × Storage Rate Per cu ft Per Day)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Crate Cost</td>
+                <td class="px-4 py-3 font-mono text-xs">Crate Base Price + Item Effective Volume × Crate Rate</td>
+                <td class="px-4 py-3">Стоимость custom crate для item.</td>
+                <td class="px-4 py-3">Item</td>
+                <td class="px-4 py-3">Additional Charges</td>
+              </tr>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Insurance Fee</h4>
-            <p class="text-sm text-slate-500 mt-1">Страхование может применяться к отдельному item.</p>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Storage Cost</td>
+                <td class="px-4 py-3 font-mono text-xs">Item Effective Volume × Storage Days × Storage Rate</td>
+                <td class="px-4 py-3">Storage считается item-level, чтобы один item мог храниться отдельно от остальных.</td>
+                <td class="px-4 py-3">Item</td>
+                <td class="px-4 py-3">Additional Charges</td>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Insurance Fee = MAX(Minimum Insurance Fee, Declared Value × Insurance Rate)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Insurance Fee</td>
+                <td class="px-4 py-3 font-mono text-xs">IF(Full Coverage, Declared Value × Insurance Rate, 0)</td>
+                <td class="px-4 py-3">Basic liability включена по умолчанию. Дополнительная charge появляется только для Full Coverage.</td>
+                <td class="px-4 py-3">Item / Order</td>
+                <td class="px-4 py-3">Additional Charges</td>
+              </tr>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">COI Fee</h4>
-            <p class="text-sm text-slate-500 mt-1">COI может требоваться на pickup или delivery.</p>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Exclusive Delivery Fee</td>
+                <td class="px-4 py-3 font-mono text-xs">IF(Exclusive Delivery, Dedicated Route Cost Adjustment, 0)</td>
+                <td class="px-4 py-3">Доплата за dedicated route вместо consolidated route.</td>
+                <td class="px-4 py-3">Order</td>
+                <td class="px-4 py-3">Additional Charges</td>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                COI Fee = IF(Pickup COI Required, Pickup COI Fee, 0) + IF(Delivery COI Required, Delivery COI Fee, 0)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Zone Fee</td>
+                <td class="px-4 py-3 font-mono text-xs">Pickup Zone Fee + Delivery Zone Fee</td>
+                <td class="px-4 py-3">Доплата по zone logic, если pickup/delivery попадают в специальные зоны.</td>
+                <td class="px-4 py-3">Route</td>
+                <td class="px-4 py-3">Additional Charges</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Additional Charges</td>
+                <td class="px-4 py-3 font-mono text-xs">Packaging + Crating + Storage + Insurance + COI + Access Fees + Zone Fees + Exclusive Delivery</td>
+                <td class="px-4 py-3">Сумма дополнительных charges, не дублирующих operational stage cost.</td>
+                <td class="px-4 py-3">Order</td>
+                <td class="px-4 py-3">Raw Final Price</td>
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
       </section>
 
-      <!-- ACCESS & CREW -->
-      <section id="crew-logic" class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-6">
+      <!-- PRICING & MARGIN -->
+      <section id="pricing-margin" class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
 
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
-          <h3 class="font-bold text-slate-800">
-            Access & Crew Logic
-          </h3>
-
+        <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <h3 class="font-bold text-slate-800">Pricing & Margin</h3>
           <p class="text-sm text-slate-500 mt-1">
-            Условия доступа, тип адреса и дополнительная рабочая сила.
+            Финальные формулы pricing, margin, discounts, rounding и final estimate.
           </p>
         </div>
 
-        <div class="divide-y divide-slate-200">
+        <div class="overflow-x-auto">
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Access Fees</h4>
-            <p class="text-sm text-slate-500 mt-1">Общие fees по pickup и delivery access.</p>
+          <table class="w-full text-sm min-w-[1400px]">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Access Fees = Pickup Access Fees + Delivery Access Fees
-              </code>
-            </div>
-          </div>
+            <thead class="bg-slate-100 text-slate-600">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold">Formula / Variable</th>
+                <th class="text-left px-4 py-3 font-semibold">Formula</th>
+                <th class="text-left px-4 py-3 font-semibold">Description</th>
+                <th class="text-left px-4 py-3 font-semibold">Level</th>
+                <th class="text-left px-4 py-3 font-semibold">Used In</th>
+              </tr>
+            </thead>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Long Carry Fee</h4>
-            <p class="text-sm text-slate-500 mt-1">Доплата за длинный перенос.</p>
+            <tbody class="divide-y divide-slate-200">
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Long Carry Fee = IF(Long Carry Distance > Long Carry Threshold, Long Carry Fee Variable, 0)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Operational Cost</td>
+                <td class="px-4 py-3 font-mono text-xs">Pickup Cost + Interstate Cost + Delivery Cost</td>
+                <td class="px-4 py-3">Базовая operational стоимость выполнения перевозки.</td>
+                <td class="px-4 py-3">Order</td>
+                <td class="px-4 py-3">Raw Final Price</td>
+              </tr>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Address Type Multiplier</h4>
-            <p class="text-sm text-slate-500 mt-1">Тип адреса влияет на сложность и скорость работы.</p>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Cost Before Margin</td>
+                <td class="px-4 py-3 font-mono text-xs">Operational Cost + Additional Charges</td>
+                <td class="px-4 py-3">Полная себестоимость перед margin и discount.</td>
+                <td class="px-4 py-3">Order</td>
+                <td class="px-4 py-3">Margin</td>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Labor Cost = Base Labor Cost × Address Type Multiplier
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Margin</td>
+                <td class="px-4 py-3 font-mono text-xs">Cost Before Margin × Margin Rate</td>
+                <td class="px-4 py-3">Коммерческая маржа, применяемая к cost base.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Raw Final Price</td>
+              </tr>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Required Crew</h4>
-            <p class="text-sm text-slate-500 mt-1">Команда считается от груза и условий доступа, а не от машины.</p>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Manual Discount</td>
+                <td class="px-4 py-3 font-mono text-xs">Approved Discount Amount</td>
+                <td class="px-4 py-3">Ручная скидка должна быть auditable и не должна ломать profitability floor.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Raw Final Price</td>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Required Crew = MAX(Included Crew Size, Heavy Item Crew Requirement, Access Crew Requirement)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Raw Final Price</td>
+                <td class="px-4 py-3 font-mono text-xs">Operational Cost + Additional Charges + Margin - Discounts</td>
+                <td class="px-4 py-3">Цена до округления.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Rounded Final Price</td>
+              </tr>
 
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Extra Helper Cost</h4>
-            <p class="text-sm text-slate-500 mt-1">Дополнительный helper оплачивается минимум за 2 часа.</p>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Rounded Final Price</td>
+                <td class="px-4 py-3 font-mono text-xs">CEILING(Raw Final Price, 10)</td>
+                <td class="px-4 py-3">Финальная customer-facing цена, округлённая вверх до ближайших $10.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Estimate</td>
+              </tr>
 
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Extra Helper Cost = Extra Helper Count × Extra Helper Hourly Rate × MAX(Actual Helper Hours, Minimum Helper Hours)
-              </code>
-            </div>
-          </div>
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Rounding Delta</td>
+                <td class="px-4 py-3 font-mono text-xs">Rounded Final Price - Raw Final Price</td>
+                <td class="px-4 py-3">Разница между raw price и округлённой ценой.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Breakdown</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Minimum Quote Rule</td>
+                <td class="px-4 py-3 font-mono text-xs">MAX(Rounded Final Price, Minimum Quote)</td>
+                <td class="px-4 py-3">Минимальная цена, ниже которой estimate не должен уходить.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Final Estimate</td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+            <!-- SNAPSHOT & EBOL LOGIC -->
+      <section id="snapshot-ebol" class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+
+        <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+          <h3 class="font-bold text-slate-800">Snapshot & eBOL Logic</h3>
+          <p class="text-sm text-slate-500 mt-1">
+            Формулы и правила snapshot integrity, estimate lifecycle и operational verification.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full text-sm min-w-[1400px]">
+
+            <thead class="bg-slate-100 text-slate-600">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold">Formula / Variable</th>
+                <th class="text-left px-4 py-3 font-semibold">Formula</th>
+                <th class="text-left px-4 py-3 font-semibold">Description</th>
+                <th class="text-left px-4 py-3 font-semibold">Level</th>
+                <th class="text-left px-4 py-3 font-semibold">Used In</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-200">
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Pricing Snapshot</td>
+                <td class="px-4 py-3 font-mono text-xs">Customer Snapshot + Route Snapshot + Items Snapshot + Variables Snapshot + Formula Version</td>
+                <td class="px-4 py-3">Immutable snapshot estimate в момент generate estimate.</td>
+                <td class="px-4 py-3">Estimate</td>
+                <td class="px-4 py-3">Lifecycle / Audit</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Formula Version</td>
+                <td class="px-4 py-3 font-mono text-xs">Formula Version ID + Activated Timestamp</td>
+                <td class="px-4 py-3">Версия formulas, использованная при расчёте estimate.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Snapshot Integrity</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Variables Snapshot</td>
+                <td class="px-4 py-3 font-mono text-xs">Fuel Variables + Margin Variables + Access Variables + Packaging Variables</td>
+                <td class="px-4 py-3">Фиксация pricing variables для reproducible estimates.</td>
+                <td class="px-4 py-3">Pricing</td>
+                <td class="px-4 py-3">Estimate History</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Estimate Version</td>
+                <td class="px-4 py-3 font-mono text-xs">EST-ID + Revision Number</td>
+                <td class="px-4 py-3">Versioning estimate revisions.</td>
+                <td class="px-4 py-3">Estimate</td>
+                <td class="px-4 py-3">Lifecycle</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">eBOL Item Count</td>
+                <td class="px-4 py-3 font-mono text-xs">COUNT(Verified Items)</td>
+                <td class="px-4 py-3">Количество items, подтверждённых внутри eBOL workflow.</td>
+                <td class="px-4 py-3">eBOL</td>
+                <td class="px-4 py-3">Operational Workflow</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Pickup Completion %</td>
+                <td class="px-4 py-3 font-mono text-xs">(Loaded Items / Total Items) × 100</td>
+                <td class="px-4 py-3">Процент завершения pickup workflow.</td>
+                <td class="px-4 py-3">eBOL</td>
+                <td class="px-4 py-3">Operational Tracking</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Delivery Completion %</td>
+                <td class="px-4 py-3 font-mono text-xs">(Delivered Items / Total Items) × 100</td>
+                <td class="px-4 py-3">Процент завершения delivery workflow.</td>
+                <td class="px-4 py-3">eBOL</td>
+                <td class="px-4 py-3">Operational Tracking</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Exception Flag</td>
+                <td class="px-4 py-3 font-mono text-xs">IF(Damage OR Missing OR Refused, TRUE, FALSE)</td>
+                <td class="px-4 py-3">Флаг operational exception внутри eBOL.</td>
+                <td class="px-4 py-3">eBOL</td>
+                <td class="px-4 py-3">Exceptions Workflow</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">POD Completion Rule</td>
+                <td class="px-4 py-3 font-mono text-xs">All Items Delivered + Required Photos + Signature Collected</td>
+                <td class="px-4 py-3">Правило завершения Proof of Delivery workflow.</td>
+                <td class="px-4 py-3">eBOL</td>
+                <td class="px-4 py-3">POD Generation</td>
+              </tr>
+
+              <tr>
+                <td class="px-4 py-3 font-semibold text-slate-800">Estimate Expiration</td>
+                <td class="px-4 py-3 font-mono text-xs">Estimate Created Date + Expiration Period</td>
+                <td class="px-4 py-3">Дата окончания актуальности estimate.</td>
+                <td class="px-4 py-3">Estimate</td>
+                <td class="px-4 py-3">Commercial Workflow</td>
+              </tr>
+
+            </tbody>
+
+          </table>
 
         </div>
 
       </section>
 
-      <!-- EBOL -->
-      <section id="ebol-logic" class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-6">
+      <!-- BA NOTES -->
+      <section class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
 
-        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
-          <h3 class="font-bold text-slate-800">
-            eBOL Logic
-          </h3>
+        <button
+          onclick="toggleBANotes()"
+          class="w-full flex items-center justify-between px-5 py-4 bg-slate-50 hover:bg-slate-100 transition"
+        >
 
-          <p class="text-sm text-slate-500 mt-1">
-            Контроль items, фото, pickup / delivery статусов.
-          </p>
+          <div class="flex items-center gap-3">
+            <i data-lucide="file-text" class="w-5 h-5 text-slate-600"></i>
+
+            <div class="text-left">
+              <p class="font-semibold text-slate-800">BA Notes</p>
+              <p class="text-xs text-slate-500">
+                Архитектурные правила formulas и pricing engine
+              </p>
+            </div>
+          </div>
+
+          <i id="baIcon" data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
+
+        </button>
+
+        <div id="baNotes" class="hidden border-t border-slate-200 px-5 py-5 text-sm text-slate-600 leading-7">
+
+          <div class="space-y-4">
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">1. Главный принцип</h4>
+
+              <p>
+                Formulas.html является reference documentation.
+                Production pricing logic должна находиться в centralized backend pricing engine.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">2. UI Ownership</h4>
+
+              <p>
+                Frontend не должен хранить hidden pricing logic.
+                UI отображает result pricing engine и lifecycle snapshots.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">3. Snapshot Integrity</h4>
+
+              <p>
+                Historical estimates не должны пересчитываться после изменения variables или formulas.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">4. Layer Separation</h4>
+
+              <p>
+                Calculator отвечает за pricing.
+                Orders и eBOL отвечают за operational execution.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">5. Explainable Pricing</h4>
+
+              <p>
+                Каждый aggregated pricing component должен иметь раскрытый breakdown.
+                В системе не должно быть “чёрных ящиков”.
+              </p>
+            </div>
+
+          </div>
+
         </div>
-
-        <div class="divide-y divide-slate-200">
-
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">eBOL Item Count</h4>
-            <p class="text-sm text-slate-500 mt-1">Количество items в электронном BOL.</p>
-
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                eBOL Item Count = COUNT(Order Items)
-              </code>
-            </div>
-          </div>
-
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Pickup Completion %</h4>
-            <p class="text-sm text-slate-500 mt-1">Доля items, отмеченных как picked up.</p>
-
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Pickup Completion % = Picked Up Items / Total Items
-              </code>
-            </div>
-          </div>
-
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Delivery Completion %</h4>
-            <p class="text-sm text-slate-500 mt-1">Доля items, отмеченных как delivered.</p>
-
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Delivery Completion % = Delivered Items / Total Items
-              </code>
-            </div>
-          </div>
-
-          <div class="p-6">
-            <h4 class="font-semibold text-slate-800">Exception Flag</h4>
-            <p class="text-sm text-slate-500 mt-1">Флаг проблемы по item или заказу.</p>
-
-            <div class="mt-3 bg-slate-100 rounded-lg p-4 overflow-x-auto">
-              <code class="text-sm text-slate-800">
-                Exception Flag = IF(Damaged Item OR Missing Item OR Not Delivered Item, TRUE, FALSE)
-              </code>
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- BUSINESS NOTES -->
-      <section id="business-notes" class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
-
-        <h3 class="font-bold text-slate-800">
-          Business Notes
-        </h3>
-
-        <ul class="list-disc ml-5 mt-4 space-y-2 text-sm text-slate-600">
-          <li>Формулы фиксируют бизнес-логику, но не заменяют техническое ТЗ для backend.</li>
-          <li>Все variables должны храниться с версией и snapshot внутри estimate.</li>
-          <li>Quick Quote использует упрощённый расчёт и возвращает диапазон, Full Quote возвращает финальную цену.</li>
-          <li>eBOL должен строиться из item-level списка с фото, комментариями и статусами pickup / delivery.</li>
-        </ul>
 
       </section>
 
@@ -719,8 +1384,30 @@
 </div>
 
 <script>
+
+  function toggleBANotes() {
+
+    const notes = document.getElementById('baNotes');
+    const icon = document.getElementById('baIcon');
+
+    notes.classList.toggle('hidden');
+
+    icon.setAttribute(
+      'data-lucide',
+      notes.classList.contains('hidden')
+        ? 'chevron-down'
+        : 'chevron-up'
+    );
+
+    lucide.createIcons();
+
+  }
+
   lucide.createIcons();
+
 </script>
+
 <script src="sidebar.js"></script>
+
 </body>
 </html>
