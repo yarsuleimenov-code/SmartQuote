@@ -1,764 +1,814 @@
 # Zaberman Broker Calculator MVP — Pricing Test Cases
 
-## 1. Purpose
+# 1. Назначение документа
 
-Документ фиксирует expected pricing behavior системы.
+Документ фиксирует:
+- expected pricing behavior;
+- тестовые сценарии pricing engine;
+- expected calculation outcomes;
+- edge pricing logic;
+- validation rules.
 
-Цель:
-- валидировать pricing engine;
-- зафиксировать expected outputs;
-- исключить неоднозначность formulas;
-- подготовить QA scenarios;
-- согласовать pricing logic между BA, CEO и development.
+Документ используется для:
+- QA;
+- backend validation;
+- pricing regression testing;
+- business validation;
+- formula verification.
 
 ---
 
-# 2. Core Validation Principle
+# 2. Основные принципы тестирования
 
-Каждый test case должен содержать:
+Pricing test cases должны проверять:
 
 ```text
+Calculation Consistency
+Explainable Pricing
+Expected Workflow Behavior
+Stable Rounding
+Snapshot Integrity
+Operational Logic
+```
+
+---
+
+# 3. Общая структура test case
+
+Каждый test case включает:
+
+```text
+Scenario
 Input
-↓
-Calculation Logic
-↓
-Expected Breakdown
-↓
-Expected Final Price
+Expected Behavior
+Expected Result
+Notes
 ```
 
 ---
 
-# 3. Pricing Structure Rules
+# 4. Test Case — Standard Order
 
-## Operational Cost Includes
+## Scenario
+
+Обычный interstate order без operational complexity.
+
+---
+
+## Input
 
 ```text
-Pickup Cost
-Interstate Cost
-Delivery Cost
+Pickup ZIP: 11211
+Delivery ZIP: 90021
+
+Items:
+1 Sofa
+80 × 36 × 32
+150 lb
+
+Access:
+House → House
+
+No storage
+No COI
+No helper
 ```
 
 ---
 
-## Additional Charges Includes
+## Expected Behavior
+
+- standard route pricing;
+- no access surcharge;
+- standard labor logic;
+- no helper logic;
+- standard vehicle fit.
+
+---
+
+## Expected Result
 
 ```text
-Packaging
-Crating
-Storage
-Insurance
-Exclusive Delivery
-Access Fees
-Zone Fees
+Standard interstate estimate
+without additional operational complexity.
 ```
 
 ---
 
-## Margin Rule
+# 5. Test Case — Fragile Item
 
-```text
-Margin applies AFTER:
-Operational Cost
-+
-Additional Charges
-```
+## Scenario
+
+Fragile item должен увеличивать effective volume.
 
 ---
 
-## Final Price Rule
-
-```text
-Rounded Final Price =
-CEILING(
-Raw Final Price,
-Rounding Rule
-)
-```
-
----
-
-# 4. Test Case Structure
-
-Каждый кейс содержит:
-- scenario;
-- input data;
-- expected calculation behavior;
-- expected breakdown;
-- expected final price.
-
----
-
-# 5. Base Pricing Cases
-
-## Case 01 — Standard Furniture Delivery
-
-### Scenario
-
-Стандартный sofa delivery без fragile logic.
-
----
-
-### Input
+## Input
 
 ```text
 Item:
-Sofa
+Glass Table
 
-Dimensions:
-84 × 36 × 34 in
+Flags:
+Fragile
+Non-stackable
+```
+
+---
+
+## Expected Behavior
+
+- increased effective volume;
+- increased handling complexity;
+- possible vehicle upgrade;
+- fragile handling surcharge.
+
+---
+
+## Expected Result
+
+```text
+Effective Volume >
+Physical Volume
+```
+
+---
+
+# 6. Test Case — Heavy Item
+
+## Scenario
+
+Heavy item должен влиять на crew requirement.
+
+---
+
+## Input
+
+```text
+Item:
+Concrete Table
 
 Weight:
-180 lb
+500 lb
+```
 
-Quantity:
-1
+---
 
-Packaging:
-Blanket Wrap
+## Expected Behavior
 
-Fragile:
+- additional labor requirement;
+- helper logic activated;
+- increased operational labor cost.
+
+---
+
+## Expected Result
+
+```text
+Crew Requirement ≥ 2
+```
+
+---
+
+# 7. Test Case — Oversized Item
+
+## Scenario
+
+Oversized item влияет на vehicle fit.
+
+---
+
+## Input
+
+```text
+Oversized dimensions
+requiring special handling
+```
+
+---
+
+## Expected Behavior
+
+- larger vehicle requirement;
+- increased operational complexity;
+- route limitations possible.
+
+---
+
+## Expected Result
+
+```text
+Vehicle upgraded automatically.
+```
+
+---
+
+# 8. Test Case — Warehouse Delivery
+
+## Scenario
+
+Warehouse delivery должна уменьшать labor complexity.
+
+---
+
+## Input
+
+```text
+Delivery Type:
+Warehouse
+```
+
+---
+
+## Expected Behavior
+
+- reduced unloading complexity;
+- reduced labor time;
+- reduced access fees.
+
+---
+
+## Expected Result
+
+```text
+Operational cost lower
+than apartment delivery.
+```
+
+---
+
+# 9. Test Case — Old Apartment Without Elevator
+
+## Scenario
+
+Old apartment со stairs увеличивает operational cost.
+
+---
+
+## Input
+
+```text
+Address Type:
+Old Apartment
+
+Floor:
+4
+
+Elevator:
 No
-
-Non-Stackable:
-No
-
-Crated:
-No
-
-Distance:
-145 miles
-
-Vehicle:
-Sprinter
-
-Storage:
-No
-
-Exclusive Delivery:
-No
 ```
 
 ---
 
-### Expected Logic
+## Expected Behavior
+
+- increased labor cost;
+- increased handling complexity;
+- helper logic possible;
+- access surcharge applied.
+
+---
+
+## Expected Result
 
 ```text
-Physical Volume calculated
-↓
-Effective Volume = Physical Volume
-↓
-Sprinter selected
-↓
-Operational Cost calculated
-↓
-Packaging added
-↓
-Margin added
-↓
-Rounded Final Price
+Operational Cost >
+standard apartment delivery.
 ```
 
 ---
 
-### Expected Breakdown
+# 10. Test Case — Long Carry
 
-```text
-Operational Cost > 0
-Packaging Cost > 0
-Storage Cost = 0
-Insurance Fee = 0
-```
+## Scenario
+
+Long carry должен увеличивать handling cost.
 
 ---
 
-### Expected Result
-
-```text
-Single vehicle
-No manual review
-Rounded price
-```
-
----
-
-# 6. Stackability Cases
-
-## Case 02 — Fragile Item
-
-### Scenario
-
-Fragile marble table.
-
----
-
-### Input
-
-```text
-Item:
-Marble Dining Table
-
-Fragile:
-Yes
-
-Non-Stackable:
-No
-
-Crated:
-No
-```
-
----
-
-### Expected Logic
-
-```text
-Fragile coefficient applied
-↓
-Effective Volume increased
-↓
-Handling complexity increased
-```
-
----
-
-### Expected Result
-
-```text
-Effective Volume > Physical Volume
-Operational Cost increases
-```
-
----
-
-## Case 03 — Non-Stackable Item
-
-### Scenario
-
-Tall antique cabinet.
-
----
-
-### Input
-
-```text
-Non-Stackable:
-Yes
-```
-
----
-
-### Expected Logic
-
-```text
-Air above item counted
-↓
-Effective Volume significantly increases
-```
-
----
-
-### Expected Result
-
-```text
-Vehicle fit may change
-Operational cost increases
-```
-
----
-
-## Case 04 — Crated Item
-
-### Scenario
-
-Fragile sculpture with custom crate.
-
----
-
-### Input
-
-```text
-Crated:
-Yes
-```
-
----
-
-### Expected Logic
-
-```text
-Crate Cost calculated
-↓
-Crate increases Effective Volume
-↓
-Crate may apply non-stackable logic
-```
-
----
-
-### Expected Breakdown
-
-```text
-Crate Cost > 0
-Packaging Cost may exist separately
-```
-
----
-
-# 7. Vehicle Fit Cases
-
-## Case 05 — Sprinter Fit
-
-### Scenario
-
-Shipment fits inside single Sprinter.
-
----
-
-### Expected Result
-
-```text
-1 vehicle selected
-Vehicle = Sprinter
-```
-
----
-
-## Case 06 — Truck Fit
-
-### Scenario
-
-Shipment exceeds Sprinter capacity.
-
----
-
-### Expected Result
-
-```text
-Truck selected automatically
-```
-
----
-
-## Case 07 — Multi-Vehicle Shipment
-
-### Scenario
-
-Shipment exceeds single truck capacity.
-
----
-
-### Expected Logic
-
-```text
-Vehicle Count =
-CEILING(
-Total Effective Volume / Vehicle Capacity
-)
-```
-
----
-
-### Expected Result
-
-```text
-Multiple vehicles assigned
-Operational Cost increases
-```
-
----
-
-# 8. Access & Handling Cases
-
-## Case 08 — Stairs Fee
-
-### Scenario
-
-Delivery to 5th floor without elevator.
-
----
-
-### Expected Logic
-
-```text
-Stairs Fee =
-(Floor - 3)
-×
-Stairs Rate
-```
-
----
-
-### Expected Result
-
-```text
-Additional Charges increase
-```
-
----
-
-## Case 09 — Long Carry
-
-### Scenario
-
-Truck cannot park near entrance.
-
----
-
-### Input
+## Input
 
 ```text
 Long Carry:
-120 ft
+75 ft
 ```
 
 ---
 
-### Expected Result
+## Expected Behavior
+
+- increased labor time;
+- access surcharge applied.
+
+---
+
+## Expected Result
 
 ```text
-Long Carry Fee > 0
+Additional access fee applied.
 ```
 
 ---
 
-## Case 10 — Heavy Item Handling
+# 11. Test Case — COI Required
 
-### Scenario
+## Scenario
 
-Item exceeds safe one-person handling weight.
+COI requirement должна добавлять operational surcharge.
 
 ---
 
-### Expected Result
+## Input
 
 ```text
-Heavy Handling Fee applied
+COI Required:
+Yes
 ```
 
 ---
 
-# 9. Storage Cases
+## Expected Behavior
 
-## Case 11 — Warehouse Storage
-
-### Scenario
-
-Shipment stored for 5 days.
+- COI fee applied;
+- operational preparation complexity increased.
 
 ---
 
-### Expected Logic
+## Expected Result
 
 ```text
-Storage Cost =
-Storage Days
-×
-Storage Daily Rate
-×
-Effective Volume
+Additional COI charge added.
 ```
 
 ---
 
-### Expected Result
+# 12. Test Case — Exclusive Delivery
+
+## Scenario
+
+Exclusive delivery должна влиять на route logic.
+
+---
+
+## Input
 
 ```text
-Storage Cost > 0
+Exclusive Delivery:
+Yes
 ```
 
 ---
 
-# 10. Insurance Cases
+## Expected Behavior
 
-## Case 12 — Basic Liability
-
-### Scenario
-
-Default insurance selected.
+- dedicated route logic;
+- higher operational cost;
+- reduced consolidation efficiency.
 
 ---
 
-### Expected Logic
+## Expected Result
 
 ```text
-Coverage =
-Total Weight × $0.60
+Final estimate >
+standard consolidated route.
 ```
 
 ---
 
-### Expected Result
+# 13. Test Case — Storage
+
+## Scenario
+
+Storage должен рассчитываться отдельно.
+
+---
+
+## Input
 
 ```text
-No Insurance Fee added
+Storage:
+5 days
 ```
 
 ---
 
-## Case 13 — Full Coverage
+## Expected Behavior
 
-### Scenario
-
-Customer selects Full Coverage.
+- storage fee calculated separately;
+- item-level storage supported.
 
 ---
 
-### Expected Logic
+## Expected Result
 
 ```text
-Insurance Fee =
-Declared Value × Coverage Rate
+Additional storage charges added.
 ```
 
 ---
 
-### Expected Result
+# 14. Test Case — Packaging
+
+## Scenario
+
+Packaging должен рассчитываться per item.
+
+---
+
+## Input
 
 ```text
-Insurance Fee > 0
+3 items
+Packaging enabled
 ```
 
 ---
 
-# 11. Discount Cases
+## Expected Behavior
 
-## Case 14 — Shared Pickup Discount
-
-### Scenario
-
-Multiple orders from same pickup address.
+- packaging cost multiplied by item quantity;
+- not fixed per order.
 
 ---
 
-### Expected Result
+## Expected Result
 
 ```text
-Consolidation Discount applied
+Packaging charge =
+per-item calculation.
 ```
 
 ---
 
-## Case 15 — Shared Delivery Discount
+# 15. Test Case — Mixed Order
 
-### Scenario
+## Scenario
 
-Multiple deliveries to same address.
+Mixed order не должен применять fragile logic ко всему shipment.
 
 ---
 
-### Expected Result
+## Input
 
 ```text
-Discount applied
-```
-
----
-
-## Case 16 — Shared Route Discount
-
-### Scenario
-
-Orders share same interstate route.
-
----
-
-### Expected Result
-
-```text
-Interstate cost partially shared
-```
-
----
-
-# 12. Exclusive Delivery Cases
-
-## Case 17 — Exclusive Delivery
-
-### Scenario
-
-Customer requests dedicated direct delivery.
-
----
-
-### Expected Result
-
-```text
-Exclusive Delivery Fee > 0
-Shared route logic disabled
-```
-
----
-
-# 13. NYC Operational Cases
-
-## Case 18 — NYC Delivery
-
-### Scenario
-
-Delivery inside NYC operational zone.
-
----
-
-### Expected Result
-
-```text
-Tolls added
-Parking reserve added
-Ticket reserve added
-```
-
----
-
-# 14. Packaging Cases
-
-## Case 19 — Multiple Packaging Types
-
-### Scenario
-
-Order contains:
-- TV Box
-- Blanket Wrap
-- Custom Crate
-
----
-
-### Expected Result
-
-```text
-Packaging calculated per item
-No fixed global packaging fee
-```
-
----
-
-# 15. Margin Cases
-
-## Case 20 — Margin Validation
-
-### Scenario
-
-Validate margin calculation order.
-
----
-
-### Expected Logic
-
-```text
-Margin applies AFTER:
-Operational Cost
+1 fragile item
 +
-Additional Charges
+9 regular boxes
 ```
 
 ---
 
-### Invalid Logic
+## Expected Behavior
+
+- fragile coefficient applied only to fragile item;
+- standard logic for remaining items.
+
+---
+
+## Expected Result
 
 ```text
-Margin applied before additional charges
+Selective item-level logic.
 ```
 
 ---
 
-# 16. Rounding Cases
+# 16. Test Case — Additional Helper
 
-## Case 21 — Price Rounding
+## Scenario
 
-### Scenario
-
-Raw price:
-$1184
+Additional helper должен учитывать minimum billable time.
 
 ---
 
-### Expected Result
+## Input
 
 ```text
-Rounded Final Price = $1190
+Extra Helper:
+1
 ```
 
 ---
 
-# 17. Snapshot Integrity Cases
+## Expected Behavior
 
-## Case 22 — Variables Changed After Estimate
-
-### Scenario
-
-Estimate generated.
-Variables changed later.
+- helper surcharge added;
+- minimum 2 hours applied.
 
 ---
 
-### Expected Result
+## Expected Result
 
 ```text
-Old estimate remains unchanged
+Helper Cost =
+2-hour minimum.
 ```
 
 ---
 
-## Case 23 — Formula Version Changed
+# 17. Test Case — Vehicle Upgrade
 
-### Scenario
+## Scenario
 
-Formula v1.0 used in estimate.
-System switches to Formula v1.1.
+Effective volume превышает vehicle capacity.
 
 ---
 
-### Expected Result
+## Input
 
 ```text
-Old estimate continues using Formula v1.0 snapshot
+Total Effective Volume >
+Sprinter Capacity
 ```
 
 ---
 
-# 18. Operational Separation Cases
+## Expected Behavior
 
-## Case 24 — Order Created
-
-### Scenario
-
-Estimate converted to Order.
+- automatic vehicle upgrade;
+- operational cost recalculated.
 
 ---
 
-### Expected Result
+## Expected Result
 
 ```text
-Order uses frozen estimate snapshot
-Pricing not recalculated
+Vehicle upgraded automatically.
 ```
 
 ---
 
-## Case 25 — eBOL Completed
+# 18. Test Case — Rounding Logic
 
-### Scenario
+## Scenario
 
-Pickup and delivery completed.
+Final estimate должен округляться вверх.
 
 ---
 
-### Expected Result
+## Input
 
 ```text
-eBOL generated automatically
-Operational workflow completed
+Raw Final Price:
+$1123
 ```
 
 ---
 
-# 19. Critical Validation Rules
+## Expected Behavior
+
+- ceiling rounding applied.
+
+---
+
+## Expected Result
+
+:contentReference[oaicite:0]{index=0}
+
+---
+
+# 19. Test Case — Draft Recalculation
+
+## Scenario
+
+Draft должен пересчитываться динамически.
+
+---
+
+## Input
+
+```text
+Item quantity changed
+```
+
+---
+
+## Expected Behavior
+
+- pricing recalculated immediately;
+- draft remains editable.
+
+---
+
+## Expected Result
+
+```text
+Updated pricing preview.
+```
+
+---
+
+# 20. Test Case — Estimate Snapshot Integrity
+
+## Scenario
+
+Estimate не должен изменяться после variables update.
+
+---
+
+## Input
+
+```text
+Existing estimate
++
+updated fuel variable
+```
+
+---
+
+## Expected Behavior
+
+- historical estimate unchanged;
+- new estimate uses updated variables.
+
+---
+
+## Expected Result
+
+```text
+Immutable historical estimate.
+```
+
+---
+
+# 21. Test Case — Formula Versioning
+
+## Scenario
+
+Estimate должен хранить formula version snapshot.
+
+---
+
+## Input
+
+```text
+Formula Version:
+v1.4
+```
+
+---
+
+## Expected Behavior
+
+- estimate linked to formula version;
+- future formula changes do not affect estimate.
+
+---
+
+## Expected Result
+
+```text
+Versioned estimate reproducibility.
+```
+
+---
+
+# 22. Test Case — Access Fee Separation
+
+## Scenario
+
+Access fee не должен дублировать labor cost.
+
+---
+
+## Input
+
+```text
+Apartment
++
+Long Carry
+```
+
+---
+
+## Expected Behavior
+
+- labor logic separated from access surcharge;
+- no duplicated charges.
+
+---
+
+## Expected Result
+
+```text
+Transparent operational pricing.
+```
+
+---
+
+# 23. Test Case — Insurance Logic
+
+## Scenario
+
+Basic liability включена по умолчанию.
+
+---
+
+## Input
+
+```text
+No additional insurance selected
+```
+
+---
+
+## Expected Behavior
+
+- base coverage included;
+- no duplicate insurance charges.
+
+---
+
+## Expected Result
+
+```text
+Standard liability active.
+```
+
+---
+
+# 24. Test Case — Large Multi-Item Order
+
+## Scenario
+
+Большой order 30-50 items.
+
+---
+
+## Input
+
+```text
+45 items
+mixed flags
+mixed dimensions
+```
+
+---
+
+## Expected Behavior
+
+- scalable item processing;
+- stable performance;
+- item-level calculations preserved.
+
+---
+
+## Expected Result
+
+```text
+Consistent calculation behavior
+for large orders.
+```
+
+---
+
+# 25. Test Case — Operational Complexity Combination
+
+## Scenario
+
+Комбинация:
+- fragile;
+- stairs;
+- helper;
+- long carry.
+
+---
+
+## Input
+
+```text
+Fragile Item
+Old Apartment
+No Elevator
+Long Carry
+Helper Required
+```
+
+---
+
+## Expected Behavior
+
+- all operational coefficients applied correctly;
+- no duplicated surcharges;
+- helper logic separated from access logic.
+
+---
+
+## Expected Result
+
+```text
+Transparent combined operational pricing.
+```
+
+---
+
+# 26. Основные правила validation
 
 ## Rule 1
 
 ```text
-Operational Cost and Additional Charges
-must not duplicate charges.
+Pricing explainable.
 ```
 
 ---
@@ -766,7 +816,7 @@ must not duplicate charges.
 ## Rule 2
 
 ```text
-Breakdown must match final estimate price.
+Pricing reproducible.
 ```
 
 ---
@@ -774,9 +824,7 @@ Breakdown must match final estimate price.
 ## Rule 3
 
 ```text
-Effective Volume must affect:
-- vehicle fit
-- operational pricing
+Historical estimates immutable.
 ```
 
 ---
@@ -784,8 +832,7 @@ Effective Volume must affect:
 ## Rule 4
 
 ```text
-Packaging must calculate per item,
-not per order.
+Item logic item-level.
 ```
 
 ---
@@ -793,21 +840,62 @@ not per order.
 ## Rule 5
 
 ```text
-Orders and eBOL must not recalculate pricing.
+No duplicated surcharges.
 ```
 
 ---
 
-# 20. Future Test Expansion
+## Rule 6
 
-Future test coverage:
-- route optimization;
-- warehouse transfers;
-- dispatch scheduling;
-- claim workflow;
-- dynamic pricing;
-- regional pricing;
-- API failure handling;
-- live fuel update edge cases;
-- multi-stop routes;
-- oversized cargo exceptions.
+```text
+Operational complexity
+должна влиять на pricing predictably.
+```
+
+---
+
+# 27. Основные архитектурные проверки
+
+Pricing engine должен поддерживать:
+
+```text
+Snapshot Integrity
+Formula Versioning
+Auditability
+Item-Level Logic
+Consistent Rounding
+Operational Transparency
+```
+
+---
+
+# 28. Будущие расширения test coverage
+
+В будущем необходимо покрыть:
+
+```text
+Route Optimization
+Dynamic Fuel Pricing
+Dispatch Constraints
+Warehouse Logic
+Regional Pricing
+Operational SLA Logic
+Damage Probability Logic
+```
+
+---
+
+# 29. Назначение документа
+
+Документ фиксирует:
+- expected pricing behavior;
+- pricing validation logic;
+- regression testing foundation;
+- pricing QA foundation;
+- explainable pricing expectations.
+
+Основная задача:
+- обеспечить consistent pricing behavior;
+- предотвратить hidden pricing changes;
+- обеспечить reproducible estimates;
+- подготовить foundation для automated testing.
