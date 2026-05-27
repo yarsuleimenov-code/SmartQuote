@@ -23,6 +23,10 @@ const futureItems = [
   { label: "Automation", icon: "workflow" }
 ];
 
+const referenceItems = [
+  { label: "Lifecycle", href: "lifecycle.html", icon: "git-branch" }
+];
+
 function isActive(href) {
   return href === currentPage;
 }
@@ -33,7 +37,7 @@ function linkClass(href) {
     : "block px-3 py-1 rounded hover:bg-slate-800 text-white";
 }
 
-function operationLinkClass(href) {
+function iconLinkClass(href) {
   return isActive(href)
     ? "flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-800 text-white"
     : "flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800";
@@ -57,9 +61,9 @@ function renderMainItems() {
   }).join("");
 }
 
-function renderOperationItems() {
-  return operationItems.map(item => `
-    <a class="${operationLinkClass(item.href)}" href="${item.href}">
+function renderIconLinks(items) {
+  return items.map(item => `
+    <a class="${iconLinkClass(item.href)}" href="${item.href}">
       <i data-lucide="${item.icon}" class="w-4"></i>
       ${item.label}
     </a>
@@ -128,15 +132,23 @@ document.getElementById("sidebar").innerHTML = `
       </p>
 
       <div class="space-y-1 mb-6">
-        ${renderOperationItems()}
+        ${renderIconLinks(operationItems)}
       </div>
 
       <p class="uppercase text-xs text-slate-500 mb-3">
         FUTURE
       </p>
 
-      <div class="space-y-1">
+      <div class="space-y-1 mb-6">
         ${renderFutureItems()}
+      </div>
+
+      <p class="uppercase text-xs text-slate-500 mb-3">
+        REFERENCE
+      </p>
+
+      <div class="space-y-1">
+        ${renderIconLinks(referenceItems)}
       </div>
 
     </nav>
