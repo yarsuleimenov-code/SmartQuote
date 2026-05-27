@@ -1,520 +1,723 @@
 # Zaberman Broker Calculator MVP — Pricing Engine Flow
 
-## 1. Purpose
+# 1. Назначение pricing engine
 
-Документ описывает последовательность работы pricing engine.
+Pricing Engine является центральным calculation layer системы.
 
-Цель:
-- стандартизировать pricing calculations;
-- исключить неоднозначность;
-- зафиксировать calculation order;
-- подготовить backend implementation.
+Основная задача pricing engine:
+- стандартизировать pricing logic;
+- исключить ручные расчёты;
+- обеспечивать explainable pricing;
+- обеспечивать reproducible estimates;
+- централизовать business logic.
 
 ---
 
-# 2. Core Principle
+# 2. Главный архитектурный принцип
 
-Pricing engine:
-- получает input data;
-- рассчитывает pricing;
-- возвращает calculation result.
+```text
+Pricing logic принадлежит backend pricing engine.
+```
 
-UI не должен самостоятельно выполнять pricing calculations.
+Frontend:
+- отображает данные;
+- собирает input;
+- показывает calculation result.
+
+Frontend не должен:
+- хранить formulas;
+- рассчитывать final pricing;
+- хранить скрытую business logic.
 
 ---
 
 # 3. High-Level Pricing Flow
 
+Общий flow расчёта:
+
 ```text
 Customer Input
 ↓
-Route Input
+Route Processing
 ↓
-Items Input
+Items Processing
 ↓
-Physical Volume Calculation
+Physical Volume
 ↓
-Effective Volume Calculation
+Effective Volume
 ↓
 Vehicle Fit
+↓
+Crew Logic
+↓
+Access Logic
 ↓
 Operational Cost
 ↓
 Additional Charges
 ↓
-Discounts
+Margin Logic
 ↓
-Margin
+Discount Logic
 ↓
-Rounding
+Rounding Logic
 ↓
-Final Price
+Final Estimate
 ↓
-Estimate Snapshot
+Snapshot Creation
 ```
 
 ---
 
-# 4. Input Stage
-
-## Customer Input
+# 4. Input Layer
 
 Pricing engine получает:
-- customer info;
-- pickup address;
-- delivery address;
-- route options;
-- delivery preferences.
+
+```text
+Customer Data
+Pickup ZIP
+Delivery ZIP
+Items
+Access Conditions
+Quote Options
+Pricing Variables
+Formula Version
+```
 
 ---
 
-## Items Input
+## Customer Data
 
-Pricing engine получает:
+Используется:
+- для estimate;
+- invoice;
+- operational workflow.
+
+Customer data не влияет напрямую на pricing.
+
+---
+
+## Route Data
+
+Используется:
+- для route calculation;
+- distance calculation;
+- zone mapping;
+- operational planning.
+
+---
+
+## Items Data
+
+Items являются главным pricing input.
+
+Каждый item содержит:
 - dimensions;
 - weight;
 - quantity;
-- packaging type;
-- fragile flag;
-- non-stackable flag;
-- crated flag;
-- declared value.
+- flags;
+- declared value;
+- packaging;
+- storage;
+- comments.
 
 ---
 
-# 5. Physical Volume Calculation
+# 5. Route Processing
 
-## Formula
-
-```text
-Physical Volume =
-(Length × Width × Height × Quantity) / 1728
-```
-
-Unit:
-```text
-cu ft
-```
+Pricing engine:
+- определяет zones;
+- рассчитывает distance;
+- определяет interstate route;
+- определяет route availability;
+- определяет operational complexity.
 
 ---
 
-# 6. Effective Volume Calculation
-
-## Purpose
-
-Effective volume показывает реальный space usage внутри vehicle.
-
----
-
-## Base Formula
+## Route Inputs
 
 ```text
-Effective Volume =
-Physical Volume × Stackability Coefficient
+Pickup ZIP
+Delivery ZIP
 ```
 
 ---
 
-## Stackability Logic
-
-### Standard Item
+## Route Outputs
 
 ```text
-Coefficient = 1.0
+Distance
+Origin Zone
+Destination Zone
+Route Type
+Operational Region
 ```
 
 ---
 
-### Fragile Item
+# 6. Item Processing
 
-```text
-Coefficient > 1.0
-```
-
-Причина:
-- требуется безопасное размещение;
-- ограничивается stacking.
+Каждый item обрабатывается отдельно.
 
 ---
 
-### Non-Stackable Item
+## Item Processing Flow
 
 ```text
-Coefficient significantly > 1.0
-```
-
-Причина:
-- над предметом учитывается воздух;
-- stacking запрещён.
-
----
-
-### Crated Item
-
-Crating:
-- увеличивает volume;
-- увеличивает handling complexity;
-- может автоматически делать item non-stackable.
-
----
-
-# 7. Total Shipment Aggregation
-
-## Total Weight
-
-```text
-SUM(Item Weight × Quantity)
+Item Input
+↓
+Physical Volume
+↓
+Flags
+↓
+Effective Volume
+↓
+Handling Complexity
+↓
+Crew Requirement
+↓
+Additional Charges
 ```
 
 ---
 
-## Total Physical Volume
+## Item-Level Logic
+
+Item-level logic включает:
+- packaging;
+- crating;
+- insurance;
+- storage;
+- stackability;
+- fragile handling.
+
+---
+
+# 7. Physical Volume
+
+Physical Volume рассчитывается на основе:
 
 ```text
-SUM(Item Physical Volume)
+Length × Width × Height
 ```
 
 ---
 
-## Total Effective Volume
+## Physical Volume Formula
+
+:contentReference[oaicite:0]{index=0}
+
+---
+
+## Где используется
+
+Physical Volume влияет на:
+- vehicle fit;
+- route planning;
+- base operational capacity.
+
+---
+
+# 8. Effective Volume
+
+Effective Volume учитывает:
+- fragile items;
+- non-stackable items;
+- crated items;
+- oversized handling;
+- operational inefficiencies.
+
+---
+
+## Effective Volume Logic
+
+:contentReference[oaicite:1]{index=1}
+
+---
+
+## Пример влияния
 
 ```text
-SUM(Item Effective Volume)
+Fragile item
+→ higher effective volume
+
+Non-stackable item
+→ higher vehicle occupancy
+
+Crated item
+→ reduced stackability
 ```
 
 ---
 
-# 8. Vehicle Fit Logic
+# 9. Vehicle Fit Logic
 
-## Purpose
+Vehicle определяется автоматически pricing engine.
 
-Автоматически подобрать vehicle.
+Broker не должен выбирать vehicle вручную.
 
 ---
 
-## Vehicle Selection Rule
+## Vehicle Fit Inputs
 
 ```text
-Select first active vehicle where:
-
-Vehicle Capacity ≥ Total Effective Volume
-AND
-Vehicle Max Weight ≥ Total Weight
+Effective Volume
+Total Weight
+Route Type
+Operational Constraints
 ```
 
 ---
 
-## Multi-Vehicle Logic
-
-Если shipment не помещается:
+## Vehicle Fit Outputs
 
 ```text
-Vehicle Count =
-CEILING(
-Total Effective Volume / Vehicle Capacity
-)
+Vehicle Type
+Required Capacity
+Operational Cost Base
+Crew Capacity
 ```
 
 ---
 
-# 9. Route Logic
+## Примеры vehicle types
 
-Route calculation использует:
-- pickup location;
-- delivery location;
-- route zones;
-- distance;
-- operational region.
-
----
-
-## Distance Source
-
-Future:
 ```text
-Google Maps / Mapbox API
+Sprinter
+Box Truck
+26 ft Truck
+Dedicated Truck
 ```
 
 ---
 
-## Zone Logic
+# 10. Crew Logic
 
-Zones могут влиять на:
-- delivery fee;
-- NYC surcharge;
-- parking reserve;
-- toll reserve;
-- access complexity.
+Crew logic определяется pricing engine.
 
 ---
 
-# 10. Operational Cost Calculation
-
-Operational Cost состоит из:
+## Crew Logic Inputs
 
 ```text
-Pickup Cost
+Item Weight
+Effective Volume
+Access Conditions
+Handling Complexity
+Oversized Items
+```
+
+---
+
+## Crew Logic Outputs
+
+```text
+Required Crew
+Additional Helpers
+Operational Labor Cost
+```
+
+---
+
+## Helper Rule
+
+Ключевое правило:
+
+```text
+Additional helper
+minimum billable time = 2 hours
+```
+
+---
+
+## Crew Logic Examples
+
+```text
+Heavy concrete table
+→ 2 people
+
+Fragile oversized item
+→ helper surcharge
+
+Small lightweight item
+→ 1 person
+```
+
+---
+
+# 11. Access Logic
+
+Access Logic учитывает:
+- pickup complexity;
+- delivery complexity;
+- handling difficulty.
+
+---
+
+## Access Inputs
+
+```text
+Address Type
+Floor
+Elevator
+Stairs
+Long Carry
+COI Required
+Narrow Access
+```
+
+---
+
+## Address Types
+
+Примеры:
+
+```text
+House
+Warehouse
+Modern Apartment
+Old Apartment
+Office
+Storage
+Retail
+```
+
+---
+
+## Access Logic Outputs
+
+```text
+Labor Impact
+Access Fee
+Handling Complexity
+Crew Requirement
+```
+
+---
+
+## Пример
+
+```text
+Warehouse
+→ lower labor complexity
+
+Old apartment + stairs
+→ higher operational cost
+```
+
+---
+
+# 12. Operational Cost
+
+Operational Cost является базой estimate.
+
+---
+
+## Operational Cost Structure
+
+```text
+Pickup Stage
 +
-Interstate Cost
+Interstate Stage
 +
-Delivery Cost
+Delivery Stage
 ```
 
 ---
 
-## 10.1 Pickup Cost
+## Pickup Stage
 
 Может включать:
 - labor;
-- loading time;
+- loading;
 - access complexity;
-- stairs;
-- long carry;
+- local mileage;
 - parking;
 - tolls.
 
 ---
 
-## 10.2 Interstate Cost
+## Interstate Stage
 
 Может включать:
-- mileage;
+- long-haul mileage;
 - fuel;
-- vehicle wear;
-- driver cost;
-- route sharing logic.
+- vehicle usage;
+- route operational cost.
 
 ---
 
-## 10.3 Delivery Cost
+## Delivery Stage
 
 Может включать:
 - unloading;
+- access complexity;
+- long carry;
 - stairs;
-- access;
-- delivery scheduling;
-- exclusive delivery.
+- helper labor.
 
 ---
 
-# 11. Additional Charges
+# 13. Additional Charges
 
-Additional Charges не должны дублировать Operational Cost.
+Additional Charges рассчитываются отдельно от Operational Cost.
 
 ---
 
-## Included Charges
+## Примеры Additional Charges
 
 ```text
 Packaging
 Crating
 Storage
 Insurance
+COI
 Exclusive Delivery
-Access Fees
-Zone Fees
+Zone Fee
 ```
 
 ---
 
-# 12. Packaging Logic
+## Packaging Logic
 
-Packaging рассчитывается:
-- per item;
-- per packaging type;
-- per quantity.
-
----
-
-## Formula
-
-```text
-Packaging Cost =
-SUM(
-Packaging Price × Quantity
-)
-```
+Packaging считается:
+- отдельно для каждого item;
+- не на весь order фиксированной ставкой.
 
 ---
 
-# 13. Crating Logic
+## Insurance Logic
 
-Crating рассчитывается отдельно от packaging.
+Basic Liability:
+- включён по умолчанию.
 
----
-
-## Formula
-
-```text
-Crate Cost =
-Material Cost
-+
-Labor Cost
-```
+Дополнительно:
+- Full Coverage;
+- declared value impact.
 
 ---
 
-## Crating Effects
+## Storage Logic
 
-Crating может:
-- увеличивать effective volume;
-- увеличивать handling complexity;
-- делать item non-stackable.
-
----
-
-# 14. Insurance Logic
-
-## Basic Liability
-
-```text
-Coverage =
-Total Weight × $0.60
-```
+Storage рассчитывается:
+- по item;
+- по storage days.
 
 ---
 
-## Full Coverage
+# 14. Margin Logic
 
-```text
-Insurance Fee =
-Declared Value × Coverage Rate
-```
-
----
-
-# 15. Storage Logic
-
-## Formula
-
-```text
-Storage Cost =
-Storage Days
-×
-Storage Daily Rate
-×
-Total Effective Volume
-```
-
----
-
-# 16. Consolidation Discount Logic
-
-Discount применяется если:
-- несколько заказов с одного pickup address;
-- несколько заказов на один delivery address;
-- shared route.
-
----
-
-## Formula
-
-```text
-Discount Amount =
-Eligible Charges × Discount %
-```
-
----
-
-# 17. Margin Calculation
-
-Margin рассчитывается после:
+Margin применяется после:
 - operational cost;
 - additional charges.
 
 ---
 
-## Formula
+## Margin Logic Formula
+
+:contentReference[oaicite:2]{index=2}
+
+---
+
+## Margin Variables
+
+Margin может зависеть от:
+- route type;
+- operational complexity;
+- dedicated delivery;
+- business rules.
+
+---
+
+# 15. Discount Logic
+
+Discount применяется после margin.
+
+---
+
+## Discount Sources
 
 ```text
-Margin =
-(
-Operational Cost
-+
-Additional Charges
-)
-×
-Margin Rate
+Manual Discount
+VIP Customer
+Operational Promotion
+Sales Override
 ```
 
 ---
 
-# 18. Raw Final Price
+## Ключевое правило
 
-## Formula
+Discount:
+- не должен ломать operational profitability;
+- должен быть auditable.
+
+---
+
+# 16. Rounding Logic
+
+После расчёта final raw price применяется rounding rule.
+
+---
+
+## Текущее правило
 
 ```text
-Raw Final Price =
+UP to nearest $10
+```
+
+---
+
+## Rounding Formula
+
+:contentReference[oaicite:3]{index=3}
+
+---
+
+# 17. Final Estimate
+
+После всех calculations формируется:
+
+```text
+Final Rounded Estimate
+```
+
+---
+
+## Estimate содержит
+
+```text
 Operational Cost
-+
 Additional Charges
-+
 Margin
--
-Discounts
+Discount
+Rounded Final Price
 ```
 
 ---
 
-# 19. Rounding Logic
+# 18. Snapshot Creation
 
-## Purpose
-
-Сделать customer-facing price cleaner.
+После generate estimate создаётся immutable snapshot.
 
 ---
 
-## Formula
+## Snapshot включает
 
 ```text
-Rounded Final Price =
-CEILING(
-Raw Final Price,
-Rounding Rule
-)
-```
-
----
-
-# 20. Estimate Snapshot Generation
-
-После расчёта система фиксирует snapshot:
-
-```text
-Customer
-Addresses
-Items
-Vehicle
-Variables
+Customer Snapshot
+Route Snapshot
+Items Snapshot
+Variables Snapshot
 Formula Version
-Calculation Result
-Final Price
+Calculation Components
+Final Rounded Price
 ```
 
-Estimate становится immutable customer-facing document.
+---
+
+## Ключевое правило
+
+```text
+Historical estimates
+не должны пересчитываться
+после изменения variables.
+```
 
 ---
 
-# 21. Future Expansion
+# 19. Recalculation Rules
 
-Pricing engine должен поддерживать:
-- dynamic pricing;
-- regional pricing models;
-- route optimization;
-- warehouse logic;
-- dispatch optimization;
-- ML/rule-based adjustments;
-- seasonal pricing;
-- live fuel updates.
+## Draft
+
+Draft:
+- editable;
+- recalculated dynamically.
 
 ---
 
-# 22. Key Architectural Rules
+## Estimate
+
+Estimate:
+- immutable;
+- frozen snapshot.
+
+---
+
+## Правильный flow
+
+```text
+Estimate change request
+↓
+Create New Draft
+↓
+Recalculate
+↓
+Generate New Estimate
+```
+
+---
+
+# 20. Edge Cases
+
+## Case 1 — Fragile Oversized Item
+
+Влияние:
+- increased effective volume;
+- higher handling complexity;
+- additional helper risk.
+
+---
+
+## Case 2 — Old Apartment + Stairs
+
+Влияние:
+- higher labor cost;
+- increased crew requirement;
+- access surcharge.
+
+---
+
+## Case 3 — Warehouse Delivery
+
+Влияние:
+- reduced unloading complexity;
+- reduced labor cost.
+
+---
+
+## Case 4 — Additional Helper
+
+Правило:
+
+```text
+Minimum billable time = 2 hours
+```
+
+---
+
+## Case 5 — Mixed Order
+
+Пример:
+
+```text
+1 fragile item
++
+9 regular boxes
+```
+
+Item-level logic должна:
+- рассчитываться отдельно;
+- не применять fragile coefficient ко всему order.
+
+---
+
+# 21. Основные архитектурные правила
 
 ## Rule 1
 
 ```text
-Pricing calculations belong to backend pricing engine.
+Pricing logic принадлежит pricing engine.
 ```
 
 ---
@@ -522,7 +725,7 @@ Pricing calculations belong to backend pricing engine.
 ## Rule 2
 
 ```text
-Estimate must store frozen calculation snapshot.
+Frontend не хранит business formulas.
 ```
 
 ---
@@ -530,7 +733,7 @@ Estimate must store frozen calculation snapshot.
 ## Rule 3
 
 ```text
-Operational layer must not recalculate pricing.
+Estimate immutable.
 ```
 
 ---
@@ -538,6 +741,62 @@ Operational layer must not recalculate pricing.
 ## Rule 4
 
 ```text
-Breakdown screen must explain calculations,
-not perform calculations.
+Draft editable.
 ```
+
+---
+
+## Rule 5
+
+```text
+Order/eBOL
+не изменяют estimate pricing.
+```
+
+---
+
+## Rule 6
+
+```text
+Additional charges
+не должны дублировать
+operational stage cost.
+```
+
+---
+
+# 22. Целевая backend архитектура
+
+Целевая архитектура pricing engine:
+
+```text
+Frontend UI
+↓
+API Layer
+↓
+Pricing Engine
+↓
+Variables Service
+↓
+Snapshot Service
+↓
+Database
+```
+
+---
+
+# 23. Назначение документа
+
+Документ фиксирует:
+- sequencing pricing logic;
+- ownership calculations;
+- business calculation flow;
+- pricing governance;
+- snapshot rules;
+- foundation backend architecture.
+
+Основная задача:
+- предотвратить хаотичную реализацию formulas;
+- обеспечить consistent pricing;
+- обеспечить auditability;
+- сохранить explainable pricing structure.
