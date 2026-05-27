@@ -1,8 +1,8 @@
 const currentPage = window.location.pathname.split("/").pop() || "index.html";
 
 const mainItems = [
-  { label: "New Calculation", href: "index.html" },
   { label: "Quick Quote", href: "quick-quote.html" },
+  { label: "New Calculation", href: "index.html" },
   { label: "My Drafts", href: "drafts.html" },
   { label: "My Estimates", href: "estimates.html" },
   { label: "All Calculations", href: null },
