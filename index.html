@@ -16,76 +16,7 @@
 <div class="min-h-screen flex">
 
   <!-- SIDEBAR -->
-  <aside class="w-64 bg-[#203241] text-slate-300 min-h-screen fixed left-0 top-0 overflow-y-auto">
-
-    <div class="p-6 border-b border-slate-700">
-      <h1 class="text-2xl font-bold text-[#12365a]">zaberman</h1>
-
-      <div class="mt-6 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
-          z
-        </div>
-
-        <div>
-          <p class="text-white font-semibold text-sm">Broker</p>
-          <p class="text-xs text-slate-400">Calculator MVP</p>
-        </div>
-      </div>
-    </div>
-
-    <nav class="p-4 text-sm">
-
-      <p class="uppercase text-xs text-slate-500 mb-3">Main</p>
-
-      <div class="mt-2">
-
-        <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-800 text-white">
-          <div class="flex items-center gap-3">
-            <i data-lucide="calculator" class="w-4"></i>
-            Calculator
-          </div>
-
-          <i data-lucide="chevron-up" class="w-4"></i>
-        </div>
-
-        <div class="ml-8 mt-2 space-y-2">
-          <a class="block text-white font-semibold" href="index.html">New Calculation</a>
-          <a class="block hover:text-white" href="quick-quote.html"> Quick Quote </a>
-          <a class="block hover:text-white" href="drafts.html">My Drafts</a>
-          <a class="block hover:text-white" href="estimates.html">My Estimates</a>
-          <a class="block hover:text-white" href="#">All Calculations</a>
-          <a class="block hover:text-white" href="variables.html">Variables</a>
-          <a class="block hover:text-white" href="references.html">References</a>
-          <a class="block hover:text-white" href="formulas.html">Formulas</a>
-        </div>
-
-      </div>
-
-      <p class="uppercase text-xs text-slate-500 mt-6 mb-3">Future</p>
-
-      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800" href="breakdown.html">
-        <i data-lucide="file-text" class="w-4"></i>
-        Cost Breakdown
-      </a>
-
-      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="invoices.html">
-        <i data-lucide="receipt" class="w-4"></i>
-        Invoices
-      </a>
-
-      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="ebol.html">
-        <i data-lucide="clipboard-check" class="w-4"></i>
-        eBOL
-      </a>
-
-      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="orders.html">
-        <i data-lucide="package-check" class="w-4"></i>
-        Orders
-      </a>
-
-    </nav>
-
-  </aside>
+<div id="sidebar"></div>
 
   <!-- MAIN -->
   <main class="ml-64 w-full">
@@ -1557,6 +1488,6 @@
   lucide.createIcons();
 
 </script>
-
+<script src="sidebar.js"></script>
 </body>
 </html>
