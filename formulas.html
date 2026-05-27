@@ -1,1 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Zaberman Broker Calculator MVP | Formulas</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-700">
+
+<div class="min-h-screen flex">
+
+  <!-- SIDEBAR -->
+  <aside class="w-64 bg-[#203241] text-slate-300 min-h-screen fixed left-0 top-0 overflow-y-auto">
+
+    <div class="p-6 border-b border-slate-700">
+      <h1 class="text-2xl font-bold text-[#12365a]">
+        zaberman
+      </h1>
+
+      <div class="mt-6 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
+          z
+        </div>
+
+        <div>
+          <p class="text-white font-semibold text-sm">
+            Admin
+          </p>
+
+          <p class="text-xs text-slate-400">
+            Formula Reference
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="p-4 text-sm">
+
+      <p class="uppercase text-xs text-slate-500 mb-3">
+        Main
+      </p>
+
+      <div class="mt-2">
+
+        <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-800 text-white">
+          <div class="flex items-center gap-3">
+            <i data-lucide="calculator" class="w-4"></i>
+            Calculator
+          </div>
+
+          <i data-lucide="chevron-up" class="w-4"></i>
+        </div>
+
+        <div class="ml-8 mt-2 space-y-2">
+          <a class="block hover:text-white" href="index.html">
+            New Calculation
+          </a>
+
+          <a class="block hover:text-white" href="quick-quote.html">
+            Quick Quote
+          </a>
+
+          <a class="block hover:text-white" href="drafts.html">
+            My Drafts
+          </a>
+
+          <a class="block hover:text-white" href="estimates.html">
+            My Estimates
+          </a>
+
+          <a class="block hover:text-white" href="#">
+            All Calculations
+          </a>
+
+          <a class="block hover:text-white" href="variables.html">
+            Variables
+          </a>
+
+          <a class="block hover:text-white" href="references.html">
+            References
+          </a>
+
+          <a class="block text-white font-semibold" href="formulas.html">
+            Formulas
+          </a>
+        </div>
+
+      </div>
+
+      <p class="uppercase text-xs text-slate-500 mt-6 mb-3">
+        Future
+      </p>
+
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800" href="breakdown.html">
+        <i data-lucide="file-text" class="w-4"></i>
+        Cost Breakdown
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="invoices.html">
+        <i data-lucide="receipt" class="w-4"></i>
+        Invoices
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="ebol.html">
+        <i data-lucide="clipboard-check" class="w-4"></i>
+        eBOL
+      </a>
+
+      <a class="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg hover:bg-slate-800" href="orders.html">
+        <i data-lucide="package-check" class="w-4"></i>
+        Orders
+      </a>
+
+    </nav>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ml-64 w-full">
+
+    <!-- TOPBAR -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+
+      <div>
+        <p class="text-xs text-slate-400">
+          Zaberman › Broker Calculator
+        </p>
+
+        <h2 class="text-lg font-semibold text-slate-800">
+          Formula Reference
+        </h2>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold">
+          Formula v1.1
+        </span>
+
+        <a href="variables.html" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
+          Back to Variables
+        </a>
+
+        <a href="breakdown.html" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
+          Open Breakdown
+        </a>
+      </div>
+
+    </header>
+
+    <!-- PAGE -->
+    <div class="p-6">
+
+      <!-- PAGE HEADER -->
+      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
+
+        <div class="flex justify-between items-start gap-6">
+
+          <div>
+            <div class="flex items-center gap-3">
+              <h1 class="text-2xl font-bold text-slate-800">
+                Pricing Engine Formulas
+              </h1>
+
+              <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-semibold">
+                Active Logic
+              </span>
+            </div>
+
+            <p class="text-sm text-slate-500 mt-2 max-w-4xl">
+              Страница фиксирует основные формулы расчёта quote, operational cost, item-level services,
+              access fees, helpers, COI и eBOL execution logic. Используется как справочник для бизнеса,
+              аналитики и разработки.
+            </p>
+          </div>
+
+          <div class="text-right text-sm text-slate-500 min-w-[180px]">
+            <p>
+              Version:
+              <b class="text-slate-700">v1.1</b>
+            </p>
+
+            <p>
+              Status:
+              <b class="text-green-700">Active</b>
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- SUMMARY -->
+      <section class="grid grid-cols-4 gap-4 mb-6">
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400 uppercase">
+            Purpose
+          </p>
+
+          <p class="font-semibold text-slate-800 mt-1">
+            Расчёт quote
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400 uppercase">
+            Scope
+          </p>
+
+          <p class="font-semibold text-slate-800 mt-1">
+            Pricing + Operations
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400 uppercase">
+            Used By
+          </p>
+
+          <p class="font-semibold text-slate-800 mt-1">
+            Pricing Engine
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <p class="text-xs text-slate-400 uppercase">
+            Source Data
+          </p>
+
+          <p class="font-semibold text-slate-800 mt-1">
+            Variables + References
+          </p>
+        </div>
+
+      </section>
+            <!-- CORE PRICING -->
+      <section class="mb-6">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div class="w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center">
+            <i data-lucide="badge-dollar-sign" class="w-5 h-5"></i>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-slate-800">
+              Core Pricing
+            </h3>
+
+            <p class="text-sm text-slate-500">
+              Базовые формулы pricing engine и расчёта итогового quote.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+
+              <div>
+                <h4 class="font-semibold text-slate-800">
+                  Physical Volume
+                </h4>
+
+                <p class="text-xs text-slate-500 mt-1">
+                  Расчёт физического объёма item.
+                </p>
+              </div>
+
+              <span class="text-xs px-2 py-1 rounded bg-slate-200 text-slate-700">
+                Core
+              </span>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Physical Volume = (Length × Width × Height × Quantity) / 1728
+                </code>
+              </div>
+
+              <div class="grid grid-cols-4 gap-4 mt-4 text-sm">
+
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                  <p class="text-xs text-slate-400 uppercase">Input</p>
+                  <p class="font-semibold mt-1">L × W × H</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                  <p class="text-xs text-slate-400 uppercase">Unit</p>
+                  <p class="font-semibold mt-1">cu ft</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                  <p class="text-xs text-slate-400 uppercase">Used In</p>
+                  <p class="font-semibold mt-1">Vehicle Fit</p>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                  <p class="text-xs text-slate-400 uppercase">Required</p>
+                  <p class="font-semibold mt-1">Yes</p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+
+              <div>
+                <h4 class="font-semibold text-slate-800">
+                  Effective Volume
+                </h4>
+
+                <p class="text-xs text-slate-500 mt-1">
+                  Расчёт operational volume с учётом stackability.
+                </p>
+              </div>
+
+              <span class="text-xs px-2 py-1 rounded bg-orange-100 text-orange-700">
+                Operational
+              </span>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Effective Volume = Physical Volume × Stackability Coefficient
+                </code>
+              </div>
+
+              <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+
+                Non-stackable, fragile и crated items увеличивают operational volume
+                и уменьшают route capacity.
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Total Effective Volume
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Общий operational volume заказа.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Total Effective Volume = SUM(Item Effective Volume)
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Total Weight
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Общий вес заказа.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Total Weight = SUM(Item Weight × Item Quantity)
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Operational Cost
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Основной operational cost interstate move.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Operational Cost = Pickup Cost + Interstate Cost + Delivery Cost
+                </code>
+              </div>
+
+              <div class="grid grid-cols-3 gap-4 mt-4 text-sm">
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                  <p class="font-semibold text-slate-800">
+                    Pickup Cost
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Local pickup labor + access + loading.
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                  <p class="font-semibold text-slate-800">
+                    Interstate Cost
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Route transportation and fuel.
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                  <p class="font-semibold text-slate-800">
+                    Delivery Cost
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Delivery labor and unloading.
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Additional Charges
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Все дополнительные сервисы и fees.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Additional Charges = Packaging + Crating + Storage + Insurance + Access + COI + Zone Fees + Helpers
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Margin
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Расчёт profitability.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Margin = (Operational Cost + Additional Charges - Discounts) × Margin Rate
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Minimum Quote Rule
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Защита от слишком низких quote.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Final Price Before Rounding = MAX(Raw Final Price, Minimum Quote)
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORMULA -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Rounded Final Price
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Финальное customer-facing rounding.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Rounded Final Price = CEILING(Final Price Before Rounding, Rounding Rule)
+                </code>
+              </div>
+
+              <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+
+                Recommended production rule:
+                round to nearest $10 or $25.
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+            <!-- ROUTE & VEHICLE LOGIC -->
+      <section class="mb-6">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center">
+            <i data-lucide="truck" class="w-5 h-5"></i>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-slate-800">
+              Route & Vehicle Logic
+            </h3>
+
+            <p class="text-sm text-slate-500">
+              Формулы interstate route planning, fuel cost и vehicle fit.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- INTERNAL FUEL PRICE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Internal Fuel Price
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Внутренняя цена топлива для pricing engine.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Internal Fuel Price = Current Avg × (1 + Fuel Surcharge % / 100)
+                </code>
+              </div>
+
+              <div class="mt-4 bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm">
+
+                <p class="font-semibold text-slate-800">
+                  Example
+                </p>
+
+                <p class="mt-2 text-slate-600">
+                  AAA Diesel = $5.50
+                </p>
+
+                <p class="text-slate-600">
+                  Fuel Surcharge = 10%
+                </p>
+
+                <p class="mt-2 font-semibold text-slate-800">
+                  Internal Fuel Price = $6.05
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FUEL COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Fuel Cost
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Стоимость топлива interstate route.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Fuel Cost = (Route Miles / Vehicle MPG) × Internal Fuel Price
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- MILEAGE COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Mileage Cost
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Operational mileage cost.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Mileage Cost = Route Miles × Vehicle Cost / Mile
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- INTERSTATE COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Interstate Cost
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Полная стоимость interstate transportation.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Interstate Cost = Fuel Cost + Mileage Cost + Driver Labor + Tolls + Parking + Route Expenses
+                </code>
+              </div>
+
+              <div class="grid grid-cols-5 gap-4 mt-4 text-sm">
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <p class="font-semibold text-slate-800">
+                    Fuel
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Diesel / Regular
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <p class="font-semibold text-slate-800">
+                    Mileage
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Depreciation
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <p class="font-semibold text-slate-800">
+                    Driver
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Driver labor
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <p class="font-semibold text-slate-800">
+                    Tolls
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Route tolls
+                  </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                  <p class="font-semibold text-slate-800">
+                    Misc
+                  </p>
+
+                  <p class="text-xs text-slate-500 mt-2">
+                    Parking / route
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- VEHICLE SELECTION -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Vehicle Selection
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Автоматический выбор vehicle.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Vehicle Selected = First Active Vehicle Where Capacity ≥ Total Effective Volume AND Max Weight ≥ Total Weight
+                </code>
+              </div>
+
+              <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+
+                Production version должна дополнительно учитывать:
+                item dimensions, stackability и loading configuration.
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- VEHICLE FIT -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Vehicle Fit
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Проверка возможности загрузки.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Vehicle Fit = Volume Fit AND Weight Fit AND Length Fit AND Stackability Fit
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- VEHICLE COUNT -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Vehicle Count
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Количество required vehicles.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Vehicle Count = CEILING(Total Effective Volume / Vehicle Capacity)
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- CUSTOMER ROUTE SHARE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Customer Route Share
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Доля клиента в consolidated route.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Customer Route Share = Customer Effective Volume / Total Route Effective Volume
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- CONSOLIDATED COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Consolidated Interstate Cost
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Interstate cost при consolidation.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Consolidated Interstate Cost = Interstate Cost × Customer Route Share
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ROUTE AVAILABILITY -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+
+              <h4 class="font-semibold text-slate-800">
+                Nearest Route
+              </h4>
+
+              <p class="text-xs text-slate-500 mt-1">
+                Поиск ближайшего доступного route.
+              </p>
+
+            </div>
+
+            <div class="p-5">
+
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Nearest Route = MIN(Route Departure Date) WHERE Available Capacity ≥ Required Capacity
+                </code>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+      <!-- SERVICE CHARGES -->
+      <section class="mb-6">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center">
+            <i data-lucide="package" class="w-5 h-5"></i>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-slate-800">
+              Service Charges
+            </h3>
+
+            <p class="text-sm text-slate-500">
+              Формулы дополнительных услуг: упаковка, крейт, хранение, страховка, COI.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- PACKAGING COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Packaging Cost
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Упаковка считается на уровне item, а не фиксированной суммой на весь заказ.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Packaging Cost = SUM((Packaging Base Price × Item Qty) + (Packaging Price / cu ft × Item Effective Volume))
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- CRATE COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Crate Cost
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Стоимость крейта на item-level.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Crate Cost = Base Crate Price + (Crate Price / cu ft × Item Effective Volume)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- STORAGE COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Storage Cost
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Хранение может применяться к отдельным items.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Storage Cost = SUM(Item Effective Volume × Storage Days × Storage Rate Per cu ft Per Day)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- INSURANCE FEE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Insurance Fee
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Страхование может применяться к одному item, а не ко всему заказу.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Insurance Fee = MAX(Minimum Insurance Fee, Declared Value × Insurance Rate)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- COI FEE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                COI Fee
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                COI может требоваться отдельно на pickup или delivery.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  COI Fee = IF(Pickup COI Required, Pickup COI Fee, 0) + IF(Delivery COI Required, Delivery COI Fee, 0)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- EXCLUSIVE DELIVERY -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Exclusive Delivery Fee
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Доплата за отдельную доставку без consolidation.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Exclusive Delivery Fee = Operational Cost × (Exclusive Delivery Multiplier - 1)
+                </code>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ACCESS & CREW LOGIC -->
+      <section class="mb-6">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center">
+            <i data-lucide="users" class="w-5 h-5"></i>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-slate-800">
+              Access & Crew Logic
+            </h3>
+
+            <p class="text-sm text-slate-500">
+              Формулы сложности доступа, команды и дополнительных helper workers.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- STAIRS FEE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Stairs Fee
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Доплата за лестницу.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Stairs Fee = IF(Stairs Required, Stairs Fee Variable, 0)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- ELEVATOR FEE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Elevator Fee
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Доплата, если лифт недоступен или не может быть использован.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Elevator Fee = IF(Elevator Unavailable, Elevator Unavailable Fee, 0)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- LONG CARRY FEE -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Long Carry Fee
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Доплата за перенос на длинную дистанцию.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Long Carry Fee = IF(Long Carry Distance &gt; Long Carry Threshold, Long Carry Fee Variable, 0)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACCESS FEES -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Access Fees
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Общая стоимость access conditions.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Access Fees = Pickup Access Fees + Delivery Access Fees
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADDRESS TYPE MULTIPLIER -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Address Type Multiplier
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Тип адреса влияет на скорость и сложность работы.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Labor Cost = Base Labor Cost × Address Type Multiplier
+                </code>
+              </div>
+
+              <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+                Warehouse может быть дешевле, old apartment без лифта и с узкими проходами должен увеличивать labor cost.
+              </div>
+            </div>
+          </div>
+
+          <!-- REQUIRED CREW -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Required Crew
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Команда рассчитывается от груза и условий доступа, а не от машины.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Required Crew = MAX(Included Crew Size, Heavy Item Crew Requirement, Access Crew Requirement)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- EXTRA HELPER COUNT -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Extra Helper Count
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Количество дополнительных работников сверх стандартной команды.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Extra Helper Count = MAX(0, Required Crew - Included Crew Size)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <!-- EXTRA HELPER COST -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Extra Helper Cost
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Дополнительный helper оплачивается минимум за 2 часа.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Extra Helper Cost = Extra Helper Count × Extra Helper Hourly Rate × MAX(Actual Helper Hours, Minimum Helper Hours)
+                </code>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+            <!-- EBOL / EXECUTION LOGIC -->
+      <section class="mb-6">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center">
+            <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-bold text-slate-800">
+              eBOL / Execution Logic
+            </h3>
+
+            <p class="text-sm text-slate-500">
+              Формулы контроля items, pickup / delivery статусов и исключений.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="space-y-4">
+
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                eBOL Item Count
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Количество items в электронном BOL.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  eBOL Item Count = COUNT(Order Items)
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Pickup Completion %
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Процент items, отмеченных как picked up.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Pickup Completion % = Picked Up Items / Total Items
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Delivery Completion %
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Процент items, отмеченных как delivered.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Delivery Completion % = Delivered Items / Total Items
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+              <h4 class="font-semibold text-slate-800">
+                Exception Flag
+              </h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Флаг проблемного item или заказа.
+              </p>
+            </div>
+
+            <div class="p-5">
+              <div class="bg-slate-900 rounded-lg p-4 overflow-x-auto">
+                <code class="text-green-400 text-sm whitespace-nowrap">
+                  Exception Flag = IF(Damaged Item OR Missing Item OR Not Delivered Item, TRUE, FALSE)
+                </code>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- BA NOTES -->
+      <section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+
+        <button
+          onclick="toggleBANotes()"
+          class="w-full flex items-center justify-between px-6 py-5 hover:bg-slate-50 transition"
+        >
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-slate-800">
+              Business Notes
+            </h3>
+
+            <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+          </div>
+
+          <i id="baNotesChevron"
+             data-lucide="chevron-down"
+             class="w-5 h-5 text-slate-500 transition-transform">
+          </i>
+        </button>
+
+        <div id="baNotesContent" class="hidden border-t border-slate-200 p-6">
+
+          <div class="text-sm text-slate-600 space-y-5">
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">
+                Назначение страницы
+              </h4>
+
+              <p>
+                Formulas.html является справочником расчётной логики калькулятора.
+                Страница нужна для согласования правил с бизнесом и передачи логики в разработку.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">
+                Что важно для бизнеса
+              </h4>
+
+              <ul class="list-disc ml-5 space-y-2">
+                <li>Упаковка считается по items, а не фиксированной суммой за весь заказ.</li>
+                <li>Дополнительный helper оплачивается минимум за 2 часа.</li>
+                <li>COI может применяться отдельно к pickup или delivery.</li>
+                <li>Тип адреса влияет на сложность работы и стоимость.</li>
+                <li>eBOL строится на item-level списке с фото, комментариями и статусами.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">
+                Важное ограничение
+              </h4>
+
+              <p>
+                Формулы на этой странице фиксируют бизнес-логику.
+                Техническая реализация, структура БД, API и валидации должны быть дополнительно описаны в dev handoff документах.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  function toggleBANotes() {
+    const content = document.getElementById('baNotesContent');
+    const chevron = document.getElementById('baNotesChevron');
+
+    content.classList.toggle('hidden');
+    chevron.classList.toggle('rotate-180');
+  }
+
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
