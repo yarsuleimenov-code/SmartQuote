@@ -6,9 +6,6 @@ const mainItems = [
   { label: "My Drafts", href: "drafts.html" },
   { label: "My Estimates", href: "estimates.html" },
   { label: "All Calculations", href: null },
-  { label: "Variables", href: "variables.html" },
-  { label: "References", href: "references.html" },
-  { label: "Formulas", href: "formulas.html" }
 ];
 
 const operationItems = [
@@ -16,6 +13,12 @@ const operationItems = [
   { label: "Invoices", href: "invoices.html", icon: "wallet" },
   { label: "eBOL", href: "ebol.html", icon: "clipboard-check" },
   { label: "Orders", href: "orders.html", icon: "package-check" }
+];
+
+const pricingItems = [
+  { label: "Variables", href: "variables.html", icon: "sliders-horizontal" },
+  { label: "References", href: "references.html", icon: "book-open" },
+  { label: "Formulas", href: "formulas.html", icon: "sigma" }
 ];
 
 const futureItems = [
@@ -133,6 +136,14 @@ document.getElementById("sidebar").innerHTML = `
 
       <div class="space-y-1 mb-6">
         ${renderIconLinks(operationItems)}
+      </div>
+
+      <p class="uppercase text-xs text-slate-500 mb-3">
+        PRICING ENGINE
+      </p>
+
+      <div class="space-y-1 mb-6">
+        ${renderIconLinks(pricingItems)}
       </div>
 
       <p class="uppercase text-xs text-slate-500 mb-3">
