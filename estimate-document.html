@@ -1,90 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Zaberman Estimate | EST-291</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-
   <style>
+    :root {
+      --ink: #0f172a;
+      --text: #334155;
+      --muted: #64748b;
+      --line: #dbe2ea;
+      --soft: #f8fafc;
+      --warn-bg: #fffbeb;
+      --warn-line: #f59e0b;
+      --danger-bg: #fef2f2;
+      --danger-line: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f1f5f9;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.35;
+    }
 
     body {
-      background: #f1f5f9;
-      color: #334155;
-      font-family: Arial, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .screen-shell {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    main {
+      margin-left: 16rem;
+      width: 100%;
+    }
+
+    .topbar {
+      height: 64px;
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
     }
 
     .document {
       width: 210mm;
       min-height: 297mm;
-      margin: 24px auto;
-      background: white;
-      padding: 18mm;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      margin: 18px auto;
+      background: #fff;
+      padding: 13mm 14mm;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
     }
 
-    .section-title {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      color: #64748b;
-      text-transform: uppercase;
+    .header {
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 9px;
       margin-bottom: 10px;
     }
 
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
     }
 
-    .table td,
-    .table th {
-      border: 1px solid #dbe2ea;
-      padding: 8px 10px;
+    .title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 23px;
+      line-height: 1.08;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .brand {
+      min-width: 150px;
+      text-align: right;
+      color: #12365a;
+      font-size: 23px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .section {
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid var(--line);
+      padding: 5px 7px;
       vertical-align: top;
     }
 
     .table th {
-      background: #f8fafc;
-      text-align: left;
+      background: var(--soft);
       color: #475569;
-      font-weight: 700;
+      text-align: left;
+      font-weight: 800;
     }
 
-    .highlight-box {
-      border: 2px solid #f59e0b;
-      background: #fffbeb;
-      padding: 12px;
+    .meta-table th,
+    .meta-table td {
+      padding: 5px 7px;
     }
 
-    .danger-box {
-      border: 2px solid #dc2626;
-      background: #fef2f2;
-      padding: 12px;
+    .muted {
+      color: var(--muted);
     }
 
-    .compact-text {
-      font-size: 12px;
-      line-height: 1.45;
+    .small {
+      font-size: 10.5px;
+    }
+
+    .compact {
+      font-size: 11px;
+      line-height: 1.34;
+    }
+
+    .price-row td {
+      background: var(--ink);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .price-row td:last-child {
+      text-align: right;
+      font-size: 19px;
+    }
+
+    .notice {
+      border: 1.6px solid var(--danger-line);
+      background: var(--danger-bg);
+      padding: 7px 8px;
+    }
+
+    .highlight {
+      border: 1.6px solid var(--warn-line);
+      background: var(--warn-bg);
+      padding: 7px 8px;
+    }
+
+    .notice-title {
+      margin: 0 0 3px;
+      color: #991b1b;
+      font-weight: 800;
+      font-size: 11.5px;
+    }
+
+    .highlight-title {
+      margin: 0 0 3px;
+      color: #92400e;
+      font-weight: 800;
+      font-size: 11.5px;
+    }
+
+    .terms-list {
+      margin: 0;
+      padding-left: 15px;
+    }
+
+    .terms-list li {
+      margin: 2px 0;
+    }
+
+    .signature-cell {
+      height: 43px;
+    }
+
+    .footer {
+      border-top: 2px solid var(--line);
+      padding-top: 8px;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .footer-brand {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .keep-together {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    @page {
+      size: A4;
+      margin: 8mm;
     }
 
     @media print {
-
+      html,
       body {
-        background: white;
+        background: #fff;
+        font-size: 11.2px;
       }
 
       #sidebar,
-      #topbar,
-      #printActions {
+      .topbar,
+      .no-print {
         display: none !important;
       }
 
@@ -94,603 +275,264 @@
       }
 
       .document {
-        box-shadow: none;
-        margin: 0;
         width: 100%;
         min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
       }
 
+      .section {
+        margin-bottom: 8px;
+      }
+
+      .table th,
+      .table td {
+        padding: 4.5px 6px;
+      }
+
+      .keep-together {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
     }
-
   </style>
-
 </head>
 
 <body>
+  <div class="screen-shell">
+    <div id="sidebar"></div>
 
-<div class="min-h-screen flex">
+    <main>
+      <header class="topbar no-print">
+        <div>
+          <p class="text-xs text-slate-400 m-0">Zaberman › Estimate Document</p>
+          <h2 class="text-lg font-semibold text-slate-800 m-0">Customer Estimate</h2>
+        </div>
 
-  <div id="sidebar"></div>
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">Back to Quote</a>
+          <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">Print / Save PDF</button>
+        </div>
+      </header>
 
-  <main class="ml-64 w-full">
+      <article class="document">
+        <section class="header keep-together">
+          <div class="header-row">
+            <div>
+              <h1 class="title">Interstate Delivery Estimate</h1>
+              <p class="subtitle">Customer-facing estimate for interstate transportation services. This document is a non-binding customer estimate unless otherwise confirmed in writing. It is not a final transportation agreement, insurance certificate, or bill of lading.</p>
+            </div>
 
-    <!-- TOPBAR -->
-    <header id="topbar"
-      class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
-
-      <div>
-
-        <p class="text-xs text-slate-400">
-          Zaberman › Estimate Document
-        </p>
-
-        <h2 class="text-lg font-semibold text-slate-800">
-          Customer Estimate
-        </h2>
-
-      </div>
-
-      <div id="printActions" class="flex items-center gap-3">
-
-        <a href="index.html"
-          class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
-
-          Back to Quote
-
-        </a>
-
-        <button onclick="window.print()"
-          class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
-
-          Print / Save PDF
-
-        </button>
-
-      </div>
-
-    </header>
-
-    <!-- DOCUMENT -->
-    <div class="document">
-            <!-- HEADER -->
-      <section style="border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 18px;">
-
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 32px;">
-
-          <div>
-
-            <h1 style="font-size: 28px; line-height: 1.15; font-weight: 800; color: #0f172a; margin: 0;">
-              Interstate Delivery Estimate
-            </h1>
-
-            <p style="font-size: 13px; color: #64748b; margin-top: 6px; max-width: 520px;">
-              Customer-facing estimate for interstate transportation services.
-            </p>
-
-          </div>
-
-          <div style="text-align: right; min-width: 180px;">
-
-            <div style="font-size: 24px; font-weight: 800; color: #12365a;">
+            <div class="brand">
               zaberman
+              <small>Interstate Delivery</small>
             </div>
-
-            <p style="font-size: 11px; color: #64748b; margin-top: 4px;">
-              Interstate Delivery
-            </p>
-
           </div>
 
-        </div>
+          <table class="table meta-table" style="margin-top: 9px;">
+            <tr>
+              <th>Estimate ID</th>
+              <th>Created</th>
+              <th>Valid Until</th>
+              <th>Estimate Total</th>
+            </tr>
+            <tr>
+              <td><strong>EST-291</strong></td>
+              <td>May 27, 2026</td>
+              <td>June 10, 2026</td>
+              <td style="font-size: 18px; font-weight: 800; color: var(--ink);">$1,130</td>
+            </tr>
+          </table>
+        </section>
 
-        <table class="table" style="margin-top: 16px;">
-
-          <tr>
-
-            <th>Estimate ID</th>
-
-            <th>Created</th>
-
-            <th>Valid Until</th>
-
-            <th>Estimate Total</th>
-
-          </tr>
-
-          <tr>
-
-            <td><strong>EST-291</strong></td>
-
-            <td>May 27, 2026</td>
-
-            <td>June 10, 2026</td>
-
-            <td style="font-size: 20px; font-weight: 800; color: #0f172a;">
-              $1,130
-            </td>
-
-          </tr>
-
-        </table>
-
-      </section>
-
-      <!-- CUSTOMER & ROUTE -->
-      <section style="margin-bottom: 18px;">
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
-
-          <div>
-
-            <div class="section-title">
-              Customer
+        <section class="section">
+          <div class="grid-2">
+            <div>
+              <h3 class="section-title">Customer</h3>
+              <table class="table compact">
+                <tr>
+                  <th style="width: 32%;">Name</th>
+                  <td><strong>John Peterson</strong></td>
+                </tr>
+                <tr>
+                  <th>Phone</th>
+                  <td>+1 (917) 555-0182</td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td>john.peterson@email.com</td>
+                </tr>
+              </table>
             </div>
-
-            <table class="table">
-
-              <tr>
-                <th style="width: 36%;">Name</th>
-                <td><strong>John Peterson</strong></td>
-              </tr>
-
-              <tr>
-                <th>Phone</th>
-                <td>+1 (917) 555-0182</td>
-              </tr>
-
-              <tr>
-                <th>Email</th>
-                <td>john.peterson@email.com</td>
-              </tr>
-
-            </table>
-
-          </div>
-
-          <div>
-
-            <div class="section-title">
-              Route
-            </div>
-
-            <table class="table">
-
-              <tr>
-                <th style="width: 36%;">Pickup</th>
-                <td>98 N 7th St, Brooklyn, NY 11211</td>
-              </tr>
-
-              <tr>
-                <th>Delivery</th>
-                <td>530 Mateo St, Los Angeles, CA 90021</td>
-              </tr>
-
-              <tr>
-                <th>Transit</th>
-                <td><strong>Consolidated Interstate Route</strong></td>
-              </tr>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </section>
-            <!-- ITEMS -->
-      <section style="margin-bottom: 18px;">
-
-        <div class="section-title">
-          Shipment Items
-        </div>
-
-        <table class="table">
-
-          <tr>
-
-            <th style="width: 48%;">
-              Item
-            </th>
-
-            <th style="width: 10%;">
-              Qty
-            </th>
-
-            <th>
-              Service / Notes
-            </th>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              <strong>Concrete Dining Table</strong><br>
-              <span style="font-size: 11px; color: #64748b;">
-                Fragile / Oversized
-              </span>
-            </td>
-
-            <td>
-              1
-            </td>
-
-            <td>
-              Blanket Wrap
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              <strong>Vintage Mirror</strong><br>
-              <span style="font-size: 11px; color: #64748b;">
-                High-Risk Item
-              </span>
-            </td>
-
-            <td>
-              1
-            </td>
-
-            <td>
-              Crating Required
-            </td>
-
-          </tr>
-
-        </table>
-
-        <p class="compact-text" style="margin-top: 8px; color: #64748b;">
-
-          Final charges may change if shipment details, item count, dimensions,
-          access conditions, or requested services differ from the information
-          provided at the time of estimate creation.
-
-        </p>
-
-      </section>
-
-      <!-- PRICING -->
-      <section style="margin-bottom: 18px;">
-
-        <div class="section-title">
-          Pricing Summary
-        </div>
-
-        <table class="table">
-
-          <tr>
-
-            <th>
-              Description
-            </th>
-
-            <th style="width: 24%;">
-              Amount
-            </th>
-
-          </tr>
-
-          <tr>
-            <td>Transportation Services</td>
-            <td><strong>$1,000</strong></td>
-          </tr>
-
-          <tr>
-            <td>Packing / Handling Services</td>
-            <td><strong>$78</strong></td>
-          </tr>
-
-          <tr>
-            <td>Insurance Processing</td>
-            <td><strong>$12</strong></td>
-          </tr>
-
-          <tr>
-            <td>Released Value Protection</td>
-            <td><strong>Included</strong></td>
-          </tr>
-
-          <tr>
-            <td>Full Value Protection</td>
-            <td><strong>Not Included</strong></td>
-          </tr>
-
-          <tr>
-            <td>Discounts / Adjustments</td>
-            <td><strong>$0</strong></td>
-          </tr>
-
-          <tr>
-
-            <td style="font-size: 16px; font-weight: 800; background: #0f172a; color: white;">
-              Estimated Total
-            </td>
-
-            <td style="font-size: 22px; font-weight: 800; background: #0f172a; color: white;">
-              $1,130
-            </td>
-
-          </tr>
-
-        </table>
-
-      </section>
-            <!-- LIABILITY & PROTECTION -->
-      <section style="margin-bottom: 18px;">
-
-        <div class="section-title">
-          Protection Plans & Liability
-        </div>
-
-        <!-- MAIN LIABILITY NOTICE -->
-        <div class="danger-box compact-text" style="margin-bottom: 12px;">
-
-          <div style="display: flex; align-items: flex-start; gap: 10px;">
-
-            <i data-lucide="shield-alert"
-              style="width: 18px; height: 18px; color: #b91c1c; margin-top: 1px;"></i>
 
             <div>
-
-              <strong style="color: #991b1b;">
-                Important Liability Notice
-              </strong>
-
-              <p style="margin-top: 4px;">
-
-                Unless Full Value Protection is separately requested and confirmed
-                in writing before transportation begins, this shipment will be transported
-                under <strong>Released Value Protection only</strong>.
-
-              </p>
-
-              <p style="margin-top: 4px;">
-
-                Released Value Protection limits carrier liability to
-                <strong>$0.60 per pound per article</strong>, subject to applicable
-                transportation rules, exclusions and service terms.
-
-              </p>
-
+              <h3 class="section-title">Route</h3>
+              <table class="table compact">
+                <tr>
+                  <th style="width: 32%;">Pickup</th>
+                  <td>98 N 7th St, Brooklyn, NY 11211</td>
+                </tr>
+                <tr>
+                  <th>Delivery</th>
+                  <td>530 Mateo St, Los Angeles, CA 90021</td>
+                </tr>
+                <tr>
+                  <th>Service</th>
+                  <td><strong>Consolidated Interstate Route</strong></td>
+                </tr>
+              </table>
             </div>
+          </div>
+        </section>
 
+        <section class="section">
+          <h3 class="section-title">Shipment Items</h3>
+          <table class="table compact">
+            <tr>
+              <th style="width: 43%;">Item</th>
+              <th style="width: 9%;">Qty</th>
+              <th style="width: 22%;">Handling</th>
+              <th>Notes</th>
+            </tr>
+            <tr>
+              <td><strong>Concrete Dining Table</strong></td>
+              <td>1</td>
+              <td>Blanket Wrap</td>
+              <td class="muted">Fragile / Oversized</td>
+            </tr>
+            <tr>
+              <td><strong>Vintage Mirror</strong></td>
+              <td>1</td>
+              <td>Crating Required</td>
+              <td class="muted">High-risk item</td>
+            </tr>
+          </table>
+
+          <p class="compact muted" style="margin: 5px 0 0;">Final charges may change if item count, dimensions, weight, access conditions, required handling, or requested services differ from the information used to create this estimate.</p>
+        </section>
+
+        <section class="section keep-together">
+          <h3 class="section-title">Pricing Summary</h3>
+          <table class="table compact">
+            <tr>
+              <th>Description</th>
+              <th style="width: 30%; text-align: right;">Amount / Status</th>
+            </tr>
+            <tr>
+              <td>Estimated Transportation Total</td>
+              <td style="text-align: right;"><strong>$1,130</strong></td>
+            </tr>
+            <tr>
+              <td>Released Value Protection</td>
+              <td style="text-align: right;"><strong>Included</strong></td>
+            </tr>
+            <tr>
+              <td>Full Value Protection</td>
+              <td style="text-align: right;"><strong>Not Included</strong></td>
+            </tr>
+            <tr>
+              <td>Protection Selection</td>
+              <td style="text-align: right;"><strong>☑ Released Value Protection Selected</strong></td>
+            </tr>
+            <tr class="price-row">
+              <td>Estimated Total</td>
+              <td>$1,130</td>
+            </tr>
+          </table>
+        </section>
+
+        <section class="section keep-together">
+          <h3 class="section-title">Protection Plans & Liability</h3>
+
+          <div class="notice compact" style="margin-bottom: 7px;">
+            <p class="notice-title">Important Liability Notice</p>
+            <p style="margin: 0 0 4px;">Unless Full Value Protection is separately requested and confirmed in writing before transportation begins, this shipment will be transported under <strong>Released Value Protection only</strong>.</p>
+            <p style="margin: 0;">Released Value Protection limits carrier liability to <strong>$0.60 per pound per article</strong>, subject to applicable transportation rules, exclusions, and service terms.</p>
           </div>
 
-        </div>
-
-        <!-- OPTIONAL COVERAGE -->
-        <div class="highlight-box compact-text">
-
-          <strong style="color: #92400e;">
-            Optional Full Value Protection
-          </strong>
-
-          <p style="margin-top: 5px;">
-
-            Full Value Protection may be purchased separately before pickup
-            for an additional charge of <strong>2.5%–5%</strong> of the declared market value,
-            plus a <strong>$15 insurance processing fee</strong>.
-
-          </p>
-
-          <p style="margin-top: 5px;">
-
-            A 5% rate may apply to mirrors, chandeliers, paintings,
-            electronics, antiques, custom, fragile or non-repairable items.
-
-          </p>
-
-        </div>
-
-      </section>
-
-      <!-- KEY TERMS -->
-      <section style="margin-bottom: 18px;">
-
-        <div class="section-title">
-          Key Terms
-        </div>
-
-        <table class="table compact-text">
-
-          <tr>
-
-            <td style="width: 34%; font-weight: 700; background: #f8fafc;">
-              Estimate Validity
-            </td>
-
-            <td>
-              Pricing may change if shipment details, dimensions, weight,
-              access conditions, requested services or item count change.
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td style="font-weight: 700; background: #f8fafc;">
-              Additional Charges
-            </td>
-
-            <td>
-              Additional charges may apply for stairs, long carry,
-              inaccessible locations, waiting time, storage, re-delivery,
-              COI requirements or undisclosed shipment conditions.
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td style="font-weight: 700; background: #f8fafc;">
-              Pickup & Delivery Windows
-            </td>
-
-            <td>
-              Pickup and delivery windows are estimates unless confirmed in writing.
-              Delays may occur due to routing, weather, road restrictions or operational factors.
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td style="font-weight: 700; background: #f8fafc;">
-              Terms Reference
-            </td>
-
-            <td>
-
-              Transportation services are additionally governed by:
-
-              <div style="margin-top: 4px; font-weight: 700; color: #0f172a;">
-                https://zaberman.com/terms
-              </div>
-
-            </td>
-
-          </tr>
-
-        </table>
-
-      </section>
-            <!-- CUSTOMER ACCEPTANCE -->
-      <section style="margin-bottom: 18px;">
-
-        <div class="section-title">
-          Customer Acceptance
-        </div>
-
-        <div class="danger-box compact-text">
-
-          <div style="display: flex; align-items: flex-start; gap: 10px;">
-
-            <i data-lucide="file-warning"
-              style="width: 18px; height: 18px; color: #b91c1c; margin-top: 1px;"></i>
-
-            <div>
-
-              <p>
-
-                By approving this estimate, customer acknowledges that:
-
-              </p>
-
-              <ul style="margin-top: 6px; padding-left: 18px;">
-
-                <li>
-                  shipment information provided for estimate generation is accurate to the best of customer knowledge;
-                </li>
-
-                <li style="margin-top: 4px;">
-                  Released Value Protection applies unless Full Value Protection is separately requested and confirmed in writing;
-                </li>
-
-                <li style="margin-top: 4px;">
-                  additional charges may apply for undisclosed shipment conditions or operational requirements;
-                </li>
-
-                <li style="margin-top: 4px;">
-                  customer had the opportunity to review applicable transportation terms and liability limitations.
-                </li>
-
-              </ul>
-
-            </div>
-
+          <div class="highlight compact">
+            <p class="highlight-title">Optional Full Value Protection</p>
+            <p style="margin: 0 0 4px;">Full Value Protection is <strong>not included</strong> in this estimate unless separately requested and confirmed in writing before pickup.</p>
+            <p style="margin: 0;">If available, it may be purchased for an additional charge of <strong>2.5%–5%</strong> of the declared market value, plus a <strong>$15 protection processing fee</strong>. Higher rates may apply to mirrors, chandeliers, paintings, electronics, antiques, custom, fragile, or non-repairable items.</p>
           </div>
+        </section>
 
-        </div>
+        <section class="section keep-together">
+          <h3 class="section-title">Key Terms</h3>
+          <table class="table compact">
+            <tr>
+              <td style="width: 30%; font-weight: 800; background: var(--soft);">Estimate Validity</td>
+              <td>Pricing may change if shipment details, dimensions, weight, access conditions, required handling, requested services, scheduling requirements, or item count change.</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 800; background: var(--soft);">Additional Charges</td>
+              <td>Additional charges may apply for stairs, long carry, inaccessible locations, waiting time, storage, re-delivery, COI requirements, undisclosed shipment conditions, excessive weight, unsafe packing, or inaccessible service conditions. Carrier may refuse unsafe or undisclosed shipments.</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 800; background: var(--soft);">Pickup & Delivery Windows</td>
+              <td>Pickup and delivery windows are estimates unless confirmed in writing. Delays may occur due to routing, weather, road restrictions, or operational factors. Carrier is not responsible for indirect, consequential, delay-related, or loss-of-business damages.</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 800; background: var(--soft);">Fragile / Antique Items</td>
+              <td>Certain fragile, antique, vintage, glass, custom, or non-repairable items may carry elevated transportation risk even with professional handling and protective packaging.</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 800; background: var(--soft);">Payment & Scheduling</td>
+              <td>Deposit, payment, scheduling, cancellation, and rescheduling requirements may be provided separately during booking confirmation.</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 800; background: var(--soft);">Terms Reference</td>
+              <td>Transportation services are additionally governed by Zaberman Terms: <strong>https://zaberman.com/terms</strong>. In case of conflict, Zaberman Terms and the final Bill of Lading govern transportation services, claims procedures, and filing deadlines.</td>
+            </tr>
+          </table>
+        </section>
 
-      </section>
+        <section class="section keep-together">
+          <h3 class="section-title">Customer Acceptance</h3>
 
-      <!-- SIGNATURE -->
-      <section style="margin-bottom: 18px;">
+          <div class="notice compact">
+            <p style="margin: 0 0 4px;"><strong>By approving this estimate, customer acknowledges that:</strong></p>
+            <ul class="terms-list">
+              <li>shipment information used for estimate generation is accurate to the best of customer knowledge;</li>
+              <li><strong>Released Value Protection applies</strong> unless Full Value Protection is separately requested and confirmed in writing;</li>
+              <li>additional charges may apply for undisclosed shipment conditions or operational requirements;</li>
+              <li>customer had the opportunity to review applicable transportation terms and liability limitations;</li>
+              <li>electronic approval or signature constitutes customer acceptance of this estimate and referenced terms.</li>
+            </ul>
+          </div>
+        </section>
 
-        <table class="table">
+        <section class="section keep-together">
+          <table class="table compact">
+            <tr>
+              <th style="width: 50%;">Customer Signature</th>
+              <th>Date</th>
+            </tr>
+            <tr>
+              <td class="signature-cell"></td>
+              <td></td>
+            </tr>
+          </table>
+        </section>
 
-          <tr>
-
-            <th style="width: 50%;">
-              Customer Signature
-            </th>
-
-            <th>
-              Date
-            </th>
-
-          </tr>
-
-          <tr>
-
-            <td style="height: 70px;"></td>
-
-            <td></td>
-
-          </tr>
-
-        </table>
-
-      </section>
-            <!-- FOOTER -->
-      <section style="border-top: 2px solid #dbe2ea; padding-top: 14px;">
-
-        <div style="display: flex; justify-content: space-between; gap: 24px; align-items: flex-start;">
-
+        <footer class="footer keep-together">
           <div>
-
-            <div style="font-size: 16px; font-weight: 800; color: #0f172a;">
-              Zaberman Interstate Delivery
-            </div>
-
-            <p class="compact-text" style="margin-top: 4px; color: #64748b; max-width: 420px;">
-
-              Interstate transportation services for furniture,
-              artwork and large items.
-
-            </p>
-
+            <div class="footer-brand">Zaberman Interstate Delivery</div>
+            <p class="compact muted" style="margin: 3px 0 0; max-width: 410px;">Interstate transportation services for furniture, artwork, and large items.</p>
           </div>
 
-          <div class="compact-text" style="text-align: right;">
-
-            <div>
-              <strong>Website:</strong>
-              https://zaberman.com
-            </div>
-
-            <div style="margin-top: 4px;">
-              <strong>Terms:</strong>
-              https://zaberman.com/terms
-            </div>
-
-            <div style="margin-top: 4px;">
-              <strong>Email:</strong>
-              a@zaberman.com
-            </div>
-
+          <div class="compact" style="text-align: right;">
+            <div><strong>Website:</strong> https://zaberman.com</div>
+            <div><strong>Terms:</strong> https://zaberman.com/terms</div>
+            <div><strong>USDOT / MC:</strong> USDOT XXXXXX | MC XXXXX</div>
+            <div><strong>Email:</strong> a@zaberman.com</div>
           </div>
+        </footer>
+      </article>
+    </main>
+  </div>
 
-        </div>
-
-      </section>
-
-    </div>
-
-  </main>
-
-</div>
-
-<script>
-
-  lucide.createIcons();
-
-</script>
-
-<script src="sidebar.js"></script>
-
+  <script src="sidebar.js"></script>
 </body>
 </html>
