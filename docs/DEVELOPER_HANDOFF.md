@@ -91,18 +91,18 @@ HTML files must not be used as source of truth for:
 
 | Screen | Назначение | Текущий статус | Production-команда должна реализовать |
 |---|---|---|---|
-| `index.html` | Основной экран создания quote. Broker вводит customer data, route, items, access conditions и quote options. | Wireframe / mock | Реальный QuoteDraft, item CRUD, validation, recalculation через pricing engine, autosave, Generate Estimate from snapshot. |
-| `breakdown.html` | Экран объяснения pricing breakdown: operational cost, additional charges, margin, rounding. | Reference / mock | Read-only breakdown из pricing engine, component-level explanation, formula version, audit trail. |
-| `estimate-document.html` | Customer-facing estimate document. Показывает, как должен выглядеть estimate для клиента. | Wireframe / mock | Генерация estimate document из immutable EstimateSnapshot, PDF artifact, versioning, legal text ownership. |
-| `drafts.html` | Список сохраненных quote drafts. | Wireframe / mock | Backend draft persistence, search, filters, pagination, ownership, duplicate, soft delete, resume draft. |
-| `estimates.html` | Список customer-facing estimates, которые были generated/sent. | Wireframe / mock | Estimate history, status lifecycle, expiration, versioning, view/send/reopen/convert actions. |
-| `invoices.html` | Будущий invoice workflow. | Wireframe / mock | Invoice entity, invoice generation, payment status, provider integration, reconciliation. |
-| `orders.html` | Будущий order workflow после approved estimate. | Wireframe / mock | Order lifecycle, dispatch state, operational assignment, route execution, conversion from Estimate. |
-| `ebol.html` | Operational eBOL / proof workflow: item verification, pickup/delivery statuses, photos, signatures, exceptions. | Wireframe / mock | eBOL state machine, photo upload, signature capture, item-level verification, POD generation. |
-| `formulas.html` | Reference documentation для pricing formulas и business rules. | Reference | Превратить business formulas в executable, versioned, tested pricing rules. |
-| `variables.html` | Admin/reference screen для pricing variables: fuel, vehicles, margins, helper rules, COI, stackability. | Reference / mock | Backend configuration model, versioning, permissions, audit log, variable snapshots. |
-| `references.html` | Reference data area для operational/pricing lookup tables. | Reference / mock | Production reference data source, admin editing, import/export, version control. |
-| `lifecycle.html` | Visual explanation of quote lifecycle and transitions. | Reference | Formal state machines для QuoteDraft, Estimate, Invoice, Order и eBOL. |
+| index.html | Основной экран создания quote. Broker вводит customer data, route, items, access conditions и quote options. | Wireframe / mock | Реальный QuoteDraft, item CRUD, validation, recalculation через pricing engine, autosave, Generate Estimate from snapshot. |
+| breakdown.html | Экран объяснения pricing breakdown: operational cost, additional charges, margin, rounding. | Reference / mock | Read-only breakdown из pricing engine, component-level explanation, formula version, audit trail. |
+| estimate-document.html | Customer-facing estimate document. Показывает, как должен выглядеть estimate для клиента. | Wireframe / mock | Генерация estimate document из immutable EstimateSnapshot, PDF artifact, versioning, legal text ownership. |
+| drafts.html | Список сохраненных quote drafts. | Wireframe / mock | Backend draft persistence, search, filters, pagination, ownership, duplicate, soft delete, resume draft. |
+| estimates.html | Список customer-facing estimates, которые были generated/sent. | Wireframe / mock | Estimate history, status lifecycle, expiration, versioning, view/send/reopen/convert actions. |
+| invoices.html | Будущий invoice workflow. | Wireframe / mock | Invoice entity, invoice generation, payment status, provider integration, reconciliation. |
+| orders.html | Будущий order workflow после approved estimate. | Wireframe / mock | Order lifecycle, dispatch state, operational assignment, route execution, conversion from Estimate. |
+| ebol.html | Operational eBOL / proof workflow: item verification, pickup/delivery statuses, photos, signatures, exceptions. | Wireframe / mock | eBOL state machine, photo upload, signature capture, item-level verification, POD generation. |
+| formulas.html | Reference documentation для pricing formulas и business rules. | Reference | Превратить business formulas в executable, versioned, tested pricing rules. |
+| variables.html | Admin/reference screen для pricing variables: fuel, vehicles, margins, helper rules, COI, stackability. | Reference / mock | Backend configuration model, versioning, permissions, audit log, variable snapshots. |
+| references.html | Reference data area для operational/pricing lookup tables. | Reference / mock | Production reference data source, admin editing, import/export, version control. |
+| lifecycle.html | Visual explanation of quote lifecycle and transitions. | Reference | Formal state machines для QuoteDraft, Estimate, Invoice, Order и eBOL. |
 
 ## 5. Domain Entities
 
@@ -440,3 +440,264 @@ PDF / Export Artifact
 Customer Approval
 ↓
 Invoice / Order / eBOL
+```
+
+Snapshot principles:
+
+- Draft can be edited.
+- EstimateSnapshot cannot be edited.
+- Sent Estimate should not be overwritten.
+- Changes after sending should create a new version.
+- Historical estimates must not be recalculated when PricingVariables change.
+- eBOL should use frozen order/estimate snapshot, not live editable quote data.
+
+## 9. API Expectations
+
+Production API should expose clear contracts between frontend and backend.
+
+Suggested endpoints:
+
+```text
+POST   /api/quotes
+GET    /api/quotes/:id
+PATCH  /api/quotes/:id
+DELETE /api/quotes/:id
+
+POST   /api/quotes/:id/items
+PATCH  /api/quotes/:id/items/:itemId
+DELETE /api/quotes/:id/items/:itemId
+
+POST   /api/pricing/calculate
+GET    /api/pricing/variables/current
+POST   /api/pricing/variables
+GET    /api/pricing/variables/:version
+
+POST   /api/quotes/:id/generate-estimate
+GET    /api/estimates/:id
+POST   /api/estimates/:id/send
+POST   /api/estimates/:id/reopen-draft
+POST   /api/estimates/:id/convert-to-invoice
+POST   /api/estimates/:id/convert-to-order
+
+GET    /api/invoices/:id
+POST   /api/invoices/:id/send
+POST   /api/invoices/:id/payment-link
+
+GET    /api/orders/:id
+PATCH  /api/orders/:id/status
+
+GET    /api/orders/:id/ebol
+PATCH  /api/orders/:id/ebol
+POST   /api/orders/:id/ebol/photos
+POST   /api/orders/:id/ebol/signatures
+POST   /api/orders/:id/ebol/generate-pod
+```
+
+Pricing calculate response should include:
+
+- calculated totals;
+- breakdown components;
+- warnings;
+- validation errors;
+- formula version;
+- variables version;
+- manual review flags.
+
+Example conceptual response:
+
+```json
+{
+  "formulaVersion": "pricing-v1.1",
+  "variablesVersion": "variables-2026-05-27",
+  "validation": {
+    "errors": [],
+    "warnings": []
+  },
+  "breakdown": {
+    "operationalCost": 922,
+    "additionalCharges": 78,
+    "margin": 124,
+    "rawPrice": 1124,
+    "roundingDelta": 6,
+    "finalPrice": 1130
+  },
+  "flags": {
+    "manualReviewRequired": false,
+    "ebolReady": true
+  }
+}
+```
+
+## 10. Mock Value Mapping
+
+| Mock value | Current prototype source | Required production source |
+|---|---|---|
+| Customer name, phone, email | Hardcoded HTML | Customer record, CRM, or validated broker input |
+| Pickup ZIP / Delivery ZIP | Hardcoded inputs | QuoteDraft route input |
+| Route miles | Static display | Maps API, internal route matrix, or approved route service |
+| Nearest route date | Static display | Dispatch/routing availability service |
+| Vehicle fit | Static display | Pricing engine vehicle selection |
+| Required crew | Static display | Crew calculation rule |
+| Item volume | Static display | Dimensions x quantity calculation |
+| Effective volume | Static display | Pricing engine with coefficients |
+| Total weight | Static display | Sum of QuoteItem weights x quantities |
+| Packaging charges | Static display | Item-level packaging pricing rule |
+| Storage charges | Static display | Storage days x storage rate |
+| Insurance charges | Static display | Approved insurance/protection model |
+| Operational cost | Static display | Pricing engine output |
+| Margin | Static display | Approved margin formula |
+| Final rounded price | Static display | Pricing engine rounding rule |
+| Estimate ID | Hardcoded EST-291 | Backend-generated unique ID |
+| Estimate PDF | Browser print page | Generated PDF/export artifact |
+| Draft list | Static table | Backend query with pagination |
+| Estimate list | Static table | Backend estimate history |
+| eBOL progress | Static counters | eBOL state machine |
+| Photos/signatures | Placeholders | File storage and signature capture |
+| Variables version | Static label | Versioned PricingVariables record |
+
+## 11. MVP Implementation Priorities
+
+Recommended MVP priorities:
+
+1. Pricing engine.
+2. Quote draft persistence.
+3. Estimate snapshot.
+4. Item CRUD.
+5. Validation.
+6. Estimate document generation.
+7. PDF/export flow.
+8. Drafts and estimates list.
+9. Basic invoice conversion.
+10. Basic order conversion.
+11. Basic eBOL/POD workflow.
+
+MVP acceptance baseline:
+
+- broker can create QuoteDraft;
+- broker can add/edit/delete items;
+- broker can save and resume draft;
+- system validates required data;
+- system calculates price through pricing engine;
+- system returns explainable breakdown;
+- broker can generate EstimateSnapshot;
+- customer-facing estimate is generated from snapshot;
+- sent estimate remains immutable;
+- changes after sending create a new version or reopened draft;
+- estimate can be converted into invoice/order.
+
+## 12. Open Business Questions
+
+These questions must be confirmed by business stakeholders before production implementation.
+
+### Margin formula
+
+- Is margin a percent of operational cost?
+- Is margin a percent of final customer price?
+- Is margin fixed, tiered, route-based, broker-based, or manually adjustable?
+- What is minimum allowed margin?
+
+### Fuel allocation
+
+- Is full route fuel cost charged to one quote?
+- Is interstate cost shared across consolidated deliveries?
+- What is the allocation formula?
+- Are there route minimums?
+
+### Insurance / Protection model
+
+- What is included by default?
+- How does Released Value Protection work in customer-facing documents?
+- How is Full Value Protection priced?
+- Are fragile, antique, mirror, art, electronics and custom items priced differently?
+- Is there a processing fee?
+- What legal language is required?
+
+### Volume coefficient logic
+
+- Are fragile, non-stackable and crated coefficients additive?
+- Are they multiplicative?
+- Should engine use max coefficient?
+- Does crate increase dimensions or apply separate handling fee?
+- Should effective volume influence vehicle fit only, price only, or both?
+
+### Interstate vs local pricing
+
+- Are interstate and local formulas separate?
+- How are pickup and delivery local labor costs calculated?
+- Are there city/zone minimums?
+- Are there access fees by building type?
+
+### Payment terms
+
+- Is deposit required?
+- When is full payment due?
+- What payment provider will be used?
+- Are payment links generated from invoice or estimate?
+
+### Cancellation terms
+
+- What is cancellation fee?
+- What is rescheduling fee?
+- What happens after failed pickup?
+- What happens after failed delivery?
+
+### Quote expiration logic
+
+- How long is estimate valid?
+- Does fuel price change expire quote?
+- Do pricing variables changes require re-quote?
+- Can expired estimate be approved?
+
+## 13. Developer Handoff Checklist
+
+Before implementation starts, the development team should:
+
+- review all screens;
+- confirm domain model;
+- confirm entity ownership;
+- confirm quote lifecycle;
+- confirm estimate lifecycle;
+- confirm invoice lifecycle;
+- confirm order lifecycle;
+- confirm eBOL lifecycle;
+- confirm pricing formulas;
+- confirm pricing variables;
+- define API contract;
+- define snapshot structure;
+- define validation rules;
+- define estimate PDF requirements;
+- define legal text ownership;
+- define audit trail requirements;
+- define roles and permissions;
+- define data sources for fuel and routes;
+- define CRM integration points;
+- define payment integration points;
+- define file storage for PDFs/photos/signatures;
+- define test fixtures for pricing engine;
+- define production deployment architecture.
+
+## 14. Final Note
+
+This repository is valuable as a hi-fi wireframe and visual technical specification.
+
+Production development should preserve:
+
+- broker-first workflow;
+- simple quote creation UX;
+- explainable pricing breakdown;
+- snapshot-based estimate generation;
+- clear separation between pricing layer and operational layer.
+
+Production development should rebuild:
+
+- calculations;
+- persistence;
+- validation;
+- security;
+- audit trail;
+- PDF generation;
+- integrations;
+- state management;
+- business rule execution.
+
+The current screens are a guide, not the implementation.
