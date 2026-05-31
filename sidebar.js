@@ -188,6 +188,13 @@ document.getElementById("sidebar").innerHTML = `
 
       ${adminSections}
 
+      <div class="pt-4 mt-6 border-t border-slate-700">
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-500" href="https://yarsuleimenov-code.github.io/lean-ideas-v2/" target="_blank" rel="noopener noreferrer">
+          <i data-lucide="message-square-warning" class="w-4"></i>
+          Report an Issue
+        </a>
+      </div>
+
     </nav>
 
   </aside>
