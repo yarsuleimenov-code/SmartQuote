@@ -104,6 +104,12 @@ Operational Scalability
 - простым;
 - минималистичным.
 
+Near-term product sequencing for broker speed is fixed separately in:
+
+```text
+docs/broker-product-pipeline.md
+```
+
 ---
 
 ## Principle 2 — Layer Separation
