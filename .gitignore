@@ -26,3 +26,7 @@ docs/workbook-logic.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
