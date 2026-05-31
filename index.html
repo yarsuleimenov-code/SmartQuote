@@ -297,12 +297,13 @@
 
               <div class="border-t border-slate-200 p-5 space-y-3 bg-slate-50">
                 <button id="sendToSheet" class="w-full py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50">Save to Google Sheets</button>
-                <a href="breakdown.html" class="block text-center w-full py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50">Open Cost Breakdown</a>
-                <a href="ebol.html" class="block text-center w-full py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50">Preview eBOL</a>
+                <a href="estimate-document.html" data-generate-estimate class="block text-center w-full py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50">Preview Estimate HTML / PDF</a>
+                <a href="breakdown.html" data-admin-only class="block text-center w-full py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50">Open Cost Breakdown</a>
+                <a href="ebol.html" data-admin-only class="block text-center w-full py-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50">Preview eBOL</a>
               </div>
             </section>
 
-            <section class="bg-white rounded-lg border border-slate-200 p-5">
+            <section data-admin-only class="bg-white rounded-lg border border-slate-200 p-5">
               <h3 class="font-bold text-slate-800 mb-3">Google Sheet Payload</h3>
               <pre id="payloadPreview" class="max-h-80 overflow-auto rounded-lg bg-slate-950 text-slate-100 text-xs p-4"></pre>
             </section>

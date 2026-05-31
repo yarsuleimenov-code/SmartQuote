@@ -1,34 +1,55 @@
-﻿const currentPage = window.location.pathname.split("/").pop() || "index.html";
+const currentPage = window.location.pathname.split("/").pop() || "index.html";
+const roleParam = new URLSearchParams(window.location.search).get("role");
+const storedRole = window.localStorage?.getItem("zabermanUserRole");
+const requestedRole = roleParam || storedRole || "basic";
+const userRole = requestedRole === "admin" ? "admin" : "basic";
+const isAdmin = userRole === "admin";
+
+if (roleParam === "admin" || roleParam === "basic") {
+  window.localStorage?.setItem("zabermanUserRole", userRole);
+}
+
+const basicAllowedPages = new Set([
+  "quick-quote.html",
+  "index.html",
+  "drafts.html",
+  "estimates.html",
+  "estimate-document.html",
+]);
+
+if (!isAdmin && !basicAllowedPages.has(currentPage)) {
+  window.location.replace("index.html");
+}
 
 const mainItems = [
   { label: "Quick Quote", href: "quick-quote.html" },
   { label: "New Calculation", href: "index.html" },
   { label: "My Drafts", href: "drafts.html" },
   { label: "My Estimates", href: "estimates.html" },
-  { label: "All Calculations", href: null },
+  { label: "Estimate Document", href: "estimate-document.html" },
+  { label: "All Calculations", href: null, adminOnly: true },
 ];
 
 const operationItems = [
   { label: "Cost Breakdown", href: "breakdown.html", icon: "file-text" },
   { label: "Invoices", href: "invoices.html", icon: "wallet" },
   { label: "eBOL", href: "ebol.html", icon: "clipboard-check" },
-  { label: "Orders", href: "orders.html", icon: "package-check" }
+  { label: "Orders", href: "orders.html", icon: "package-check" },
 ];
 
 const pricingItems = [
   { label: "Variables", href: "variables.html", icon: "sliders-horizontal" },
   { label: "References", href: "references.html", icon: "book-open" },
-  { label: "Formulas", href: "formulas.html", icon: "sigma" }
+  { label: "Formulas", href: "formulas.html", icon: "sigma" },
 ];
 
 const futureItems = [
   { label: "Analytics", icon: "bar-chart-3" },
-  { label: "Automation", icon: "workflow" }
+  { label: "Automation", icon: "workflow" },
 ];
 
 const referenceItems = [
   { label: "Lifecycle", href: "lifecycle.html", icon: "git-branch" },
-  { label: "Estimate Document", href: "estimate-document.html", icon: "file-badge" }
 ];
 
 function isActive(href) {
@@ -48,7 +69,7 @@ function iconLinkClass(href) {
 }
 
 function renderMainItems() {
-  return mainItems.map(item => {
+  return mainItems.filter((item) => isAdmin || !item.adminOnly).map((item) => {
     if (!item.href) {
       return `
         <div class="px-3 py-1 rounded text-slate-500 bg-slate-900/20 cursor-not-allowed">
@@ -66,7 +87,7 @@ function renderMainItems() {
 }
 
 function renderIconLinks(items) {
-  return items.map(item => `
+  return items.map((item) => `
     <a class="${iconLinkClass(item.href)}" href="${item.href}">
       <i data-lucide="${item.icon}" class="w-4"></i>
       ${item.label}
@@ -75,13 +96,47 @@ function renderIconLinks(items) {
 }
 
 function renderFutureItems() {
-  return futureItems.map(item => `
+  return futureItems.map((item) => `
     <div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 bg-slate-900/20 cursor-not-allowed">
       <i data-lucide="${item.icon}" class="w-4"></i>
       ${item.label}
     </div>
   `).join("");
 }
+
+const adminSections = isAdmin ? `
+  <p class="uppercase text-xs text-slate-500 mb-3">
+    OPERATIONS
+  </p>
+
+  <div class="space-y-1 mb-6">
+    ${renderIconLinks(operationItems)}
+  </div>
+
+  <p class="uppercase text-xs text-slate-500 mb-3">
+    PRICING ENGINE
+  </p>
+
+  <div class="space-y-1 mb-6">
+    ${renderIconLinks(pricingItems)}
+  </div>
+
+  <p class="uppercase text-xs text-slate-500 mb-3">
+    FUTURE
+  </p>
+
+  <div class="space-y-1 mb-6">
+    ${renderFutureItems()}
+  </div>
+
+  <p class="uppercase text-xs text-slate-500 mb-3">
+    REFERENCE
+  </p>
+
+  <div class="space-y-1">
+    ${renderIconLinks(referenceItems)}
+  </div>
+` : "";
 
 document.getElementById("sidebar").innerHTML = `
   <aside class="w-64 bg-[#203241] text-slate-300 min-h-screen fixed left-0 top-0 overflow-y-auto">
@@ -93,16 +148,16 @@ document.getElementById("sidebar").innerHTML = `
 
       <div class="mt-6 flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
-          P
+          ${isAdmin ? "A" : "U"}
         </div>
 
         <div>
           <p class="text-white font-semibold text-sm">
-            Admin
+            ${isAdmin ? "Admin" : "User"}
           </p>
 
           <p class="text-xs text-slate-400">
-            Broker Calculator
+            ${isAdmin ? "Broker Calculator" : "Calculator"}
           </p>
         </div>
       </div>
@@ -131,42 +186,18 @@ document.getElementById("sidebar").innerHTML = `
         </div>
       </div>
 
-      <p class="uppercase text-xs text-slate-500 mb-3">
-        OPERATIONS
-      </p>
-
-      <div class="space-y-1 mb-6">
-        ${renderIconLinks(operationItems)}
-      </div>
-
-      <p class="uppercase text-xs text-slate-500 mb-3">
-        PRICING ENGINE
-      </p>
-
-      <div class="space-y-1 mb-6">
-        ${renderIconLinks(pricingItems)}
-      </div>
-
-      <p class="uppercase text-xs text-slate-500 mb-3">
-        FUTURE
-      </p>
-
-      <div class="space-y-1 mb-6">
-        ${renderFutureItems()}
-      </div>
-
-      <p class="uppercase text-xs text-slate-500 mb-3">
-        REFERENCE
-      </p>
-
-      <div class="space-y-1">
-        ${renderIconLinks(referenceItems)}
-      </div>
+      ${adminSections}
 
     </nav>
 
   </aside>
 `;
+
+if (!isAdmin) {
+  document.querySelectorAll("[data-admin-only]").forEach((element) => {
+    element.hidden = true;
+  });
+}
 
 if (window.lucide) {
   lucide.createIcons();
