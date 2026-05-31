@@ -40,9 +40,16 @@ Set these variables for the deployed Pages project:
 ```text
 APPS_SCRIPT_ENDPOINT=<apps-script-web-app-url>
 SHEETS_AUTH_TOKEN=<generated-secret-token>
+ADMIN_AUTH_TOKEN=<generated-admin-login-token>
+ADMIN_SESSION_SECRET=<generated-cookie-signing-secret>
 ```
 
 The Pages Function at `functions/api/sheets/save.js` injects `SHEETS_AUTH_TOKEN` server-side before forwarding the request to Apps Script.
+
+`ADMIN_AUTH_TOKEN` is the token entered on `admin-login.html`.
+`ADMIN_SESSION_SECRET` signs the HttpOnly admin session cookie. Use a different random value from `ADMIN_AUTH_TOKEN`.
+
+Admin-only HTML routes are protected by `functions/_middleware.js`. Basic users can still use calculator pages and generate customer estimate HTML/PDF documents.
 
 ## Recommended Next Security Step
 

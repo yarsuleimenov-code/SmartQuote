@@ -1,12 +1,12 @@
 const currentPage = window.location.pathname.split("/").pop() || "index.html";
 const roleParam = new URLSearchParams(window.location.search).get("role");
 const storedRole = window.localStorage?.getItem("zabermanUserRole");
-const requestedRole = roleParam || storedRole || "basic";
+const requestedRole = roleParam === "basic" ? "basic" : storedRole || "basic";
 const userRole = requestedRole === "admin" ? "admin" : "basic";
 const isAdmin = userRole === "admin";
 
-if (roleParam === "admin" || roleParam === "basic") {
-  window.localStorage?.setItem("zabermanUserRole", userRole);
+if (roleParam === "basic") {
+  window.localStorage?.setItem("zabermanUserRole", "basic");
 }
 
 const basicAllowedPages = new Set([
@@ -189,6 +189,18 @@ document.getElementById("sidebar").innerHTML = `
       ${adminSections}
 
       <div class="pt-4 mt-6 border-t border-slate-700">
+        ${isAdmin ? `
+          <button id="adminLogout" class="mb-2 w-full flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-600 text-slate-200 hover:bg-slate-800" type="button">
+            <i data-lucide="log-out" class="w-4"></i>
+            Sign Out
+          </button>
+        ` : `
+          <a class="mb-2 flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-600 text-slate-200 hover:bg-slate-800" href="admin-login.html">
+            <i data-lucide="shield-check" class="w-4"></i>
+            Admin Login
+          </a>
+        `}
+
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-500" href="https://yarsuleimenov-code.github.io/lean-ideas-v2/" target="_blank" rel="noopener noreferrer">
           <i data-lucide="message-square-warning" class="w-4"></i>
           Report an Issue
@@ -204,6 +216,27 @@ if (!isAdmin) {
   document.querySelectorAll("[data-admin-only]").forEach((element) => {
     element.hidden = true;
   });
+}
+
+document.getElementById("adminLogout")?.addEventListener("click", async () => {
+  try {
+    await fetch("/api/admin/logout", { method: "POST" });
+  } finally {
+    window.localStorage.setItem("zabermanUserRole", "basic");
+    window.location.assign("index.html");
+  }
+});
+
+if (isAdmin) {
+  fetch("/api/admin/session")
+    .then((response) => response.ok ? response.json() : { isAdmin: false })
+    .then((session) => {
+      if (!session.isAdmin) {
+        window.localStorage.setItem("zabermanUserRole", "basic");
+        window.location.reload();
+      }
+    })
+    .catch(() => {});
 }
 
 if (window.lucide) {
