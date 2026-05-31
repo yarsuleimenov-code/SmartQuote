@@ -1,0 +1,26 @@
+.git
+.git/**
+.wrangler
+.wrangler/**
+.cloudflare
+.cloudflare/**
+node_modules
+node_modules/**
+
+# Source/support files that should not be served as public static assets.
+docs
+docs/**
+tools
+tools/**
+functions
+functions/**
+google-apps-script.gs
+README.md
+.gitignore
+.assetsignore
+
+# Local source data not needed by the browser.
+Loads calculator 4.5 (Suleimanov).xlsx
+docs/workbook-analysis.json
+docs/workbook-logic.json
+zone_zip_map.csv
