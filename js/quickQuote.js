@@ -1,4 +1,6 @@
 (function () {
+  const QUICK_DEFAULT_CREW = 2;
+
   const zoneZip = {
     "NY Area": "11211",
     Boston: "02108",
@@ -106,8 +108,8 @@
         deliveryAddress: `${deliveryZone} quick quote zone`,
       },
       access: {
-        pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
-        delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
+        pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: QUICK_DEFAULT_CREW },
+        delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: QUICK_DEFAULT_CREW },
       },
       options: {
         exclusiveDelivery: priority === "Exclusive Delivery",
@@ -184,7 +186,8 @@
     byId("quickHighPrice").textContent = currency(high);
     byId("quickFinalPrice").textContent = currency(result.totals.finalPrice);
     byId("quickVehicle").textContent = result.vehicle.name;
-    byId("quickCrew").textContent = `${result.requiredCrew} ${result.requiredCrew === 1 ? "person" : "people"}`;
+    const estimatedCrew = result.requiredCrew || QUICK_DEFAULT_CREW;
+    byId("quickCrew").textContent = `${estimatedCrew} ${estimatedCrew === 1 ? "person" : "people"}`;
     byId("quickEffectiveVolume").textContent = `${result.totals.effectiveVolume.toFixed(1)} cu ft`;
     byId("quickWeight").textContent = `${result.totals.totalWeight.toFixed(0)} lb`;
     byId("quickWarnings").innerHTML = result.warnings.length

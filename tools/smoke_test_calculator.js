@@ -119,6 +119,10 @@ onePersonBookshelfQuote.items = [{
   comment: "",
 }];
 const onePersonBookshelfResult = context.window.PricingCalculator.calculateQuote(onePersonBookshelfQuote);
+const quickTwoPersonBookshelfQuote = JSON.parse(JSON.stringify(onePersonBookshelfQuote));
+quickTwoPersonBookshelfQuote.access.pickup.crew = 2;
+quickTwoPersonBookshelfQuote.access.delivery.crew = 2;
+const quickTwoPersonBookshelfResult = context.window.PricingCalculator.calculateQuote(quickTwoPersonBookshelfQuote);
 
 if (!result.routeSupported) {
   throw new Error("Expected demo route to be supported by ZIP map.");
@@ -152,6 +156,14 @@ if (onePersonBookshelfResult.totals.finalPrice !== 320) {
   throw new Error(`Expected one-person bookshelf benchmark to be 320, got ${onePersonBookshelfResult.totals.finalPrice}.`);
 }
 
+if (quickTwoPersonBookshelfResult.crew.pickup !== 2 || quickTwoPersonBookshelfResult.crew.delivery !== 2) {
+  throw new Error("Expected quick quote benchmark to use 2-person pickup and delivery crews.");
+}
+
+if (quickTwoPersonBookshelfResult.totals.finalPrice <= onePersonBookshelfResult.totals.finalPrice) {
+  throw new Error("Expected 2-person quick quote benchmark to be higher than the 1-person benchmark.");
+}
+
 console.log(JSON.stringify({
   route: `${result.pickupZone} -> ${result.deliveryZone}`,
   distance: result.distance,
@@ -163,5 +175,7 @@ console.log(JSON.stringify({
   excelTableOperationalCost: excelTableResult.totals.operationalCost,
   onePersonBookshelfFinalPrice: onePersonBookshelfResult.totals.finalPrice,
   onePersonBookshelfCrew: onePersonBookshelfResult.crew,
+  quickTwoPersonBookshelfFinalPrice: quickTwoPersonBookshelfResult.totals.finalPrice,
+  quickTwoPersonBookshelfCrew: quickTwoPersonBookshelfResult.crew,
   itemCount: result.items.length,
 }, null, 2));
