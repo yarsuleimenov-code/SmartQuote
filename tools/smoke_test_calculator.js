@@ -90,6 +90,36 @@ excelTableQuote.items = [{
 }];
 const excelTableResult = context.window.PricingCalculator.calculateQuote(excelTableQuote);
 
+const onePersonBookshelfQuote = JSON.parse(JSON.stringify(context.window.CalculatorBlankQuote));
+onePersonBookshelfQuote.route = {
+  pickupZip: "95827",
+  deliveryZip: "11385",
+  pickupAddress: "",
+  deliveryAddress: "",
+};
+onePersonBookshelfQuote.access = {
+  pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 1 },
+  delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 1 },
+};
+onePersonBookshelfQuote.items = [{
+  id: "one-person-bookshelf",
+  name: "Bookshelf",
+  length: 37,
+  width: 52,
+  height: 15,
+  weight: 51,
+  qty: 1,
+  packaging: "Bubble Protection",
+  insurance: "Basic Liability",
+  declaredValue: 0,
+  storageDays: 0,
+  fragile: false,
+  nonStackable: false,
+  crated: false,
+  comment: "",
+}];
+const onePersonBookshelfResult = context.window.PricingCalculator.calculateQuote(onePersonBookshelfQuote);
+
 if (!result.routeSupported) {
   throw new Error("Expected demo route to be supported by ZIP map.");
 }
@@ -118,6 +148,10 @@ if (excelTableResult.totals.finalPrice !== 1140) {
   throw new Error(`Expected Excel table benchmark to be 1140, got ${excelTableResult.totals.finalPrice}.`);
 }
 
+if (onePersonBookshelfResult.totals.finalPrice !== 320) {
+  throw new Error(`Expected one-person bookshelf benchmark to be 320, got ${onePersonBookshelfResult.totals.finalPrice}.`);
+}
+
 console.log(JSON.stringify({
   route: `${result.pickupZone} -> ${result.deliveryZone}`,
   distance: result.distance,
@@ -127,5 +161,7 @@ console.log(JSON.stringify({
   nameOnlyFinalPrice: nameOnlyResult.totals.finalPrice,
   excelTableFinalPrice: excelTableResult.totals.finalPrice,
   excelTableOperationalCost: excelTableResult.totals.operationalCost,
+  onePersonBookshelfFinalPrice: onePersonBookshelfResult.totals.finalPrice,
+  onePersonBookshelfCrew: onePersonBookshelfResult.crew,
   itemCount: result.items.length,
 }, null, 2));

@@ -15,8 +15,8 @@
       deliveryAddress: "",
     },
     access: {
-      pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
-      delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
+      pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
+      delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
     },
     options: {
       exclusiveDelivery: false,
@@ -64,8 +64,8 @@
       deliveryAddress: "200 Demo Ave, Los Angeles, CA 90021",
     },
     access: {
-      pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
-      delivery: { addressType: "Old Apartment", coi: true, stairs: true, elevatorUnavailable: false, narrowAccess: true, floor: 4, longCarryFt: 50 },
+      pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
+      delivery: { addressType: "Old Apartment", coi: true, stairs: true, elevatorUnavailable: false, narrowAccess: true, floor: 4, longCarryFt: 50, crew: 0 },
     },
     options: {
       exclusiveDelivery: false,

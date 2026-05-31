@@ -97,6 +97,11 @@
     }, 0);
   }
 
+  function crewOverride(value) {
+    const crew = number(value);
+    return crew > 0 ? crew : null;
+  }
+
   function pickupLoadingMinutes(volume) {
     const settings = window.CalculatorVariables.settings;
     if (volume < settings.loadingVolumeThresholdCuFt) {
@@ -173,7 +178,10 @@
     const storage = calculatedItems.reduce((sum, item) => sum + item.storageCost, 0);
     const vehicle = getVehicle(effectiveVolume, totalWeight);
     const interstateVehicle = getVehicleByName(settings.interstateVehicleName, vehicle);
-    const requiredCrew = hasBillableItems ? Math.max(1, ...calculatedItems.map((item) => item.crewNeed)) : 0;
+    const itemRequiredCrew = hasBillableItems ? Math.max(1, ...calculatedItems.map((item) => item.crewNeed)) : 0;
+    const pickupTeam = hasBillableItems ? crewOverride(quote.access?.pickup?.crew) || itemRequiredCrew : 0;
+    const deliveryTeam = hasBillableItems ? crewOverride(quote.access?.delivery?.crew) || itemRequiredCrew : 0;
+    const requiredCrew = hasBillableItems ? Math.max(pickupTeam, deliveryTeam, itemRequiredCrew) : 0;
 
     const pickupDistance = distance ? window.CalculatorVariables.distanceMatrix[pickupZone]?.[pickupZone] || 0 : 0;
     const deliveryDistance = distance ? window.CalculatorVariables.distanceMatrix[deliveryZone]?.[deliveryZone] || 0 : 0;
@@ -187,8 +195,8 @@
           pickupVehicle: vehicle,
           deliveryVehicle: vehicle,
           interstateVehicle,
-          pickupTeam: requiredCrew,
-          deliveryTeam: requiredCrew,
+          pickupTeam,
+          deliveryTeam,
           interstateTeam: 1,
           insurance,
         })
@@ -203,8 +211,8 @@
           pickupVehicle: vehicle,
           deliveryVehicle: vehicle,
           interstateVehicle,
-          pickupTeam: requiredCrew,
-          deliveryTeam: requiredCrew,
+          pickupTeam,
+          deliveryTeam,
           interstateTeam: 1,
           insurance,
         })
@@ -231,6 +239,11 @@
       items: calculatedItems,
       vehicle,
       requiredCrew,
+      crew: {
+        pickup: pickupTeam,
+        delivery: deliveryTeam,
+        itemRequired: itemRequiredCrew,
+      },
       totals: {
         totalVolume: money(totalVolume),
         effectiveVolume: money(effectiveVolume),

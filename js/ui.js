@@ -37,7 +37,7 @@
         "leadName", "customerName", "customerPhone", "customerEmail",
         "pickupZip", "deliveryZip", "pickupAddress", "deliveryAddress",
         "pickupAddressType", "deliveryAddressType", "pickupFloor", "deliveryFloor",
-        "pickupLongCarry", "deliveryLongCarry", "helperRequirement", "deliveryType",
+        "pickupLongCarry", "deliveryLongCarry", "pickupCrew", "deliveryCrew", "helperRequirement", "deliveryType",
         "requestedDate", "manualAdjustment", "notes",
       ].forEach((id) => {
         fields[id] = byId(id);
@@ -59,6 +59,8 @@
       fields.deliveryFloor.value = quote.access.delivery.floor || 1;
       fields.pickupLongCarry.value = quote.access.pickup.longCarryFt || 0;
       fields.deliveryLongCarry.value = quote.access.delivery.longCarryFt || 0;
+      fields.pickupCrew.value = quote.access.pickup.crew || "";
+      fields.deliveryCrew.value = quote.access.delivery.crew || "";
       fields.helperRequirement.value = quote.options.helperRequirement || "Auto";
       fields.deliveryType.value = quote.options.deliveryType || "Consolidated Route";
       fields.requestedDate.value = quote.options.requestedDate || "";
@@ -97,6 +99,7 @@
           narrowAccess: byId("pickupNarrowAccess").checked,
           floor: number(fields.pickupFloor.value),
           longCarryFt: number(fields.pickupLongCarry.value),
+          crew: number(fields.pickupCrew.value),
         },
         delivery: {
           addressType: fields.deliveryAddressType.value,
@@ -106,6 +109,7 @@
           narrowAccess: byId("deliveryNarrowAccess").checked,
           floor: number(fields.deliveryFloor.value),
           longCarryFt: number(fields.deliveryLongCarry.value),
+          crew: number(fields.deliveryCrew.value),
         },
       };
       quote.options = {
@@ -161,7 +165,9 @@
       byId("deliveryZone").textContent = result.deliveryZone;
       byId("routeDistance").textContent = `${Math.round(result.distance)} mi`;
       byId("vehicleFit").textContent = result.vehicle.name;
-      byId("requiredCrew").textContent = `${result.requiredCrew} ${result.requiredCrew === 1 ? "person" : "people"}`;
+      byId("requiredCrew").textContent = result.requiredCrew
+        ? `P ${result.crew.pickup} / D ${result.crew.delivery}`
+        : "0";
       byId("finalPrice").textContent = currency(result.totals.finalPrice);
       byId("marginAmount").textContent = `Margin ${currency(result.totals.margin)}`;
       byId("operationalCost").textContent = currency(result.totals.operationalCost);
