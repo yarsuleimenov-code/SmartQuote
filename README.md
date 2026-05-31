@@ -1,4 +1,4 @@
-# Logistics Pricing Calculator
+﻿# Logistics Pricing Calculator
 
 Hi-fi wireframe и visual technical specification для production-разработки Logistics Pricing Calculator.
 
