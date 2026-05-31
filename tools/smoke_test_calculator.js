@@ -123,6 +123,12 @@ const quickTwoPersonBookshelfQuote = JSON.parse(JSON.stringify(onePersonBookshel
 quickTwoPersonBookshelfQuote.access.pickup.crew = 2;
 quickTwoPersonBookshelfQuote.access.delivery.crew = 2;
 const quickTwoPersonBookshelfResult = context.window.PricingCalculator.calculateQuote(quickTwoPersonBookshelfQuote);
+const quickRoundedVolumeQuote = JSON.parse(JSON.stringify(quickTwoPersonBookshelfQuote));
+quickRoundedVolumeQuote.items[0].length = Math.ceil(16.7) * 12;
+quickRoundedVolumeQuote.items[0].width = 12;
+quickRoundedVolumeQuote.items[0].height = 12;
+quickRoundedVolumeQuote.items[0].weight = 51;
+const quickRoundedVolumeResult = context.window.PricingCalculator.calculateQuote(quickRoundedVolumeQuote);
 
 if (!result.routeSupported) {
   throw new Error("Expected demo route to be supported by ZIP map.");
@@ -164,6 +170,10 @@ if (quickTwoPersonBookshelfResult.totals.finalPrice <= onePersonBookshelfResult.
   throw new Error("Expected 2-person quick quote benchmark to be higher than the 1-person benchmark.");
 }
 
+if (quickRoundedVolumeResult.totals.totalVolume !== 17) {
+  throw new Error(`Expected Quick Quote 16.7 cu ft to round up to 17 cu ft, got ${quickRoundedVolumeResult.totals.totalVolume}.`);
+}
+
 console.log(JSON.stringify({
   route: `${result.pickupZone} -> ${result.deliveryZone}`,
   distance: result.distance,
@@ -177,5 +187,7 @@ console.log(JSON.stringify({
   onePersonBookshelfCrew: onePersonBookshelfResult.crew,
   quickTwoPersonBookshelfFinalPrice: quickTwoPersonBookshelfResult.totals.finalPrice,
   quickTwoPersonBookshelfCrew: quickTwoPersonBookshelfResult.crew,
+  quickRoundedVolume: quickRoundedVolumeResult.totals.totalVolume,
+  quickRoundedVolumeFinalPrice: quickRoundedVolumeResult.totals.finalPrice,
   itemCount: result.items.length,
 }, null, 2));

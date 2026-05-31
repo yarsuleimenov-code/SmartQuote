@@ -68,11 +68,11 @@
   }
 
   function quickItemToFullItem(item) {
-    const volume = Math.max(number(item.volume), 0);
+    const volume = Math.ceil(Math.max(number(item.volume), 0));
     return {
       id: item.id,
       name: item.name,
-      length: volume,
+      length: volume * 12,
       width: 12,
       height: 12,
       weight: number(item.weight),
