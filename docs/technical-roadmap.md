@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — Technical Roadmap
+﻿# Zaberman LLC Pricing Calculator — Technical Roadmap
 
 # 1. Назначение документа
 

@@ -1,0 +1,131 @@
+const fs = require("fs");
+const vm = require("vm");
+
+const context = {
+  window: {},
+  console,
+};
+context.window.window = context.window;
+vm.createContext(context);
+
+[
+  "js/zoneZipMap.js",
+  "js/variables.js",
+  "js/mockData.js",
+  "js/calculator.js",
+  "js/googleSheet.js",
+].forEach((file) => {
+  vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: file });
+});
+
+const quote = JSON.parse(JSON.stringify(context.window.CalculatorMockData));
+const result = context.window.PricingCalculator.calculateQuote(quote);
+const payload = context.window.GoogleSheetIntegration.buildPayload(quote, result);
+const blankQuote = JSON.parse(JSON.stringify(context.window.CalculatorBlankQuote));
+const blankResult = context.window.PricingCalculator.calculateQuote(blankQuote);
+const emptyQuote = JSON.parse(JSON.stringify(context.window.CalculatorMockData));
+emptyQuote.items = [{
+  id: "empty",
+  name: "",
+  length: 0,
+  width: 0,
+  height: 0,
+  weight: 0,
+  qty: 1,
+  packaging: "None",
+  insurance: "Basic Liability",
+  declaredValue: 0,
+  storageDays: 0,
+  fragile: false,
+  nonStackable: false,
+  crated: false,
+  comment: "",
+}];
+const emptyResult = context.window.PricingCalculator.calculateQuote(emptyQuote);
+const nameOnlyQuote = JSON.parse(JSON.stringify(context.window.CalculatorMockData));
+nameOnlyQuote.access = {
+  pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
+  delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
+};
+nameOnlyQuote.items = [{
+  id: "name-only",
+  name: "d",
+  length: 0,
+  width: 0,
+  height: 0,
+  weight: 0,
+  qty: 1,
+  packaging: "Custom Crate",
+  insurance: "Full Coverage",
+  declaredValue: 0,
+  storageDays: 0,
+  fragile: false,
+  nonStackable: false,
+  crated: false,
+  comment: "",
+}];
+const nameOnlyResult = context.window.PricingCalculator.calculateQuote(nameOnlyQuote);
+
+const excelTableQuote = JSON.parse(JSON.stringify(context.window.CalculatorMockData));
+excelTableQuote.access = {
+  pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
+  delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0 },
+};
+excelTableQuote.items = [{
+  id: "excel-table",
+  name: "Table",
+  length: 140,
+  width: 50,
+  height: 20,
+  weight: 500,
+  qty: 1,
+  packaging: "None",
+  insurance: "Basic Liability",
+  declaredValue: 0,
+  storageDays: 0,
+  fragile: false,
+  nonStackable: false,
+  crated: false,
+  comment: "",
+}];
+const excelTableResult = context.window.PricingCalculator.calculateQuote(excelTableQuote);
+
+if (!result.routeSupported) {
+  throw new Error("Expected demo route to be supported by ZIP map.");
+}
+
+if (!result.totals.finalPrice || result.totals.finalPrice <= 0) {
+  throw new Error("Expected final price to be positive.");
+}
+
+if (!payload.items_json && (!payload.items || !payload.items.length)) {
+  throw new Error("Expected payload items to be present.");
+}
+
+if (blankResult.totals.finalPrice !== 0 || blankResult.items.length !== 0) {
+  throw new Error(`Expected blank initial quote to be zero, got ${blankResult.totals.finalPrice}.`);
+}
+
+if (emptyResult.totals.finalPrice !== 0 || emptyResult.totals.operationalCost !== 0) {
+  throw new Error(`Expected empty item quote to be zero, got ${emptyResult.totals.finalPrice}.`);
+}
+
+if (nameOnlyResult.totals.finalPrice !== 0 || nameOnlyResult.totals.operationalCost !== 0) {
+  throw new Error(`Expected name-only item quote to be zero, got ${nameOnlyResult.totals.finalPrice}.`);
+}
+
+if (excelTableResult.totals.finalPrice !== 1140) {
+  throw new Error(`Expected Excel table benchmark to be 1140, got ${excelTableResult.totals.finalPrice}.`);
+}
+
+console.log(JSON.stringify({
+  route: `${result.pickupZone} -> ${result.deliveryZone}`,
+  distance: result.distance,
+  finalPrice: result.totals.finalPrice,
+  blankFinalPrice: blankResult.totals.finalPrice,
+  emptyFinalPrice: emptyResult.totals.finalPrice,
+  nameOnlyFinalPrice: nameOnlyResult.totals.finalPrice,
+  excelTableFinalPrice: excelTableResult.totals.finalPrice,
+  excelTableOperationalCost: excelTableResult.totals.operationalCost,
+  itemCount: result.items.length,
+}, null, 2));

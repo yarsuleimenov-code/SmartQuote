@@ -1,8 +1,8 @@
-# Zaberman Broker Calculator MVP — Архитектура системы
+﻿# Zaberman LLC Pricing Calculator — Архитектура системы
 
 ## 1. Назначение системы
 
-Zaberman Broker Calculator MVP проектируется как operational pricing system для interstate перевозок мебели, bulky items, fragile cargo и full service delivery.
+Zaberman LLC Pricing Calculator проектируется как operational pricing system для interstate перевозок мебели, bulky items, fragile cargo и full service delivery.
 
 Система должна:
 - ускорять создание quote;

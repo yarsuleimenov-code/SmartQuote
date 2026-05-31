@@ -1,6 +1,6 @@
-# Zaberman Broker Calculator
+# Logistics Pricing Calculator
 
-Hi-fi wireframe и visual technical specification для production-разработки Zaberman Broker Calculator.
+Hi-fi wireframe и visual technical specification для production-разработки Logistics Pricing Calculator.
 
 Проект описывает broker-first workflow для interstate-перевозок мебели, fragile cargo, full service delivery, estimate generation, invoice/order lifecycle и будущего eBOL/POD workflow.
 
@@ -48,7 +48,7 @@ Production implementation должна строиться отдельно и в
 
 Перед началом production-разработки обязательно прочитать:
 
-[DEVELOPER_HANDOFF.md](./DEVELOPER_HANDOFF.md)
+[DEVELOPER_HANDOFF.md](./docs/DEVELOPER_HANDOFF.md)
 
 ---
 
@@ -576,7 +576,7 @@ Production-система должна включать следующие ос�
 
 Подробное описание сущностей находится в:
 
-[DEVELOPER_HANDOFF.md](./DEVELOPER_HANDOFF.md)
+[DEVELOPER_HANDOFF.md](./docs/DEVELOPER_HANDOFF.md)
 
 ---
 
@@ -791,7 +791,6 @@ Pricing response should include:
 ├── lifecycle.html
 ├── sidebar.js
 ├── README.md
-├── DEVELOPER_HANDOFF.md
 │
 └── /docs
     ├── architecture.md
@@ -800,6 +799,7 @@ Pricing response should include:
     ├── pricing-test-cases.md
     ├── operational-edge-cases.md
     ├── ebol-workflow.md
+    ├── DEVELOPER_HANDOFF.md
     └── technical-roadmap.md
 ```
 

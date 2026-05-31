@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — Operational Edge Cases
+﻿# Zaberman LLC Pricing Calculator — Operational Edge Cases
 
 ## 1. Purpose
 

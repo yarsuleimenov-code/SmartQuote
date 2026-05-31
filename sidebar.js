@@ -1,4 +1,4 @@
-const currentPage = window.location.pathname.split("/").pop() || "index.html";
+﻿const currentPage = window.location.pathname.split("/").pop() || "index.html";
 
 const mainItems = [
   { label: "Quick Quote", href: "quick-quote.html" },
@@ -87,13 +87,13 @@ document.getElementById("sidebar").innerHTML = `
   <aside class="w-64 bg-[#203241] text-slate-300 min-h-screen fixed left-0 top-0 overflow-y-auto">
 
     <div class="p-6 border-b border-slate-700">
-      <h1 class="text-2xl font-bold text-[#12365a]">
-        zaberman
+      <h1 class="text-2xl font-bold text-white tracking-wide">
+        Zaberman LLC
       </h1>
 
       <div class="mt-6 flex items-center gap-3">
         <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
-          z
+          P
         </div>
 
         <div>
@@ -102,7 +102,7 @@ document.getElementById("sidebar").innerHTML = `
           </p>
 
           <p class="text-xs text-slate-400">
-            Broker Calculator MVP
+            Broker Calculator
           </p>
         </div>
       </div>

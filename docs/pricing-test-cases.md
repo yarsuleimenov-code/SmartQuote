@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — Pricing Test Cases
+﻿# Zaberman LLC Pricing Calculator — Pricing Test Cases
 
 # 1. Назначение документа
 

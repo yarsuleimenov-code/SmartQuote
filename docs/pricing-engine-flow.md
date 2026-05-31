@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — Pricing Engine Flow
+﻿# Zaberman LLC Pricing Calculator — Pricing Engine Flow
 
 # 1. Назначение pricing engine
 

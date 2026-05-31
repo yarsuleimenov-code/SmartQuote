@@ -1,0 +1,28 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local dependencies and build artifacts
+node_modules/
+dist/
+build/
+.wrangler/
+.cloudflare/
+
+# Environment and secrets
+.env
+.env.*
+*.local
+
+# Local workbook / generated analysis artifacts
+Loads calculator 4.5 (Suleimanov).xlsx
+docs/workbook-analysis.json
+docs/workbook-logic.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

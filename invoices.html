@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Zaberman Broker Calculator MVP | Invoices</title>
+  <title>Zaberman LLC Pricing Calculator | Invoices</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -25,7 +25,7 @@
     <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
 
       <div>
-        <p class="text-xs text-slate-400">Zaberman › Broker Calculator</p>
+        <p class="text-xs text-slate-400">Zaberman LLC › Broker Calculator</p>
         <h2 class="text-lg font-semibold text-slate-800">Invoices</h2>
       </div>
 
@@ -133,15 +133,15 @@
 
             <tbody class="divide-y divide-slate-200">
               <tr>
-                <td class="px-4 py-3 font-medium text-slate-800">INV-001</td>
-                <td class="px-4 py-3">EST-291</td>
-                <td class="px-4 py-3">John Smith</td>
-                <td class="px-4 py-3 font-semibold">$1,130</td>
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs">Future</span>
+                <td colspan="7" class="px-4 py-12 text-center text-slate-500">
+                  <div class="flex flex-col items-center gap-3">
+                    <i data-lucide="wallet" class="w-8 h-8 text-slate-300"></i>
+                    <div>
+                      <p class="font-semibold text-slate-700">No invoices yet</p>
+                      <p class="text-sm text-slate-400 mt-1">Invoices will be created from approved estimate snapshots.</p>
+                    </div>
+                  </div>
                 </td>
-                <td class="px-4 py-3">Stripe / Square</td>
-                <td class="px-4 py-3 text-slate-500">Create Order after payment/approval</td>
               </tr>
             </tbody>
           </table>

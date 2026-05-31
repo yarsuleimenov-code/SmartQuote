@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — eBOL Workflow
+﻿# Zaberman LLC Pricing Calculator — eBOL Workflow
 
 # 1. Назначение eBOL
 

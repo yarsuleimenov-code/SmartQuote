@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Zaberman Broker Calculator MVP | Orders</title>
+  <title>Zaberman LLC Pricing Calculator | Orders</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -25,7 +25,7 @@
     <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
 
       <div>
-        <p class="text-xs text-slate-400">Zaberman › Operations</p>
+        <p class="text-xs text-slate-400">Zaberman LLC › Operations</p>
         <h2 class="text-lg font-semibold text-slate-800">Orders</h2>
       </div>
 
@@ -74,12 +74,12 @@
 
         <div class="bg-white rounded-xl border border-slate-200 p-4">
           <p class="text-xs text-slate-400">Pending Pickup</p>
-          <p class="text-2xl font-bold text-slate-800 mt-1">1</p>
+          <p class="text-2xl font-bold text-slate-800 mt-1">0</p>
         </div>
 
         <div class="bg-white rounded-xl border border-slate-200 p-4">
           <p class="text-xs text-slate-400">In Transit</p>
-          <p class="text-2xl font-bold text-blue-700 mt-1">1</p>
+          <p class="text-2xl font-bold text-blue-700 mt-1">0</p>
         </div>
 
         <div class="bg-white rounded-xl border border-slate-200 p-4">
@@ -130,88 +130,14 @@
             <tbody class="divide-y divide-slate-200">
 
               <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">ORD-291</td>
-
-                <td class="px-4 py-3">
-                  <p class="font-medium text-slate-800">John Smith</p>
-                  <p class="text-xs text-slate-400">EST-291 / INV-001</p>
-                </td>
-
-                <td class="px-4 py-3">
-                  <p class="text-slate-800">NY Area → CA South</p>
-                  <p class="text-xs text-slate-400">Brooklyn, NY → Los Angeles, CA</p>
-                </td>
-
-                <td class="px-4 py-3">
-                  <p class="font-medium">2 item lines</p>
-                  <p class="text-xs text-slate-400">525 lb · fragile / non-stackable</p>
-                </td>
-
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs font-semibold">
-                    Pending Pickup
-                  </span>
-                </td>
-
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold">
-                    Approved
-                  </span>
-                </td>
-
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-semibold">
-                    Incomplete
-                  </span>
-                </td>
-
-                <td class="px-4 py-3 text-right">
-                  <a href="ebol.html" class="inline-block px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">
-                    Open eBOL
-                  </a>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">ORD-284</td>
-
-                <td class="px-4 py-3">
-                  <p class="font-medium text-slate-800">Sarah Lee</p>
-                  <p class="text-xs text-slate-400">EST-284 / INV-002</p>
-                </td>
-
-                <td class="px-4 py-3">
-                  <p class="text-slate-800">NY Area → Boston</p>
-                  <p class="text-xs text-slate-400">Queens, NY → Boston, MA</p>
-                </td>
-
-                <td class="px-4 py-3">
-                  <p class="font-medium">1 item line</p>
-                  <p class="text-xs text-slate-400">120 lb · standard</p>
-                </td>
-
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs font-semibold">
-                    In Transit
-                  </span>
-                </td>
-
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold">
-                    Paid
-                  </span>
-                </td>
-
-                <td class="px-4 py-3">
-                  <span class="px-2 py-1 rounded bg-amber-100 text-amber-700 text-xs font-semibold">
-                    Pickup Complete
-                  </span>
-                </td>
-
-                <td class="px-4 py-3 text-right">
-                  <a href="ebol.html" class="inline-block px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">
-                    Open eBOL
-                  </a>
+                <td colspan="8" class="px-4 py-12 text-center text-slate-500">
+                  <div class="flex flex-col items-center gap-3">
+                    <i data-lucide="package-check" class="w-8 h-8 text-slate-300"></i>
+                    <div>
+                      <p class="font-semibold text-slate-700">No orders yet</p>
+                      <p class="text-sm text-slate-400 mt-1">Orders will be created from approved estimates or invoices.</p>
+                    </div>
+                  </div>
                 </td>
               </tr>
 

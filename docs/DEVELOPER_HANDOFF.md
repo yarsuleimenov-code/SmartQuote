@@ -1,8 +1,8 @@
-# Developer Handoff для Zaberman Calculator
+# Developer Handoff для Logistics Pricing Calculator
 
 ## 1. Статус репозитория
 
-Этот репозиторий является hi-fi wireframe и visual technical specification для будущей production-системы Zaberman Broker Calculator.
+Этот репозиторий является hi-fi wireframe и visual technical specification для будущей production-системы Logistics Pricing Calculator.
 
 Репозиторий предназначен для передачи команде разработки как визуальное и бизнес-техническое задание.
 

@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — Estimate Lifecycle
+﻿# Zaberman LLC Pricing Calculator — Estimate Lifecycle
 
 # 1. Назначение документа
 

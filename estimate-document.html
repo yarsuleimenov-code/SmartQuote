@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zaberman Estimate | EST-291</title>
+  <title>Zaberman LLC Delivery Estimate</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -306,7 +306,7 @@
     <main>
       <header class="topbar no-print">
         <div>
-          <p class="text-xs text-slate-400 m-0">Zaberman › Estimate Document</p>
+          <p class="text-xs text-slate-400 m-0">Zaberman LLC › Estimate Document</p>
           <h2 class="text-lg font-semibold text-slate-800 m-0">Customer Estimate</h2>
         </div>
 
@@ -325,7 +325,7 @@
             </div>
 
             <div class="brand">
-              zaberman
+              Zaberman LLC
               <small>Interstate Delivery</small>
             </div>
           </div>
@@ -338,10 +338,10 @@
               <th>Estimate Total</th>
             </tr>
             <tr>
-              <td><strong>EST-291</strong></td>
-              <td>May 27, 2026</td>
-              <td>June 10, 2026</td>
-              <td style="font-size: 18px; font-weight: 800; color: var(--ink);">$1,130</td>
+              <td><strong id="estimateId">EST-NEW</strong></td>
+              <td id="createdDate">-</td>
+              <td id="validUntil">-</td>
+              <td id="estimateTotalMeta" style="font-size: 18px; font-weight: 800; color: var(--ink);">$0</td>
             </tr>
           </table>
         </section>
@@ -353,15 +353,15 @@
               <table class="table compact">
                 <tr>
                   <th style="width: 32%;">Name</th>
-                  <td><strong>John Peterson</strong></td>
+                  <td><strong id="customerName">-</strong></td>
                 </tr>
                 <tr>
                   <th>Phone</th>
-                  <td>+1 (917) 555-0182</td>
+                  <td id="customerPhone">-</td>
                 </tr>
                 <tr>
                   <th>Email</th>
-                  <td>john.peterson@email.com</td>
+                  <td id="customerEmail">-</td>
                 </tr>
               </table>
             </div>
@@ -371,15 +371,15 @@
               <table class="table compact">
                 <tr>
                   <th style="width: 32%;">Pickup</th>
-                  <td>98 N 7th St, Brooklyn, NY 11211</td>
+                  <td id="pickupAddress">-</td>
                 </tr>
                 <tr>
                   <th>Delivery</th>
-                  <td>530 Mateo St, Los Angeles, CA 90021</td>
+                  <td id="deliveryAddress">-</td>
                 </tr>
                 <tr>
                   <th>Service</th>
-                  <td><strong>Consolidated Interstate Route</strong></td>
+                  <td><strong id="serviceType">Consolidated Interstate Route</strong></td>
                 </tr>
               </table>
             </div>
@@ -390,23 +390,18 @@
           <h3 class="section-title">Shipment Items</h3>
           <table class="table compact">
             <tr>
-              <th style="width: 43%;">Item</th>
-              <th style="width: 9%;">Qty</th>
-              <th style="width: 22%;">Handling</th>
+              <th style="width: 30%;">Item</th>
+              <th style="width: 8%;">Qty</th>
+              <th style="width: 18%;">Dimensions</th>
+              <th style="width: 12%;">Weight</th>
+              <th style="width: 16%;">Handling</th>
               <th>Notes</th>
             </tr>
-            <tr>
-              <td><strong>Concrete Dining Table</strong></td>
-              <td>1</td>
-              <td>Blanket Wrap</td>
-              <td class="muted">Fragile / Oversized</td>
-            </tr>
-            <tr>
-              <td><strong>Vintage Mirror</strong></td>
-              <td>1</td>
-              <td>Crating Required</td>
-              <td class="muted">High-risk item</td>
-            </tr>
+            <tbody id="shipmentItems">
+              <tr>
+                <td colspan="6" class="muted" style="text-align: center;">No shipment items loaded.</td>
+              </tr>
+            </tbody>
           </table>
 
           <p class="compact muted" style="margin: 5px 0 0;">Final charges may change if item count, dimensions, weight, access conditions, required handling, or requested services differ from the information used to create this estimate.</p>
@@ -421,7 +416,7 @@
             </tr>
             <tr>
               <td>Estimated Transportation Total</td>
-              <td style="text-align: right;"><strong>$1,130</strong></td>
+              <td style="text-align: right;"><strong id="transportationTotal">$0</strong></td>
             </tr>
             <tr>
               <td>Released Value Protection</td>
@@ -429,15 +424,15 @@
             </tr>
             <tr>
               <td>Full Value Protection</td>
-              <td style="text-align: right;"><strong>Not Included</strong></td>
+              <td style="text-align: right;"><strong id="fullCoverageStatus">Not Included</strong></td>
             </tr>
             <tr>
               <td>Protection Selection</td>
-              <td style="text-align: right;"><strong>☐ Released Value Protection Selected</strong></td>
+              <td style="text-align: right;"><strong id="protectionSelection">Released Value Protection Selected</strong></td>
             </tr>
             <tr class="price-row">
               <td>Estimated Total</td>
-              <td>$1,130</td>
+              <td id="estimateTotal">$0</td>
             </tr>
           </table>
         </section>
@@ -483,7 +478,7 @@
             </tr>
             <tr>
               <td style="font-weight: 800; background: var(--soft);">Terms Reference</td>
-              <td>Transportation services are additionally governed by Zaberman Terms: <strong>https://zaberman.com/terms</strong>. In case of conflict, Zaberman Terms and the final Bill of Lading govern transportation services, claims procedures, and filing deadlines.</td>
+              <td>Transportation services are additionally governed by Zaberman LLC service terms and the final Bill of Lading. In case of conflict, the final Bill of Lading governs transportation services, claims procedures, and filing deadlines.</td>
             </tr>
           </table>
         </section>
@@ -518,21 +513,23 @@
 
         <footer class="footer keep-together">
           <div>
-            <div class="footer-brand">Zaberman Interstate Delivery</div>
+            <div class="footer-brand">Zaberman LLC</div>
             <p class="compact muted" style="margin: 3px 0 0; max-width: 410px;">Interstate transportation services for furniture, artwork, and large items.</p>
           </div>
 
           <div class="compact" style="text-align: right;">
-            <div><strong>Website:</strong> https://zaberman.com</div>
-            <div><strong>Terms:</strong> https://zaberman.com/terms</div>
-            <div><strong>USDOT / MC:</strong> USDOT XXXXXX | MC XXXXX</div>
-            <div><strong>Email:</strong> a@zaberman.com</div>
+            <div><strong>Website:</strong> -</div>
+            <div><strong>Terms:</strong> Provided during booking</div>
+            <div><strong>USDOT / MC:</strong> -</div>
+            <div><strong>Email:</strong> -</div>
           </div>
         </footer>
       </article>
     </main>
   </div>
 
+  <script src="js/storage.js"></script>
+  <script src="js/estimateDocument.js"></script>
   <script src="sidebar.js"></script>
 </body>
 </html>

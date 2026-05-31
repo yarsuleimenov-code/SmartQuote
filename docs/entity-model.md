@@ -1,4 +1,4 @@
-# Zaberman Broker Calculator MVP — Entity Model
+﻿# Zaberman LLC Pricing Calculator — Entity Model
 
 # 1. Назначение документа
 
