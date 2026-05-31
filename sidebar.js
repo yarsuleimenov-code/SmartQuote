@@ -9,18 +9,6 @@ if (roleParam === "basic") {
   window.localStorage?.setItem("zabermanUserRole", "basic");
 }
 
-const basicAllowedPages = new Set([
-  "quick-quote.html",
-  "index.html",
-  "drafts.html",
-  "estimates.html",
-  "estimate-document.html",
-]);
-
-if (!isAdmin && !basicAllowedPages.has(currentPage)) {
-  window.location.replace("index.html");
-}
-
 const mainItems = [
   { label: "Quick Quote", href: "quick-quote.html" },
   { label: "New Calculation", href: "index.html" },
