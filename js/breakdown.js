@@ -83,7 +83,7 @@
 
   function renderBreakdown({ source, quote, result, estimateId }) {
     const totals = result.totals;
-    const baseFees = totals.operationalCost - totals.routeCost - totals.laborCost;
+    const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
     setText("breakdownEstimateId", `Estimate #${estimateId || "EST-NEW"}`);
     setText("breakdownSource", source);
     setText("breakdownCustomer", quote.customer?.name || "-");
@@ -97,7 +97,7 @@
     setText("bdDistance", `${Math.round(result.distance || 0)} mi`);
     setText("bdLaborCost", currency(totals.laborCost));
     setText("bdCrew", `${result.requiredCrew || 0} ${result.requiredCrew === 1 ? "person" : "people"}`);
-    setText("bdBaseFees", currency(baseFees));
+    setText("bdNonRouteCost", currency(nonRouteOperationalCost));
     setText("bdPackaging", currency(totals.packaging));
     setText("bdStorage", currency(totals.storage));
     setText("bdInsurance", currency(totals.insurance));
