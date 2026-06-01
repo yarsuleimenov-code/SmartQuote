@@ -204,9 +204,9 @@
                   <span class="text-xs text-slate-400">Storage</span>
                   <input data-field="storageDays" type="number" class="mt-1 w-full border rounded-lg px-2 py-2" value="${item.storageDays || 0}" />
                 </label>
-                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
-                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />N-stack</label>
-                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
+                <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
+                <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />N-stack</label>
+                <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
                 <label class="col-span-5">
                   <span class="text-xs text-slate-400">Comment</span>
                   <input data-field="comment" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white" value="${escapeHtml(item.comment)}" />
