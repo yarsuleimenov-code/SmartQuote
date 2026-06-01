@@ -17,7 +17,10 @@
   }
 
   function snapshot() {
-    return window.CalculatorStorage?.loadEstimateSnapshot?.() || null;
+    const params = new URLSearchParams(window.location.search);
+    return window.CalculatorStorage?.selectEstimateSnapshot?.(params.get("estimateId"))
+      || window.CalculatorStorage?.loadEstimateSnapshot?.()
+      || null;
   }
 
   function quote(snapshotValue) {

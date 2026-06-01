@@ -116,7 +116,9 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const snapshot = window.CalculatorStorage?.loadEstimateSnapshot();
+    const params = new URLSearchParams(window.location.search);
+    const snapshot = window.CalculatorStorage?.selectEstimateSnapshot(params.get("estimateId"))
+      || window.CalculatorStorage?.loadEstimateSnapshot();
     if (snapshot) {
       applySnapshot(snapshot);
     } else {

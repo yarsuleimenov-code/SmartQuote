@@ -40,7 +40,9 @@
   }
 
   function getSource() {
-    const snapshot = window.CalculatorStorage.loadEstimateSnapshot();
+    const params = new URLSearchParams(window.location.search);
+    const snapshot = window.CalculatorStorage.selectEstimateSnapshot(params.get("estimateId"))
+      || window.CalculatorStorage.loadEstimateSnapshot();
     if (snapshot?.quote && snapshot?.result) {
       return {
         source: "Snapshot",

@@ -57,11 +57,13 @@
     `;
   }
 
-  function renderEstimate(snapshot) {
-    const quote = snapshot.quote || {};
-    const result = snapshot.result || {};
-    renderCounts(1);
-    byId("estimateRows").innerHTML = `
+  function renderEstimates(snapshots) {
+    renderCounts(snapshots.length);
+    byId("estimateRows").innerHTML = snapshots.map((snapshot) => {
+      const quote = snapshot.quote || {};
+      const result = snapshot.result || {};
+      const snapshotId = snapshot.snapshotId || "";
+      return `
       <tr>
         <td class="px-4 py-3 font-semibold text-slate-800">${escapeHtml(snapshot.estimateId || quote.estimateId || "EST-LOCAL")}</td>
         <td class="px-4 py-3">
@@ -83,32 +85,51 @@
         <td class="px-4 py-3">v1</td>
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">
-            <a href="estimate-document.html" class="px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">View</a>
-            <a href="invoices.html" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Invoice</a>
-            <a href="orders.html" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Order</a>
-            <a href="ebol.html" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">eBOL</a>
-            <button id="reopenEstimateDraft" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Reopen Draft</button>
-            <button id="deleteEstimateSnapshot" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
+            <a href="estimate-document.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">View</a>
+            <a href="invoices.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Invoice</a>
+            <a href="orders.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Order</a>
+            <a href="ebol.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">eBOL</a>
+            <button data-reopen-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Reopen Draft</button>
+            <button data-delete-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
           </div>
         </td>
       </tr>
     `;
+    }).join("");
 
-    byId("reopenEstimateDraft").addEventListener("click", () => {
-      window.CalculatorStorage.save(quote);
-      window.location.href = "index.html?loadDraft=1";
+    byId("estimateRows").querySelectorAll("[data-select-estimate]").forEach((link) => {
+      link.addEventListener("click", () => {
+        window.CalculatorStorage.selectEstimateSnapshot(link.dataset.selectEstimate);
+      });
     });
-    byId("deleteEstimateSnapshot").addEventListener("click", () => {
-      window.CalculatorStorage.clearEstimateSnapshot();
-      renderEmpty();
-      if (window.lucide) lucide.createIcons();
+
+    byId("estimateRows").querySelectorAll("[data-reopen-estimate]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const snapshot = window.CalculatorStorage.selectEstimateSnapshot(button.dataset.reopenEstimate);
+        if (!snapshot?.quote) return;
+        window.CalculatorStorage.save({ ...snapshot.quote, localId: undefined });
+        window.location.href = "index.html?loadDraft=1";
+      });
+    });
+
+    byId("estimateRows").querySelectorAll("[data-delete-estimate]").forEach((button) => {
+      button.addEventListener("click", () => {
+        window.CalculatorStorage.deleteEstimateSnapshot(button.dataset.deleteEstimate);
+        const updatedSnapshots = window.CalculatorStorage.listEstimateSnapshots();
+        if (updatedSnapshots.length) {
+          renderEstimates(updatedSnapshots);
+        } else {
+          renderEmpty();
+        }
+        if (window.lucide) lucide.createIcons();
+      });
     });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const snapshot = window.CalculatorStorage.loadEstimateSnapshot();
-    if (snapshot) {
-      renderEstimate(snapshot);
+    const snapshots = window.CalculatorStorage.listEstimateSnapshots();
+    if (snapshots.length) {
+      renderEstimates(snapshots);
     } else {
       renderEmpty();
     }

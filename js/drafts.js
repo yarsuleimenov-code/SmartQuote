@@ -57,11 +57,12 @@
     `;
   }
 
-  function renderDraft(draft) {
-    const result = window.PricingCalculator.calculateQuote(draft);
-    const summary = itemSummary(result);
-    byId("draftCount").textContent = "1";
-    byId("draftRows").innerHTML = `
+  function renderDrafts(drafts) {
+    byId("draftCount").textContent = String(drafts.length);
+    byId("draftRows").innerHTML = drafts.map((draft) => {
+      const result = window.PricingCalculator.calculateQuote(draft);
+      const summary = itemSummary(result);
+      return `
       <tr>
         <td class="px-4 py-3 font-semibold text-slate-800">${escapeHtml(draft.estimateId || "DRAFT-LOCAL")}</td>
         <td class="px-4 py-3">
@@ -88,24 +89,38 @@
         <td class="px-4 py-3"><p>Saved locally</p><p class="text-xs text-slate-400">Browser storage</p></td>
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">
-            <a href="index.html?loadDraft=1" class="px-3 py-2 rounded-lg bg-teal-500 text-white text-xs hover:bg-teal-600">Open</a>
-            <button id="deleteLocalDraft" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
+            <a href="index.html?loadDraft=1&draftId=${encodeURIComponent(draft.localId)}" data-open-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg bg-teal-500 text-white text-xs hover:bg-teal-600">Open</a>
+            <button data-delete-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
           </div>
         </td>
       </tr>
     `;
+    }).join("");
 
-    byId("deleteLocalDraft").addEventListener("click", () => {
-      window.CalculatorStorage.clear();
-      renderEmpty();
-      if (window.lucide) lucide.createIcons();
+    byId("draftRows").querySelectorAll("[data-open-draft]").forEach((link) => {
+      link.addEventListener("click", () => {
+        window.CalculatorStorage.selectDraft(link.dataset.openDraft);
+      });
+    });
+
+    byId("draftRows").querySelectorAll("[data-delete-draft]").forEach((button) => {
+      button.addEventListener("click", () => {
+        window.CalculatorStorage.deleteDraft(button.dataset.deleteDraft);
+        const updatedDrafts = window.CalculatorStorage.listDrafts();
+        if (updatedDrafts.length) {
+          renderDrafts(updatedDrafts);
+        } else {
+          renderEmpty();
+        }
+        if (window.lucide) lucide.createIcons();
+      });
     });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const draft = window.CalculatorStorage.load();
-    if (draft) {
-      renderDraft(draft);
+    const drafts = window.CalculatorStorage.listDrafts();
+    if (drafts.length) {
+      renderDrafts(drafts);
     } else {
       renderEmpty();
     }

@@ -33,7 +33,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Pricing logic is local JavaScript in `js/calculator.js`.
 - UI for Full Quote is in `index.html` and `js/ui.js`.
 - Quick Quote logic is in `quick-quote.html` and `js/quickQuote.js`.
-- Local/browser storage is used for drafts; Google Sheets integration exists through Apps Script endpoint.
+- Local/browser storage is used for multiple drafts and generated estimate snapshots; Google Sheets integration exists through Apps Script endpoint.
 
 ## Work Style
 

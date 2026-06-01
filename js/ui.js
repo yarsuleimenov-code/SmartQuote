@@ -420,7 +420,7 @@
       cacheFields();
       const params = new URLSearchParams(window.location.search);
       if (params.get("loadDraft") === "1") {
-        quote = storage.load() || quote;
+        quote = storage.selectDraft(params.get("draftId")) || storage.load() || quote;
       }
       setFieldValues();
       result = calculateQuote(quote);
