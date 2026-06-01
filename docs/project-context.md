@@ -17,7 +17,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 
 ## Key Pricing Notes
 
-- `CA South -> CA North` with `85 x 63 x 47`, `qty 1`, `80 lb`, crew `2/1/2` is expected around `$850`.
+- `CA South -> CA North` with `85 x 63 x 47`, `qty 1`, volume-dominant weight such as `80-150 lb`, crew `2/1/2` is expected around `$850`.
 - Long interstate route examples such as `NY Area -> CA North` may be around `$1360` for the same item.
 - `Eff. volume` is rounded up to a whole cubic foot in the calculation model.
 - Empty items and name-only items must not create a non-zero quote.
@@ -37,4 +37,3 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Preserve confirmed calculations unless a business bug is explicitly identified.
 - Add or update smoke tests when calculation behavior changes.
 - Push to `main` after verified changes when implementation is requested.
-

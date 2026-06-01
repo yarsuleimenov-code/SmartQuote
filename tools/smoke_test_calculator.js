@@ -130,6 +130,36 @@ quickRoundedVolumeQuote.items[0].height = 12;
 quickRoundedVolumeQuote.items[0].weight = 51;
 const quickRoundedVolumeResult = context.window.PricingCalculator.calculateQuote(quickRoundedVolumeQuote);
 
+const caSouthNorthBedQuote = JSON.parse(JSON.stringify(context.window.CalculatorBlankQuote));
+caSouthNorthBedQuote.route = {
+  pickupZip: "90021",
+  deliveryZip: "94601",
+  pickupAddress: "",
+  deliveryAddress: "",
+};
+caSouthNorthBedQuote.access = {
+  pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 2 },
+  delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 2 },
+};
+caSouthNorthBedQuote.items = [{
+  id: "ca-south-north-bed",
+  name: "Bed",
+  length: 85,
+  width: 63,
+  height: 47,
+  weight: 150,
+  qty: 1,
+  packaging: "Custom Crate",
+  insurance: "Basic Liability",
+  declaredValue: 0,
+  storageDays: 0,
+  fragile: false,
+  nonStackable: false,
+  crated: false,
+  comment: "",
+}];
+const caSouthNorthBedResult = context.window.PricingCalculator.calculateQuote(caSouthNorthBedQuote);
+
 if (!result.routeSupported) {
   throw new Error("Expected demo route to be supported by ZIP map.");
 }
@@ -178,6 +208,14 @@ if (onePersonBookshelfResult.items[0].effectiveVolume !== 17) {
   throw new Error(`Expected fractional effective volume to round up to 17 cu ft, got ${onePersonBookshelfResult.items[0].effectiveVolume}.`);
 }
 
+if (caSouthNorthBedResult.totals.finalPrice !== 850) {
+  throw new Error(`Expected CA South -> CA North bed benchmark to stay 850, got ${caSouthNorthBedResult.totals.finalPrice}.`);
+}
+
+if (caSouthNorthBedResult.totals.packaging <= 0 || caSouthNorthBedResult.totals.additionalCharges !== 0) {
+  throw new Error("Expected packaging to be tracked without changing confirmed additional charges benchmark.");
+}
+
 console.log(JSON.stringify({
   route: `${result.pickupZone} -> ${result.deliveryZone}`,
   distance: result.distance,
@@ -193,5 +231,6 @@ console.log(JSON.stringify({
   quickTwoPersonBookshelfCrew: quickTwoPersonBookshelfResult.crew,
   quickRoundedVolume: quickRoundedVolumeResult.totals.totalVolume,
   quickRoundedVolumeFinalPrice: quickRoundedVolumeResult.totals.finalPrice,
+  caSouthNorthBedFinalPrice: caSouthNorthBedResult.totals.finalPrice,
   itemCount: result.items.length,
 }, null, 2));
