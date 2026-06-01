@@ -84,6 +84,9 @@
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">
             <a href="estimate-document.html" class="px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">View</a>
+            <a href="invoices.html" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Invoice</a>
+            <a href="orders.html" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Order</a>
+            <a href="ebol.html" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">eBOL</a>
             <button id="reopenEstimateDraft" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Reopen Draft</button>
             <button id="deleteEstimateSnapshot" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
           </div>

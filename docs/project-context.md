@@ -21,6 +21,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Long interstate route examples such as `NY Area -> CA North` may be around `$1360` for the same item.
 - `Zaberman_Calculator_UAT.xlsx` is the current UAT workbook for calculation acceptance checks.
 - Compact UAT index is documented in `docs/uat-test-cases.md`.
+- Primary calculation flow is accepted by manual UAT: 8 / 8 cases pass when SmartQuote uses the same assumptions as Spreadsheet/Zion.
+- Treat `js/calculator.js` as fixed for now; do not change pricing logic while building screen links or operational workflow screens.
 - `Eff. volume` is rounded up to a whole cubic foot in the calculation model.
 - Empty items and name-only items must not create a non-zero quote.
 - Quick Quote defaults to 2-person crew assumption.

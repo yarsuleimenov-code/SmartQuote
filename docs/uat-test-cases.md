@@ -6,6 +6,8 @@ Source workbook: `Zaberman_Calculator_UAT.xlsx`.
 
 Use this file as the compact UAT checklist for validating SmartQuote calculations against confirmed Spreadsheet/Zion baselines.
 
+Status: the primary calculation flow is business-accepted. Manual UAT passed 8 / 8 when SmartQuote uses the same assumptions as Spreadsheet/Zion. Do not change `js/calculator.js` for screen-linking or operational workflow work.
+
 ## Test Cases
 
 | ID | Scenario | Checks | Route | Items | Qty | Conditions | Spreadsheet | Zion |
@@ -28,7 +30,9 @@ Use this file as the compact UAT checklist for validating SmartQuote calculation
 
 ## Runner
 
-Run the local UAT checker:
+The local UAT checker is optional diagnostic tooling. It is not the acceptance source when its generated assumptions differ from the manual UAT sheet.
+
+Run:
 
 ```bash
 python tools/run_uat_calculator.py
@@ -42,9 +46,4 @@ python tools/run_uat_calculator.py --json
 python tools/run_uat_calculator.py --strict
 ```
 
-Current initial result:
-
-- Spreadsheet baseline: 4 / 8 pass.
-- Zion baseline: 5 / 8 pass.
-
-Known mismatches should be reviewed as assumption differences first, especially item template defaults, packaging, fragile/non-stackable flags, insurance, and storage.
+Known mismatches should be reviewed as assumption differences first, especially item template defaults, packaging, fragile/non-stackable flags, insurance, and storage. Example: N-stack correctly increases cost; comparing a N-stack SmartQuote run against a non-N-stack baseline is not a calculation defect.
