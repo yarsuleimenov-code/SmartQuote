@@ -162,6 +162,7 @@
   function renderBreakdown({ source, sourceType, recordId, quote, result, estimateId }) {
     const totals = result.totals;
     const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
+    const displayedAdditionalCharges = Number(totals.additionalCharges || 0) + Number(totals.manualAdjustment || 0);
     byId("bdSourceType").value = sourceType || "estimate";
     const selectedRecordId = populateRecordSelect(sourceType || "estimate", recordId);
     byId("bdRecordSelect").value = selectedRecordId || "";
@@ -171,7 +172,7 @@
     setText("breakdownCustomer", quote.customer?.leadName || quote.customer?.name || "-");
     setText("breakdownRoute", `${result.pickupZone} -> ${result.deliveryZone}`);
     setText("bdOperationalCost", currency(totals.operationalCost));
-    setText("bdAdditionalCharges", currency(totals.additionalCharges));
+    setText("bdAdditionalCharges", currency(displayedAdditionalCharges));
     setText("bdMargin", currency(totals.margin));
     setText("bdFinalPrice", currency(totals.finalPrice));
     setText("bdVehicle", result.vehicle?.name || "-");
@@ -186,12 +187,12 @@
     setText("bdAccessFees", currency(totals.accessFees));
     setText("bdOptionFees", currency(totals.optionFees));
     setText("bdManualAdjustment", currency(totals.manualAdjustment));
-    setText("bdAdditionalTotal", currency(totals.additionalCharges + totals.manualAdjustment));
+    setText("bdAdditionalTotal", currency(displayedAdditionalCharges));
     setText("bdEffectiveVolume", `${Math.ceil(Number(totals.effectiveVolume || 0))} cu ft`);
     setText("bdTotalWeight", `${Number(totals.totalWeight || 0).toFixed(0)} lb`);
     setText(
       "bdRawFormula",
-      `${currency(totals.operationalCost)} + ${currency(totals.additionalCharges)} + ${currency(totals.margin)} + ${currency(totals.manualAdjustment)} = ${currency(totals.rawPrice)}`
+      `${currency(totals.operationalCost)} + ${currency(displayedAdditionalCharges)} + ${currency(totals.margin)} = ${currency(totals.rawPrice)}`
     );
     setText("bdRoundedFormula", `CEILING(${currency(totals.rawPrice)}, 10) = ${currency(totals.finalPrice)}`);
     renderItems(result.items || []);
