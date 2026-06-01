@@ -183,15 +183,15 @@
             <span class="text-xs text-slate-400">Qty</span>
             <input data-field="qty" type="number" min="1" class="mt-1 w-full border rounded-lg px-3 py-2" value="${item.qty || 1}" />
           </label>
-          <div class="col-span-11 grid grid-cols-3 gap-2">
+          <div class="col-span-10 grid grid-cols-3 gap-2">
             <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
             <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />Non-stack</label>
             <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
           </div>
-          <div class="col-span-1 grid grid-cols-1 gap-1">
-            <button data-action="duplicate" class="h-8 rounded-md border border-teal-200 bg-teal-50 text-xs font-semibold text-teal-700 hover:bg-teal-100" title="Duplicate item">Copy</button>
-            <button data-action="clear" class="h-8 rounded-md border border-amber-200 bg-amber-50 text-xs font-semibold text-amber-700 hover:bg-amber-100" title="Clear item">Clear</button>
-            <button data-action="delete" class="h-8 rounded-md border border-slate-200 bg-white text-xs font-semibold text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-700" title="Delete item">Delete</button>
+          <div class="col-span-2 flex items-end justify-end gap-3 self-stretch pb-2 text-xs font-medium">
+            <button data-action="duplicate" class="text-teal-700 hover:text-teal-900 hover:underline" title="Duplicate item">Copy</button>
+            <button data-action="clear" class="text-amber-700 hover:text-amber-900 hover:underline" title="Clear item">Clear</button>
+            <button data-action="delete" class="text-slate-500 hover:text-red-700 hover:underline" title="Delete item">Delete</button>
           </div>
         </div>
       </div>
