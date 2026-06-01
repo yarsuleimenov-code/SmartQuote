@@ -188,12 +188,28 @@
             <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />Non-stack</label>
             <label class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
           </div>
-          <div class="col-span-1 text-right">
-            <button data-action="delete" class="text-slate-400 hover:text-red-600">Delete</button>
+          <div class="col-span-1 flex justify-end gap-2">
+            <button data-action="duplicate" class="text-slate-400 hover:text-teal-700" title="Duplicate item">Copy</button>
+            <button data-action="clear" class="text-slate-400 hover:text-amber-700" title="Clear item">Clear</button>
+            <button data-action="delete" class="text-slate-400 hover:text-red-600" title="Delete item">Delete</button>
           </div>
         </div>
       </div>
     `).join("");
+  }
+
+  function createEmptyQuickItem(id = createId()) {
+    return {
+      id,
+      template: "custom",
+      name: "",
+      volume: 0,
+      weight: 0,
+      qty: 1,
+      fragile: false,
+      nonStackable: false,
+      crated: false,
+    };
   }
 
   function buildSnapshot(quote, result) {
@@ -215,11 +231,22 @@
     const result = window.PricingCalculator.calculateQuote(quote);
     const low = result.totals.finalPrice ? result.totals.finalPrice * 0.9 : 0;
     const high = result.totals.finalPrice ? result.totals.finalPrice * 1.1 : 0;
+    const hasBillableItems = result.items.length > 0;
 
     byId("quickRouteStatus").textContent = result.routeSupported ? "Route Ready" : "Unsupported Route";
     byId("quickRouteStatus").className = result.routeSupported
       ? "px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
       : "px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold";
+    byId("quickReadiness").textContent = !result.routeSupported
+      ? "Unsupported Route"
+      : hasBillableItems
+        ? "Ready"
+        : "Add item details";
+    byId("quickReadiness").className = !result.routeSupported
+      ? "px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold"
+      : hasBillableItems
+        ? "px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
+        : "px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold";
     byId("quickDistance").textContent = `${Math.round(result.distance)} mi`;
     byId("quickLowPrice").textContent = currency(low);
     byId("quickHighPrice").textContent = currency(high);
@@ -303,38 +330,24 @@
       updateSummary();
     });
     byId("quickItems").addEventListener("click", (event) => {
-      if (event.target.dataset.action !== "delete") return;
+      if (!event.target.dataset.action) return;
       const card = event.target.closest("[data-quick-item-id]");
-      if (quickItems.length === 1) {
-        quickItems = [{
-          id: card.dataset.quickItemId,
-          template: "custom",
-          name: "",
-          volume: 0,
-          weight: 0,
-          qty: 1,
-          fragile: false,
-          nonStackable: false,
-          crated: false,
-        }];
-      } else {
+      if (!card) return;
+      const item = quickItems.find((entry) => entry.id === card.dataset.quickItemId);
+      if (event.target.dataset.action === "duplicate" && item) {
+        quickItems.splice(quickItems.indexOf(item) + 1, 0, { ...item, id: createId(), name: item.name ? `${item.name} copy` : "" });
+      } else if (event.target.dataset.action === "clear") {
+        quickItems = quickItems.map((entry) => entry.id === card.dataset.quickItemId ? createEmptyQuickItem(card.dataset.quickItemId) : entry);
+      } else if (event.target.dataset.action === "delete" && quickItems.length === 1) {
+        quickItems = [createEmptyQuickItem(card.dataset.quickItemId)];
+      } else if (event.target.dataset.action === "delete") {
         quickItems = quickItems.filter((item) => item.id !== card.dataset.quickItemId);
       }
       renderItems();
       updateSummary();
     });
     byId("quickAddItem").addEventListener("click", () => {
-      quickItems.push({
-        id: createId(),
-        template: "custom",
-        name: "",
-        volume: 0,
-        weight: 0,
-        qty: 1,
-        fragile: false,
-        nonStackable: false,
-        crated: false,
-      });
+      quickItems.push(createEmptyQuickItem());
       renderItems();
       updateSummary();
     });
