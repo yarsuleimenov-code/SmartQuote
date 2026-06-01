@@ -167,7 +167,7 @@
             <span class="text-xs text-slate-400">Template</span>
             <select data-field="template" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white">${renderTemplateOptions(item.template || "custom")}</select>
           </label>
-          <label class="col-span-3">
+          <label class="col-span-5">
             <span class="text-xs text-slate-400">Item</span>
             <input data-field="name" class="mt-1 w-full border rounded-lg px-3 py-2 font-semibold" value="${escapeHtml(item.name)}" />
           </label>
