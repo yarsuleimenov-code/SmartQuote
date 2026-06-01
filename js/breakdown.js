@@ -185,6 +185,7 @@
     setText("bdInsurance", currency(totals.insurance));
     setText("bdAccessFees", currency(totals.accessFees));
     setText("bdOptionFees", currency(totals.optionFees));
+    setText("bdManualAdjustment", currency(totals.manualAdjustment));
     setText("bdAdditionalTotal", currency(totals.additionalCharges));
     setText("bdEffectiveVolume", `${Math.ceil(Number(totals.effectiveVolume || 0))} cu ft`);
     setText("bdTotalWeight", `${Number(totals.totalWeight || 0).toFixed(0)} lb`);
