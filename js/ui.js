@@ -180,8 +180,14 @@
                 <select data-field="packaging" class="mt-1 w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select>
               </label>
             </td>
-            <td class="px-3 pt-7 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</td>
-            <td class="px-3 pt-7" data-computed="totalWeight">${computed.totalWeight || 0}</td>
+            <td class="px-3 pt-3">
+              <span class="block text-xs text-slate-400">Eff. volume</span>
+              <span class="mt-1 block px-2 py-2 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</span>
+            </td>
+            <td class="px-3 pt-3">
+              <span class="block text-xs text-slate-400">Total weight</span>
+              <span class="mt-1 block px-2 py-2 text-slate-800" data-computed="totalWeight">${computed.totalWeight || 0}</span>
+            </td>
           </tr>
           <tr data-item-id="${item.id}" class="${detailBg}">
             <td colspan="9" class="px-3 pb-2">
