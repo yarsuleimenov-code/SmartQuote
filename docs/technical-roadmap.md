@@ -24,8 +24,10 @@
 Текущий статус:
 
 ```text
-Workflow MVP / Architecture Prototype
+Business MVP Stabilization
 ```
+
+The project is still not production-ready, but it is no longer only a static wireframe. The current calculator has a working local pricing flow, local drafts and estimate snapshots, Cloudflare deployment, admin page protection, Google Sheets proxy wiring, and a frontend pricing config/snapshot layer.
 
 ---
 
@@ -49,6 +51,12 @@ Workflow MVP / Architecture Prototype
 - eBOL workflow concept;
 - operational workflow modeling;
 - reusable UI structure.
+- Quick Quote workflow with 2-person default assumption.
+- Multiple local drafts and generated estimate snapshots.
+- Estimate status management in My Estimates.
+- Cost Breakdown record selector for drafts and estimate snapshots.
+- `formulaVersion` and `variablesSnapshot` in generated estimates.
+- Read-only `Variables` and `References` screens pending governed editing.
 
 ---
 
@@ -288,6 +296,8 @@ Architecture Docs
 - responsive cleanup;
 - state preparation;
 - UI normalization.
+- preserve current UAT-approved calculation outputs while changing workflow screens.
+- keep `js/calculator.js` stable unless a separate business calculation bug is approved.
 
 ---
 
@@ -299,7 +309,17 @@ shared UI components
 navigation consistency
 stable workflows
 UI cleanup
+pricing config layer
+estimate snapshot metadata
 ```
+
+Current status:
+- `js/pricingConfig.js` exists as the frontend config layer.
+- `variablesSnapshot` and `formulaVersion` are captured on estimates.
+- `Variables` and `References` are currently read-only to avoid uncontrolled pricing changes.
+
+Next deliverable:
+- Interactive Variables MVP with impact preview before save.
 
 ---
 
@@ -371,6 +391,25 @@ Infrastructure Foundation
 Backend phase начинается:
 - только после architecture freeze;
 - только после stabilized entity model.
+- только после broker-facing MVP flow can be handed to the business for test use.
+
+Near-term business handoff gate:
+
+```text
+Quick Quote
+↓
+Full Quote
+↓
+Generate Estimate
+↓
+Estimate Document
+↓
+My Estimates status tracking
+↓
+Cost Breakdown audit
+```
+
+The gate is passed when this flow works repeatedly without manual Excel checks for accepted benchmark cases.
 
 ---
 
@@ -391,6 +430,22 @@ Formula Versioning
 Snapshot Service
 Rounding Engine
 Pricing Audit
+```
+
+Frontend MVP sequence before backend pricing engine:
+
+```text
+Read-only variables baseline
+↓
+Editable safe variables subset
+↓
+Benchmark impact preview
+↓
+Saved admin overrides
+↓
+Variables snapshot per estimate
+↓
+Backend migration
 ```
 
 ---

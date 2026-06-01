@@ -166,6 +166,12 @@ Administrative pricing screen.
 
 Variables должны редактироваться только admin role.
 
+Current MVP status:
+- `variables.html` is read-only.
+- Displayed values are synced from UAT-approved runtime constants where already wired.
+- Editing must stay disabled until variable persistence, impact preview, versioning, and snapshot governance are implemented.
+- Runtime defaults live in `js/variables.js`; saved frontend overrides are applied through `js/pricingConfig.js`.
+
 ---
 
 ## 4.4 formulas.html — Formula Documentation
@@ -179,6 +185,11 @@ Variables должны редактироваться только admin role.
 - хранить pricing references.
 
 Экран не является pricing engine.
+
+Current MVP status:
+- `formulas.html` remains read-only documentation.
+- It must not be used as executable logic.
+- Any formula change must be represented in `js/calculator.js` only after separate UAT approval.
 
 ---
 
@@ -449,11 +460,32 @@ Final Rounded Price
 уже отправленные estimates.
 ```
 
+Current MVP implementation:
+- Estimate snapshots store `formulaVersion`.
+- Estimate snapshots store `variablesSnapshot` from `js/pricingConfig.js`.
+- Historical snapshots should be opened from saved estimate data, not recalculated from future admin values.
+- Drafts remain live and may recalculate against current variables.
+
 ---
 
 # 10. Variables Governance
 
 Variables управляются admin role.
+
+Current MVP implementation:
+- `js/variables.js` is the default UAT-approved variables baseline.
+- `js/pricingConfig.js` is the frontend config layer:
+
+```text
+default variables
+↓
+saved admin overrides
+↓
+CalculatorVariables runtime
+```
+
+- `variables.html` and `references.html` are read-only until the interactive admin flow is implemented.
+- The first editable version should expose only a limited safe set of variables and must include benchmark impact preview before save.
 
 Примеры variables:
 - fuel surcharge;

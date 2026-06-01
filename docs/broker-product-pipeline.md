@@ -147,12 +147,17 @@ Help the business tune pricing while preserving broker workflow speed.
 - Add cost breakdown review for admin only.
 - Add variable change notes.
 - Add formula/version label to calculation output.
+- Keep `Variables` and `References` read-only until benchmark preview and snapshot governance are in place.
+- Start interactive Variables with a limited safe set: margin, rounding, priority fee, storage rate, access fees, packaging rates, and protection plans.
+- Add before/after impact preview for accepted benchmark cases before allowing admin save.
 
 ### Acceptance Criteria
 
 - Admin can compare SmartQuote vs Excel without manual digging.
 - Broker does not see unnecessary formula complexity.
 - Pricing adjustments are traceable.
+- Any generated estimate stores `formulaVersion` and `variablesSnapshot`.
+- Admin cannot silently change pricing constants without a visible version/change note.
 
 ## Phase 6 - Persistence And Operational Readiness
 
@@ -172,6 +177,9 @@ Move from local testing toward reliable shared workflow.
 - Add stable IDs for draft, estimate, item.
 - Add basic duplicate prevention.
 - Document backend migration requirements.
+- Add export/import local backup for drafts and estimates.
+- Keep Google Sheets as test-mode backup/audit, not the only source of truth.
+- Include `manual_adjustment`, displayed `additional_charges`, and calculated base additional charges in payloads for audit clarity.
 
 ### Acceptance Criteria
 
@@ -182,11 +190,11 @@ Move from local testing toward reliable shared workflow.
 ## Near-Term Priority Order
 
 ```text
-1. Quick Quote usability and calculation reliability
-2. Full Quote input speed
-3. Validation and review-required states
-4. Estimate HTML/PDF workflow
-5. Pricing benchmark matrix
+1. Interactive Variables MVP with benchmark impact preview
+2. Export/import backup for drafts and estimates
+3. Full broker flow QA from Quick Quote to Estimate Document
+4. Validation and review-required states
+5. Estimate HTML/PDF final polish
 6. Sheets persistence stabilization
 7. Backend migration preparation
 ```
@@ -214,6 +222,8 @@ These are useful later, but they do not currently improve broker speed in daily 
 - Full Quote is the detailed calculation workspace.
 - Estimate Document is customer-facing and should hide internal cost logic.
 - Admin views are for calibration and review, not daily broker quoting.
+- `Variables` and `References` are intentionally read-only until governed variable editing is implemented.
+- Existing accepted calculation benchmarks are the release gate for every pricing-related change.
 
 ## Success Metric
 

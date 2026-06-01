@@ -11,7 +11,15 @@ The repository is currently a static HTML/Tailwind wireframe. The first working 
 - estimate summary;
 - broker notes section.
 
-`quick-quote.html` should remain the fast entry point, but it should be wired after the full calculator logic is stable. `breakdown.html`, `estimate-document.html`, `ebol.html`, `variables.html`, `formulas.html`, `references.html`, and lifecycle/history pages should remain available as reference and workflow screens.
+`quick-quote.html` is the fast entry point and now feeds saved drafts/estimate snapshots. `breakdown.html`, `estimate-document.html`, `drafts.html`, and `estimates.html` consume local saved records. `variables.html`, `formulas.html`, `references.html`, and lifecycle/history pages remain admin/reference screens until governed editing is implemented.
+
+Current implementation notes:
+
+- Runtime defaults live in `js/variables.js`.
+- `js/pricingConfig.js` applies saved admin overrides on top of defaults and provides `variablesSnapshot`.
+- `variables.html` and `references.html` are read-only to prevent uncontrolled pricing changes.
+- Generated estimate snapshots include `formulaVersion` and `variablesSnapshot`.
+- `js/calculator.js` is treated as UAT-approved baseline.
 
 ## Excel Findings
 
@@ -63,6 +71,35 @@ Vehicle reference rows include:
 Zone distance matrix includes `CA North`, `CA South`, `DC Area`, `NY Area`, `Boston`, and `TX`. The external `zone_zip_map.csv` has 3,172 ZIP rows with columns `Region`, `ZoneName`, `ZIP`. First MVP should use it only for ZIP validation and zone lookup; addresses outside the map should be rejected or marked unsupported.
 
 ## Implementation Phases
+
+### Current Stabilization Baseline
+
+Files:
+
+- `js/calculator.js`
+- `js/variables.js`
+- `js/pricingConfig.js`
+- `js/storage.js`
+- `js/ui.js`
+- `js/quickQuote.js`
+- `js/googleSheet.js`
+
+Result:
+
+- Local calculator works against accepted benchmark assumptions.
+- Drafts and estimates can be stored locally.
+- Estimate snapshots contain formula and variables metadata.
+- Manual Adjustment is shown as part of Additional Charges for business explanation while preserved separately for audit.
+
+Verification:
+
+- `node tools/smoke_test_calculator.js`.
+- Manual broker flow: Quick Quote -> Full Quote -> Generate Estimate -> Estimate Document -> My Estimates -> Cost Breakdown.
+
+If limits end:
+
+- Do not modify `js/calculator.js`.
+- Continue by improving workflow screens and persistence around the accepted calculation engine.
 
 ### Phase 1 - Project Cleanup / Layout Stabilization
 
@@ -158,6 +195,8 @@ Result:
 
 - Frontend can build the expected payload.
 - Sending remains disabled until an Apps Script Web App endpoint is configured.
+- Test-mode Cloudflare proxy can forward payloads when `APPS_SCRIPT_ENDPOINT` and `SHEETS_AUTH_TOKEN` are configured.
+- Payload includes `formula_version`, `variables_snapshot`, `manual_adjustment`, displayed `additional_charges`, and calculated base additional charges.
 
 Verification:
 
@@ -195,3 +234,37 @@ Checks:
 - browser smoke test where runtime is available.
 - syntax check for JS modules.
 
+### Phase 8 - Interactive Variables MVP
+
+Files:
+
+- `variables.html`
+- `js/variablesAdmin.js`
+- `js/pricingConfig.js`
+- `js/variables.js`
+- `tools/smoke_test_calculator.js`
+
+Recommended first editable scope:
+
+- margin rate;
+- rounding increment;
+- priority date fee;
+- storage rate;
+- access fees;
+- packaging rates;
+- protection plans.
+
+Do not make vehicle parameters, route matrix, or effective-volume multipliers editable until benchmark impact preview is stable.
+
+Result:
+
+- Admin can preview before/after pricing impact against accepted benchmark cases.
+- Admin can save a controlled override set.
+- New drafts use current variables.
+- Existing estimate snapshots stay frozen.
+
+Verification:
+
+- Before/after preview shows expected deltas.
+- Existing smoke test still passes for baseline after reset.
+- Saved estimate includes new `variablesSnapshot`.

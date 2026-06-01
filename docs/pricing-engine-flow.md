@@ -23,11 +23,18 @@ Frontend:
 - отображает данные;
 - собирает input;
 - показывает calculation result.
+- in the current MVP, temporarily runs the accepted local calculator until backend pricing engine exists.
 
 Frontend не должен:
 - хранить formulas;
 - рассчитывать final pricing;
 - хранить скрытую business logic.
+
+Current MVP exception:
+- `js/calculator.js` contains the accepted local calculation model.
+- `js/variables.js` contains the UAT-approved runtime variables baseline.
+- `js/pricingConfig.js` applies frontend admin overrides and creates `variablesSnapshot`.
+- This is a transition layer for business validation, not the target production architecture.
 
 ---
 
@@ -67,6 +74,11 @@ Final Estimate
 Snapshot Creation
 ```
 
+Current MVP snapshot rule:
+- Drafts are live and recalculate against current runtime variables.
+- Estimates are frozen snapshots and include `formulaVersion`, `variablesSnapshot`, `quote`, and `result`.
+- Opening an existing estimate should use saved `result`, not recalculate from current variables.
+
 ---
 
 # 4. Input Layer
@@ -82,6 +94,18 @@ Access Conditions
 Quote Options
 Pricing Variables
 Formula Version
+```
+
+Current MVP variable source:
+
+```text
+js/variables.js defaults
+↓
+js/pricingConfig.js saved overrides
+↓
+CalculatorVariables runtime
+↓
+PricingCalculator.calculateQuote()
 ```
 
 ---
