@@ -43,7 +43,7 @@
     byId("draftCount").textContent = "0";
     byId("draftRows").innerHTML = `
       <tr>
-        <td colspan="9" class="px-4 py-12 text-center text-slate-500">
+        <td colspan="10" class="px-4 py-12 text-center text-slate-500">
           <div class="flex flex-col items-center gap-3">
             <i data-lucide="file-plus" class="w-8 h-8 text-slate-300"></i>
             <div>
@@ -66,8 +66,12 @@
       <tr>
         <td class="px-4 py-3 font-semibold text-slate-800">${escapeHtml(draft.estimateId || "DRAFT-LOCAL")}</td>
         <td class="px-4 py-3">
+          <p class="font-semibold text-slate-800">${escapeHtml(draft.customer?.leadName || "-")}</p>
+          <p class="text-xs text-slate-400">CRM lead name</p>
+        </td>
+        <td class="px-4 py-3">
           <div>
-            <p class="font-medium text-slate-800">${escapeHtml(draft.customer?.name || draft.customer?.leadName || "-")}</p>
+            <p class="font-medium text-slate-800">${escapeHtml(draft.customer?.name || "-")}</p>
             <p class="text-xs text-slate-400">${escapeHtml(draft.customer?.email || draft.customer?.phone || "-")}</p>
           </div>
         </td>
@@ -84,8 +88,8 @@
           </div>
         </td>
         <td class="px-4 py-3 font-semibold text-slate-800">${currency(result.totals?.finalPrice)}</td>
-        <td class="px-4 py-3">${dateLabel(draft.updatedAt)}</td>
         <td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">Local Draft</span></td>
+        <td class="px-4 py-3">${dateLabel(draft.updatedAt)}</td>
         <td class="px-4 py-3"><p>Saved locally</p><p class="text-xs text-slate-400">Browser storage</p></td>
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">

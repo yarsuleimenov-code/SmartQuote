@@ -84,7 +84,7 @@
 
           <div>
             <label class="text-xs text-slate-400">Search</label>
-            <input class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Customer, route, draft ID..." />
+            <input class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Lead name, customer, route, draft ID..." />
           </div>
 
           <div>
@@ -154,25 +154,26 @@
 
         <div class="overflow-x-auto border border-slate-200 rounded-xl">
 
-          <table class="w-full text-sm min-w-[1100px]">
+          <table class="w-full text-sm min-w-[1250px]">
 
             <thead class="bg-slate-50 text-slate-500">
               <tr>
                 <th class="text-left px-4 py-3">Draft ID</th>
+                <th class="text-left px-4 py-3">Lead Name</th>
                 <th class="text-left px-4 py-3">Customer</th>
                 <th class="text-left px-4 py-3">Route</th>
                 <th class="text-left px-4 py-3">Items</th>
                 <th class="text-left px-4 py-3">Final Price</th>
-                <th class="text-left px-4 py-3">Nearest Route</th>
                 <th class="text-left px-4 py-3">Status</th>
                 <th class="text-left px-4 py-3">Last Edited</th>
+                <th class="text-left px-4 py-3">Storage</th>
                 <th class="text-right px-4 py-3">Actions</th>
               </tr>
             </thead>
 
             <tbody id="draftRows" class="divide-y divide-slate-200">
               <tr>
-                <td colspan="9" class="px-4 py-12 text-center text-slate-500">
+                <td colspan="10" class="px-4 py-12 text-center text-slate-500">
                   <div class="flex flex-col items-center gap-3">
                     <i data-lucide="file-plus" class="w-8 h-8 text-slate-300"></i>
                     <div>
