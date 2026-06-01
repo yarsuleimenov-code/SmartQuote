@@ -64,7 +64,7 @@
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
-    const inactive = (statusCounts.Expired || 0) + (statusCounts.Rejected || 0);
+    const inactive = (statusCounts.Expired || 0) + (statusCounts.Rejected || 0) + (statusCounts["Converted to Invoice"] || 0);
     const active = snapshots.length - inactive;
 
     byId("estimateCount").textContent = String(snapshots.length);
@@ -145,6 +145,8 @@
       const result = snapshot.result || {};
       const snapshotId = snapshot.snapshotId || "";
       const currentStatus = displayStatus(snapshot);
+      const canFollowUp = !["Rejected", "Expired", "Converted to Invoice"].includes(currentStatus);
+      const canConvert = currentStatus === "Approved";
       return `
       <tr>
         <td class="px-4 py-3 font-semibold text-slate-800">${escapeHtml(snapshot.estimateId || quote.estimateId || "EST-LOCAL")}</td>
@@ -174,13 +176,20 @@
         </td>
         <td class="px-4 py-3">v1</td>
         <td class="px-4 py-3">
-          <div class="flex justify-end gap-2">
+          <div class="flex flex-col items-end gap-2">
+            <div class="flex justify-end gap-2">
+              <button data-quick-status="${escapeHtml(snapshotId)}" data-next-status="Sent" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50"${canFollowUp ? "" : " disabled"}>Mark Sent</button>
+              <button data-quick-status="${escapeHtml(snapshotId)}" data-next-status="Approved" class="px-3 py-2 rounded-lg border border-green-200 text-green-700 text-xs hover:bg-green-50"${canFollowUp ? "" : " disabled"}>Approve</button>
+              <button data-quick-status="${escapeHtml(snapshotId)}" data-next-status="Rejected" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50"${currentStatus === "Converted to Invoice" ? " disabled" : ""}>Reject</button>
+              <button data-convert-invoice="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg ${canConvert ? "bg-teal-500 text-white hover:bg-teal-600" : "bg-slate-100 text-slate-400 cursor-not-allowed"} text-xs"${canConvert ? "" : " disabled title=\"Approve estimate before invoice conversion\""}>Convert Invoice</button>
+            </div>
+            <div class="flex justify-end gap-2">
             <a href="estimate-document.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">View</a>
-            <a href="invoices.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Invoice</a>
             <a href="orders.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Order</a>
             <a href="ebol.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">eBOL</a>
             <button data-reopen-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Reopen Draft</button>
             <button data-delete-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
+            </div>
           </div>
         </td>
       </tr>
@@ -208,13 +217,22 @@
 
     byId("estimateRows").querySelectorAll("[data-status-estimate]").forEach((select) => {
       select.addEventListener("change", () => {
-        const updated = window.CalculatorStorage.updateEstimateSnapshot(select.dataset.statusEstimate, {
-          status: select.value,
-          statusUpdatedAt: new Date().toISOString(),
-        });
-        if (!updated) return;
-        allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
-        renderCurrentView();
+        updateEstimateStatus(select.dataset.statusEstimate, select.value);
+      });
+    });
+
+    byId("estimateRows").querySelectorAll("[data-quick-status]").forEach((button) => {
+      button.addEventListener("click", () => {
+        updateEstimateStatus(button.dataset.quickStatus, button.dataset.nextStatus);
+      });
+    });
+
+    byId("estimateRows").querySelectorAll("[data-convert-invoice]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const snapshot = window.CalculatorStorage.selectEstimateSnapshot(button.dataset.convertInvoice);
+        if (!snapshot || displayStatus(snapshot) !== "Approved") return;
+        updateEstimateStatus(button.dataset.convertInvoice, "Converted to Invoice", false);
+        window.location.href = `invoices.html?estimateId=${encodeURIComponent(button.dataset.convertInvoice)}`;
       });
     });
 
@@ -234,6 +252,16 @@
         renderCurrentView();
       });
     });
+  }
+
+  function updateEstimateStatus(snapshotId, status, rerender = true) {
+    const updated = window.CalculatorStorage.updateEstimateSnapshot(snapshotId, {
+      status,
+      statusUpdatedAt: new Date().toISOString(),
+    });
+    if (!updated) return;
+    allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
+    if (rerender) renderCurrentView();
   }
 
   function bindFilters() {
