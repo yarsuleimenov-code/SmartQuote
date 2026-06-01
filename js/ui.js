@@ -142,17 +142,9 @@
             <td class="px-3 pt-3"><select data-field="packaging" class="w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select></td>
             <td class="px-3 py-3 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</td>
             <td class="px-3 py-3" data-computed="totalWeight">${computed.totalWeight || 0}</td>
-            <td class="px-3 py-3"><span data-computed="warning" class="${computed.warning && computed.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${computed.warning || "OK"}</span></td>
-            <td class="px-3 pt-3 text-right">
-              <div class="flex justify-end gap-3 text-xs font-medium">
-                <button data-action="duplicate-item" class="text-teal-700 hover:text-teal-900 hover:underline">Copy</button>
-                <button data-action="clear-item" class="text-amber-700 hover:text-amber-900 hover:underline">Clear</button>
-                <button data-action="delete-item" class="text-slate-500 hover:text-red-700 hover:underline">Delete</button>
-              </div>
-            </td>
           </tr>
           <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-slate-50/60">
-            <td colspan="11" class="px-3 pb-3">
+            <td colspan="9" class="px-3 pb-2">
               <div class="grid grid-cols-12 gap-3 items-end text-sm">
                 <label class="col-span-2">
                   <span class="text-xs text-slate-400">Protection</span>
@@ -173,6 +165,21 @@
                   <span class="text-xs text-slate-400">Comment</span>
                   <input data-field="comment" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white" value="${escapeHtml(item.comment)}" />
                 </label>
+              </div>
+            </td>
+          </tr>
+          <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-slate-50/60">
+            <td colspan="9" class="px-3 pb-3">
+              <div class="flex items-center justify-between gap-4 text-xs">
+                <div class="text-slate-500">
+                  Warning:
+                  <span data-computed="warning" class="${computed.warning && computed.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${computed.warning || "OK"}</span>
+                </div>
+                <div class="flex justify-end gap-3 font-medium">
+                  <button data-action="duplicate-item" class="text-teal-700 hover:text-teal-900 hover:underline">Copy</button>
+                  <button data-action="clear-item" class="text-amber-700 hover:text-amber-900 hover:underline">Clear</button>
+                  <button data-action="delete-item" class="text-slate-500 hover:text-red-700 hover:underline">Delete</button>
+                </div>
               </div>
             </td>
           </tr>
@@ -229,11 +236,14 @@
 
     function refreshItemComputed() {
       result.items.forEach((item) => {
-        const row = byId("itemsBody").querySelector(`[data-item-id="${item.id}"]`);
-        if (!row) return;
-        row.querySelector('[data-computed="effectiveVolume"]').textContent = item.effectiveVolume || 0;
-        row.querySelector('[data-computed="totalWeight"]').textContent = item.totalWeight || 0;
-        const warning = row.querySelector('[data-computed="warning"]');
+        const itemRows = Array.from(byId("itemsBody").querySelectorAll(`[data-item-id="${item.id}"]`));
+        if (!itemRows.length) return;
+        const effectiveVolume = itemRows.map((row) => row.querySelector('[data-computed="effectiveVolume"]')).find(Boolean);
+        const totalWeight = itemRows.map((row) => row.querySelector('[data-computed="totalWeight"]')).find(Boolean);
+        const warning = itemRows.map((row) => row.querySelector('[data-computed="warning"]')).find(Boolean);
+        if (effectiveVolume) effectiveVolume.textContent = item.effectiveVolume || 0;
+        if (totalWeight) totalWeight.textContent = item.totalWeight || 0;
+        if (!warning) return;
         warning.textContent = item.warning || "OK";
         warning.className = item.warning && item.warning !== "OK" ? "text-amber-700" : "text-green-700";
       });
