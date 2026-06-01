@@ -50,6 +50,28 @@
           </div>
         </section>
 
+        <section class="bg-white rounded-lg border border-slate-200 p-5 mb-5">
+          <div class="grid grid-cols-12 gap-4 items-end text-sm">
+            <label class="col-span-3">
+              <span class="text-xs text-slate-400">Review Source</span>
+              <select id="bdSourceType" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white">
+                <option value="estimate">Estimate Snapshot</option>
+                <option value="draft">Draft</option>
+              </select>
+            </label>
+
+            <label class="col-span-7">
+              <span class="text-xs text-slate-400">Record</span>
+              <select id="bdRecordSelect" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white"></select>
+            </label>
+
+            <div class="col-span-2 text-right">
+              <p class="text-xs text-slate-400">Mode</p>
+              <p id="bdReviewMode" class="mt-1 font-semibold text-slate-700">Snapshot review</p>
+            </div>
+          </div>
+        </section>
+
         <div class="grid grid-cols-12 gap-5">
           <div class="col-span-8 space-y-5">
             <section class="bg-white rounded-lg border border-slate-200 p-5">

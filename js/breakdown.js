@@ -39,13 +39,87 @@
     };
   }
 
-  function getSource() {
+  function recordLabel({ id, leadName, customerName, route, price }) {
+    const name = leadName || customerName || "No lead name";
+    const routeText = route || "No route";
+    return `${id || "LOCAL"} - ${name} - ${routeText} - ${currency(price)}`;
+  }
+
+  function estimateOption(snapshot) {
+    const quote = snapshot.quote || {};
+    const result = snapshot.result || {};
+    return {
+      id: snapshot.snapshotId,
+      label: recordLabel({
+        id: snapshot.estimateId || quote.estimateId,
+        leadName: quote.customer?.leadName,
+        customerName: quote.customer?.name,
+        route: `${result.pickupZone || "-"} -> ${result.deliveryZone || "-"}`,
+        price: result.totals?.finalPrice,
+      }),
+    };
+  }
+
+  function draftOption(draft) {
+    const result = window.PricingCalculator.calculateQuote(draft);
+    return {
+      id: draft.localId,
+      label: recordLabel({
+        id: draft.estimateId,
+        leadName: draft.customer?.leadName,
+        customerName: draft.customer?.name,
+        route: `${result.pickupZone || "-"} -> ${result.deliveryZone || "-"}`,
+        price: result.totals?.finalPrice,
+      }),
+    };
+  }
+
+  function populateRecordSelect(sourceType, selectedId) {
+    const records = sourceType === "draft"
+      ? window.CalculatorStorage.listDrafts().map(draftOption)
+      : window.CalculatorStorage.listEstimateSnapshots().map(estimateOption);
+    const select = byId("bdRecordSelect");
+
+    if (!records.length) {
+      select.innerHTML = `<option value="">No ${sourceType === "draft" ? "drafts" : "estimates"} found</option>`;
+      select.disabled = true;
+      return "";
+    }
+
+    select.disabled = false;
+    select.innerHTML = records.map((record) => (
+      `<option value="${escapeHtml(record.id)}"${record.id === selectedId ? " selected" : ""}>${escapeHtml(record.label)}</option>`
+    )).join("");
+    if (selectedId && records.some((record) => record.id === selectedId)) return selectedId;
+    return records[0].id;
+  }
+
+  function getSource(sourceType, recordId) {
     const params = new URLSearchParams(window.location.search);
-    const snapshot = window.CalculatorStorage.selectEstimateSnapshot(params.get("estimateId"))
+    const selectedSource = sourceType || (params.get("draftId") ? "draft" : "estimate");
+    const selectedId = recordId || params.get("estimateId") || params.get("draftId");
+
+    if (selectedSource === "draft") {
+      const draft = window.CalculatorStorage.selectDraft(selectedId) || window.CalculatorStorage.load();
+      if (draft) {
+        return {
+          source: "Draft",
+          sourceType: "draft",
+          recordId: draft.localId,
+          quote: draft,
+          result: window.PricingCalculator.calculateQuote(draft),
+          estimateId: draft.estimateId,
+        };
+      }
+    }
+
+    const snapshot = window.CalculatorStorage.selectEstimateSnapshot(selectedId)
       || window.CalculatorStorage.loadEstimateSnapshot();
     if (snapshot?.quote && snapshot?.result) {
       return {
         source: "Snapshot",
+        sourceType: "estimate",
+        recordId: snapshot.snapshotId,
         quote: snapshot.quote,
         result: snapshot.result,
         estimateId: snapshot.estimateId || snapshot.quote.estimateId,
@@ -55,6 +129,8 @@
     const draft = window.CalculatorStorage.load() || window.CalculatorBlankQuote;
     return {
       source: "Draft",
+      sourceType: "draft",
+      recordId: draft.localId,
       quote: draft,
       result: window.PricingCalculator.calculateQuote(draft),
       estimateId: draft.estimateId,
@@ -83,12 +159,16 @@
       : "<li>No item warnings</li>";
   }
 
-  function renderBreakdown({ source, quote, result, estimateId }) {
+  function renderBreakdown({ source, sourceType, recordId, quote, result, estimateId }) {
     const totals = result.totals;
     const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
+    byId("bdSourceType").value = sourceType || "estimate";
+    const selectedRecordId = populateRecordSelect(sourceType || "estimate", recordId);
+    byId("bdRecordSelect").value = selectedRecordId || "";
+    setText("bdReviewMode", sourceType === "draft" ? "Live draft calculation" : "Frozen estimate snapshot");
     setText("breakdownEstimateId", `Estimate #${estimateId || "EST-NEW"}`);
     setText("breakdownSource", source);
-    setText("breakdownCustomer", quote.customer?.name || "-");
+    setText("breakdownCustomer", quote.customer?.leadName || quote.customer?.name || "-");
     setText("breakdownRoute", `${result.pickupZone} -> ${result.deliveryZone}`);
     setText("bdOperationalCost", currency(totals.operationalCost));
     setText("bdAdditionalCharges", currency(totals.additionalCharges));
@@ -117,14 +197,22 @@
     renderWarnings(result.warnings || []);
     byId("bdPayload").textContent = JSON.stringify(window.GoogleSheetIntegration.buildPayload(quote, result), null, 2);
 
-    byId("breakdownEstimateLink").addEventListener("click", () => {
+    byId("breakdownEstimateLink").onclick = () => {
       window.CalculatorStorage.saveEstimateSnapshot(buildSnapshot(quote, result));
-    });
+    };
 
     if (window.lucide) lucide.createIcons();
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     renderBreakdown(getSource());
+    byId("bdSourceType").addEventListener("change", () => {
+      const sourceType = byId("bdSourceType").value;
+      const recordId = populateRecordSelect(sourceType);
+      renderBreakdown(getSource(sourceType, recordId));
+    });
+    byId("bdRecordSelect").addEventListener("change", () => {
+      renderBreakdown(getSource(byId("bdSourceType").value, byId("bdRecordSelect").value));
+    });
   });
 })();

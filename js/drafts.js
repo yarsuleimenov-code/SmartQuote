@@ -94,6 +94,7 @@
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">
             <a href="index.html?loadDraft=1&draftId=${encodeURIComponent(draft.localId)}" data-open-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg bg-teal-500 text-white text-xs hover:bg-teal-600">Open</a>
+            <a href="breakdown.html?draftId=${encodeURIComponent(draft.localId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Breakdown</a>
             <button data-delete-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
           </div>
         </td>

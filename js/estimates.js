@@ -185,6 +185,7 @@
             </div>
             <div class="flex justify-end gap-2">
             <a href="estimate-document.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg bg-slate-800 text-white text-xs hover:bg-slate-900">View</a>
+            <a href="breakdown.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Breakdown</a>
             <a href="orders.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Order</a>
             <a href="ebol.html?estimateId=${encodeURIComponent(snapshotId)}" data-select-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">eBOL</a>
             <button data-reopen-estimate="${escapeHtml(snapshotId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Reopen Draft</button>
