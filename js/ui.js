@@ -132,25 +132,49 @@
       tbody.innerHTML = quote.items.map((item, index) => {
         const computed = result.items.find((entry) => entry.id === item.id) || {};
         return `
-          <tr data-item-id="${item.id}" class="border-b border-slate-200 last:border-0">
-            <td class="px-3 py-3"><input data-field="name" class="w-48 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" /></td>
-            <td class="px-3 py-3"><input data-field="length" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.length || 0}" /></td>
-            <td class="px-3 py-3"><input data-field="width" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.width || 0}" /></td>
-            <td class="px-3 py-3"><input data-field="height" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.height || 0}" /></td>
-            <td class="px-3 py-3"><input data-field="weight" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.weight || 0}" /></td>
-            <td class="px-3 py-3"><input data-field="qty" type="number" min="1" class="w-16 border rounded-lg px-2 py-2" value="${item.qty || 1}" /></td>
-            <td class="px-3 py-3"><select data-field="packaging" class="w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select></td>
-            <td class="px-3 py-3"><select data-field="insurance" class="w-36 border rounded-lg px-2 py-2">${itemSelect(item.insurance, Object.keys(window.CalculatorVariables.protectionPlans))}</select></td>
-            <td class="px-3 py-3"><input data-field="declaredValue" type="number" class="w-28 border rounded-lg px-2 py-2" value="${item.declaredValue || 0}" /></td>
-            <td class="px-3 py-3"><input data-field="storageDays" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.storageDays || 0}" /></td>
-            <td class="px-3 py-3 text-center"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} /></td>
-            <td class="px-3 py-3 text-center"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} /></td>
-            <td class="px-3 py-3 text-center"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} /></td>
+          <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-white">
+            <td class="px-3 pt-3"><input data-field="name" class="w-64 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" /></td>
+            <td class="px-3 pt-3"><input data-field="length" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.length || 0}" /></td>
+            <td class="px-3 pt-3"><input data-field="width" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.width || 0}" /></td>
+            <td class="px-3 pt-3"><input data-field="height" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.height || 0}" /></td>
+            <td class="px-3 pt-3"><input data-field="weight" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.weight || 0}" /></td>
+            <td class="px-3 pt-3"><input data-field="qty" type="number" min="1" class="w-16 border rounded-lg px-2 py-2" value="${item.qty || 1}" /></td>
+            <td class="px-3 pt-3"><select data-field="packaging" class="w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select></td>
             <td class="px-3 py-3 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</td>
             <td class="px-3 py-3" data-computed="totalWeight">${computed.totalWeight || 0}</td>
             <td class="px-3 py-3"><span data-computed="warning" class="${computed.warning && computed.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${computed.warning || "OK"}</span></td>
-            <td class="px-3 py-3"><input data-field="comment" class="w-56 border rounded-lg px-2 py-2" value="${escapeHtml(item.comment)}" /></td>
-            <td class="px-3 py-3 text-right"><button class="text-slate-400 hover:text-red-600" data-action="delete-item">Delete</button></td>
+            <td class="px-3 pt-3 text-right">
+              <div class="flex justify-end gap-3 text-xs font-medium">
+                <button data-action="duplicate-item" class="text-teal-700 hover:text-teal-900 hover:underline">Copy</button>
+                <button data-action="clear-item" class="text-amber-700 hover:text-amber-900 hover:underline">Clear</button>
+                <button data-action="delete-item" class="text-slate-500 hover:text-red-700 hover:underline">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-slate-50/60">
+            <td colspan="11" class="px-3 pb-3">
+              <div class="grid grid-cols-12 gap-3 items-end text-sm">
+                <label class="col-span-2">
+                  <span class="text-xs text-slate-400">Protection</span>
+                  <select data-field="insurance" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white">${itemSelect(item.insurance, Object.keys(window.CalculatorVariables.protectionPlans))}</select>
+                </label>
+                <label class="col-span-1">
+                  <span class="text-xs text-slate-400">Value</span>
+                  <input data-field="declaredValue" type="number" class="mt-1 w-full border rounded-lg px-2 py-2" value="${item.declaredValue || 0}" />
+                </label>
+                <label class="col-span-1">
+                  <span class="text-xs text-slate-400">Storage</span>
+                  <input data-field="storageDays" type="number" class="mt-1 w-full border rounded-lg px-2 py-2" value="${item.storageDays || 0}" />
+                </label>
+                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
+                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />Non-stack</label>
+                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
+                <label class="col-span-5">
+                  <span class="text-xs text-slate-400">Comment</span>
+                  <input data-field="comment" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white" value="${escapeHtml(item.comment)}" />
+                </label>
+              </div>
+            </td>
           </tr>
         `;
       }).join("");
@@ -243,23 +267,7 @@
     }
 
     function addItem() {
-      quote.items.push({
-        id: createId(),
-        name: "",
-        length: 0,
-        width: 0,
-        height: 0,
-        weight: 0,
-        qty: 1,
-        packaging: "None",
-        insurance: "Basic Liability",
-        declaredValue: 0,
-        storageDays: 0,
-        fragile: false,
-        nonStackable: false,
-        crated: false,
-        comment: "",
-      });
+      quote.items.push(createEmptyItem());
       recalculate({ renderItems: true });
     }
 
@@ -297,11 +305,17 @@
         recalculate();
       });
       byId("itemsBody").addEventListener("click", (event) => {
-        if (event.target.dataset.action !== "delete-item") return;
+        if (!event.target.dataset.action) return;
         const row = event.target.closest("[data-item-id]");
-        if (quote.items.length === 1) {
+        if (!row) return;
+        const item = quote.items.find((entry) => entry.id === row.dataset.itemId);
+        if (event.target.dataset.action === "duplicate-item" && item) {
+          quote.items.splice(quote.items.indexOf(item) + 1, 0, { ...item, id: createId(), name: item.name ? `${item.name} copy` : "" });
+        } else if (event.target.dataset.action === "clear-item") {
+          quote.items = quote.items.map((entry) => entry.id === row.dataset.itemId ? createEmptyItem(row.dataset.itemId) : entry);
+        } else if (event.target.dataset.action === "delete-item" && quote.items.length === 1) {
           quote.items = [createEmptyItem(row.dataset.itemId)];
-        } else {
+        } else if (event.target.dataset.action === "delete-item") {
           quote.items = quote.items.filter((item) => item.id !== row.dataset.itemId);
         }
         recalculate({ renderItems: true });
