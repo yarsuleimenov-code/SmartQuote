@@ -131,9 +131,16 @@
       const tbody = byId("itemsBody");
       tbody.innerHTML = quote.items.map((item, index) => {
         const computed = result.items.find((entry) => entry.id === item.id) || {};
+        const groupBg = index % 2 === 0 ? "bg-white" : "bg-slate-50/70";
+        const detailBg = index % 2 === 0 ? "bg-slate-50/70" : "bg-slate-100/70";
         return `
-          <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-white">
-            <td class="px-3 pt-3"><input data-field="name" class="w-64 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" /></td>
+          <tr data-item-id="${item.id}" class="border-t-4 border-t-slate-200 ${groupBg}">
+            <td class="px-3 pt-3">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex h-6 min-w-6 items-center justify-center rounded-md bg-slate-100 px-2 text-xs font-semibold text-slate-500">${String(index + 1).padStart(2, "0")}</span>
+                <input data-field="name" class="w-56 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" />
+              </div>
+            </td>
             <td class="px-3 pt-3"><input data-field="length" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.length || 0}" /></td>
             <td class="px-3 pt-3"><input data-field="width" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.width || 0}" /></td>
             <td class="px-3 pt-3"><input data-field="height" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.height || 0}" /></td>
@@ -143,9 +150,9 @@
             <td class="px-3 py-3 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</td>
             <td class="px-3 py-3" data-computed="totalWeight">${computed.totalWeight || 0}</td>
           </tr>
-          <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-slate-50/60">
+          <tr data-item-id="${item.id}" class="${detailBg}">
             <td colspan="9" class="px-3 pb-2">
-              <div class="grid grid-cols-12 gap-3 items-end text-sm">
+              <div class="grid grid-cols-12 gap-3 items-end text-sm rounded-lg border border-slate-200/80 bg-white/70 p-2">
                 <label class="col-span-2">
                   <span class="text-xs text-slate-400">Protection</span>
                   <select data-field="insurance" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white">${itemSelect(item.insurance, Object.keys(window.CalculatorVariables.protectionPlans))}</select>
@@ -168,9 +175,9 @@
               </div>
             </td>
           </tr>
-          <tr data-item-id="${item.id}" class="border-b border-slate-200 bg-slate-50/60">
+          <tr data-item-id="${item.id}" class="border-b-2 border-b-slate-200 ${detailBg}">
             <td colspan="9" class="px-3 pb-3">
-              <div class="flex items-center justify-between gap-4 text-xs">
+              <div class="flex items-center justify-between gap-4 rounded-lg bg-white/60 px-3 py-2 text-xs">
                 <div class="text-slate-500">
                   Warning:
                   <span data-computed="warning" class="${computed.warning && computed.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${computed.warning || "OK"}</span>
