@@ -134,7 +134,7 @@
         const groupBg = index % 2 === 0 ? "bg-white" : "bg-slate-50/70";
         const detailBg = index % 2 === 0 ? "bg-slate-50/70" : "bg-slate-100/70";
         return `
-          <tr data-item-id="${item.id}" class="border-t-4 border-t-slate-200 ${groupBg}">
+          <tr data-item-id="${item.id}" class="border-t-8 border-t-slate-100 ${groupBg}">
             <td class="px-3 pt-3">
               <label class="block">
                 <span class="text-xs text-slate-400">Item</span>
@@ -205,7 +205,7 @@
                   <input data-field="storageDays" type="number" class="mt-1 w-full border rounded-lg px-2 py-2" value="${item.storageDays || 0}" />
                 </label>
                 <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
-                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />Non-stack</label>
+                <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />N-stack</label>
                 <label class="col-span-1 flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
                 <label class="col-span-5">
                   <span class="text-xs text-slate-400">Comment</span>
