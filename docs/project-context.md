@@ -19,6 +19,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 
 - `CA South -> CA North` with `85 x 63 x 47`, `qty 1`, volume-dominant weight such as `80-150 lb`, crew `2/1/2` is expected around `$850`.
 - Long interstate route examples such as `NY Area -> CA North` may be around `$1360` for the same item.
+- `Zaberman_Calculator_UAT.xlsx` is the current UAT workbook for calculation acceptance checks.
+- Compact UAT index is documented in `docs/uat-test-cases.md`.
 - `Eff. volume` is rounded up to a whole cubic foot in the calculation model.
 - Empty items and name-only items must not create a non-zero quote.
 - Quick Quote defaults to 2-person crew assumption.
