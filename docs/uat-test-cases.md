@@ -26,3 +26,25 @@ Use this file as the compact UAT checklist for validating SmartQuote calculation
 - Do not change confirmed pricing logic without a reproduced mismatch and a clear business decision.
 - If a calculation bug is fixed, add or update a smoke/regression test for that case.
 
+## Runner
+
+Run the local UAT checker:
+
+```bash
+python tools/run_uat_calculator.py
+```
+
+Options:
+
+```bash
+python tools/run_uat_calculator.py --baseline Zion
+python tools/run_uat_calculator.py --json
+python tools/run_uat_calculator.py --strict
+```
+
+Current initial result:
+
+- Spreadsheet baseline: 4 / 8 pass.
+- Zion baseline: 5 / 8 pass.
+
+Known mismatches should be reviewed as assumption differences first, especially item template defaults, packaging, fragile/non-stackable flags, insurance, and storage.

@@ -18,6 +18,7 @@ build/
 
 # Local workbook / generated analysis artifacts
 Loads calculator 4.5 (Suleimanov).xlsx
+~$*.xlsx
 docs/workbook-analysis.json
 docs/workbook-logic.json
 
