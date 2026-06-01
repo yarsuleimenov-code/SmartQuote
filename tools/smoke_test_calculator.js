@@ -174,6 +174,10 @@ if (quickRoundedVolumeResult.totals.totalVolume !== 17) {
   throw new Error(`Expected Quick Quote 16.7 cu ft to round up to 17 cu ft, got ${quickRoundedVolumeResult.totals.totalVolume}.`);
 }
 
+if (onePersonBookshelfResult.items[0].effectiveVolume !== 17) {
+  throw new Error(`Expected fractional effective volume to round up to 17 cu ft, got ${onePersonBookshelfResult.items[0].effectiveVolume}.`);
+}
+
 console.log(JSON.stringify({
   route: `${result.pickupZone} -> ${result.deliveryZone}`,
   distance: result.distance,

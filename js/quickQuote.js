@@ -254,7 +254,7 @@
     byId("quickVehicle").textContent = result.vehicle.name;
     const estimatedCrew = result.requiredCrew || QUICK_DEFAULT_CREW;
     byId("quickCrew").textContent = `${estimatedCrew} ${estimatedCrew === 1 ? "person" : "people"}`;
-    byId("quickEffectiveVolume").textContent = `${result.totals.effectiveVolume.toFixed(1)} cu ft`;
+    byId("quickEffectiveVolume").textContent = `${Math.ceil(result.totals.effectiveVolume || 0)} cu ft`;
     byId("quickWeight").textContent = `${result.totals.totalWeight.toFixed(0)} lb`;
     byId("quickPriceDrivers").innerHTML = renderPriceDrivers(quote, result);
     byId("quickWarnings").innerHTML = result.warnings.length

@@ -35,7 +35,7 @@
     const items = result.items || [];
     const itemText = `${items.length} ${items.length === 1 ? "line" : "lines"}`;
     const weight = `${Number(result.totals?.totalWeight || 0).toFixed(0)} lb`;
-    const volume = `${Number(result.totals?.effectiveVolume || 0).toFixed(1)} cu ft`;
+    const volume = `${Math.ceil(Number(result.totals?.effectiveVolume || 0))} cu ft`;
     return { itemText, details: `${weight} - ${volume}` };
   }
 

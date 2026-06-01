@@ -257,7 +257,7 @@
       byId("insuranceCost").textContent = currency(result.totals.insurance);
       byId("accessFees").textContent = currency(result.totals.accessFees);
       byId("optionFees").textContent = currency(result.totals.optionFees);
-      byId("effectiveVolume").textContent = `${result.totals.effectiveVolume.toFixed(1)} cu ft`;
+      byId("effectiveVolume").textContent = `${Math.ceil(result.totals.effectiveVolume || 0)} cu ft`;
       byId("totalVolume").textContent = `${result.totals.totalVolume.toFixed(1)} cu ft`;
       byId("totalWeight").textContent = `${result.totals.totalWeight.toFixed(0)} lb`;
       byId("warningList").innerHTML = result.warnings.length

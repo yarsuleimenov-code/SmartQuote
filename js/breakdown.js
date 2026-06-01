@@ -67,7 +67,7 @@
             <td class="px-4 py-3 font-medium text-slate-800">${escapeHtml(item.name)}</td>
             <td class="px-4 py-3 text-right">${item.qty || 1}</td>
             <td class="px-4 py-3 text-right">${Number(item.volume || 0).toFixed(1)} cu ft</td>
-            <td class="px-4 py-3 text-right">${Number(item.effectiveVolume || 0).toFixed(1)} cu ft</td>
+            <td class="px-4 py-3 text-right">${Math.ceil(Number(item.effectiveVolume || 0))} cu ft</td>
             <td class="px-4 py-3 text-right">${Number(item.totalWeight || 0).toFixed(0)} lb</td>
             <td class="px-4 py-3 ${item.warning && item.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${escapeHtml(item.warning || "OK")}</td>
           </tr>
@@ -104,7 +104,7 @@
     setText("bdAccessFees", currency(totals.accessFees));
     setText("bdOptionFees", currency(totals.optionFees));
     setText("bdAdditionalTotal", currency(totals.additionalCharges));
-    setText("bdEffectiveVolume", `${Number(totals.effectiveVolume || 0).toFixed(1)} cu ft`);
+    setText("bdEffectiveVolume", `${Math.ceil(Number(totals.effectiveVolume || 0))} cu ft`);
     setText("bdTotalWeight", `${Number(totals.totalWeight || 0).toFixed(0)} lb`);
     setText(
       "bdRawFormula",

@@ -35,7 +35,7 @@
     if (item.fragile) multiplier += 0.1;
     if (item.nonStackable) multiplier += 0.25;
     if (item.crated) multiplier += 0.15;
-    return baseVolume * multiplier;
+    return Math.ceil(baseVolume * multiplier);
   }
 
   function getVehicle(effectiveVolume, totalWeight) {
