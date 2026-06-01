@@ -136,19 +136,52 @@
         return `
           <tr data-item-id="${item.id}" class="border-t-4 border-t-slate-200 ${groupBg}">
             <td class="px-3 pt-3">
-              <div class="flex items-center gap-2">
-                <span class="inline-flex h-6 min-w-6 items-center justify-center rounded-md bg-slate-100 px-2 text-xs font-semibold text-slate-500">${String(index + 1).padStart(2, "0")}</span>
-                <input data-field="name" class="w-56 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" />
-              </div>
+              <label class="block">
+                <span class="text-xs text-slate-400">Item</span>
+                <span class="mt-1 flex items-center gap-2">
+                  <span class="inline-flex h-9 min-w-9 items-center justify-center rounded-md bg-slate-100 px-2 text-xs font-semibold text-slate-500">${String(index + 1).padStart(2, "0")}</span>
+                  <input data-field="name" placeholder="Item name" class="w-56 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" />
+                </span>
+              </label>
             </td>
-            <td class="px-3 pt-3"><input data-field="length" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.length || 0}" /></td>
-            <td class="px-3 pt-3"><input data-field="width" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.width || 0}" /></td>
-            <td class="px-3 pt-3"><input data-field="height" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.height || 0}" /></td>
-            <td class="px-3 pt-3"><input data-field="weight" type="number" class="w-20 border rounded-lg px-2 py-2" value="${item.weight || 0}" /></td>
-            <td class="px-3 pt-3"><input data-field="qty" type="number" min="1" class="w-16 border rounded-lg px-2 py-2" value="${item.qty || 1}" /></td>
-            <td class="px-3 pt-3"><select data-field="packaging" class="w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select></td>
-            <td class="px-3 py-3 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</td>
-            <td class="px-3 py-3" data-computed="totalWeight">${computed.totalWeight || 0}</td>
+            <td class="px-3 pt-3">
+              <label class="block">
+                <span class="text-xs text-slate-400">Length</span>
+                <input data-field="length" type="number" placeholder="L" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.length || 0}" />
+              </label>
+            </td>
+            <td class="px-3 pt-3">
+              <label class="block">
+                <span class="text-xs text-slate-400">Width</span>
+                <input data-field="width" type="number" placeholder="W" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.width || 0}" />
+              </label>
+            </td>
+            <td class="px-3 pt-3">
+              <label class="block">
+                <span class="text-xs text-slate-400">Height</span>
+                <input data-field="height" type="number" placeholder="H" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.height || 0}" />
+              </label>
+            </td>
+            <td class="px-3 pt-3">
+              <label class="block">
+                <span class="text-xs text-slate-400">Item weight</span>
+                <input data-field="weight" type="number" placeholder="lb" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.weight || 0}" />
+              </label>
+            </td>
+            <td class="px-3 pt-3">
+              <label class="block">
+                <span class="text-xs text-slate-400">Qty</span>
+                <input data-field="qty" type="number" min="1" placeholder="Qty" class="mt-1 w-16 border rounded-lg px-2 py-2" value="${item.qty || 1}" />
+              </label>
+            </td>
+            <td class="px-3 pt-3">
+              <label class="block">
+                <span class="text-xs text-slate-400">Packaging</span>
+                <select data-field="packaging" class="mt-1 w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select>
+              </label>
+            </td>
+            <td class="px-3 pt-7 font-semibold text-slate-800" data-computed="effectiveVolume">${computed.effectiveVolume || 0}</td>
+            <td class="px-3 pt-7" data-computed="totalWeight">${computed.totalWeight || 0}</td>
           </tr>
           <tr data-item-id="${item.id}" class="${detailBg}">
             <td colspan="9" class="px-3 pb-2">
