@@ -234,6 +234,7 @@
     }
 
     function updateSummary() {
+      const displayedAdditionalCharges = result.totals.additionalCharges + result.totals.manualAdjustment;
       byId("routeStatus").textContent = result.routeSupported ? "Route Ready" : "Unsupported ZIP";
       byId("routeStatus").className = result.routeSupported
         ? "px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
@@ -248,7 +249,7 @@
       byId("finalPrice").textContent = currency(result.totals.finalPrice);
       byId("marginAmount").textContent = `Margin ${currency(result.totals.margin)}`;
       byId("operationalCost").textContent = currency(result.totals.operationalCost);
-      byId("additionalCharges").textContent = currency(result.totals.additionalCharges);
+      byId("additionalCharges").textContent = currency(displayedAdditionalCharges);
       byId("margin").textContent = currency(result.totals.margin);
       byId("rawPrice").textContent = currency(result.totals.rawPrice);
       byId("roundingDelta").textContent = currency(result.totals.roundingDelta);
@@ -271,6 +272,8 @@
       const validUntil = new Date(createdAt.getTime() + 14 * 24 * 60 * 60 * 1000);
       return {
         snapshotVersion: 1,
+        formulaVersion: window.CalculatorVariables?.formulaVersion || "unknown",
+        variablesSnapshot: window.PricingConfig?.snapshot?.() || null,
         createdAt: createdAt.toISOString(),
         validUntil: validUntil.toISOString(),
         estimateId: quote.estimateId || "EST-291",

@@ -225,6 +225,8 @@
     const validUntil = new Date(createdAt.getTime() + 14 * 24 * 60 * 60 * 1000);
     return {
       snapshotVersion: 1,
+      formulaVersion: window.CalculatorVariables?.formulaVersion || "unknown",
+      variablesSnapshot: window.PricingConfig?.snapshot?.() || null,
       createdAt: createdAt.toISOString(),
       validUntil: validUntil.toISOString(),
       estimateId: quote.estimateId,

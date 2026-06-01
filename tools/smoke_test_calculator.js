@@ -11,6 +11,7 @@ vm.createContext(context);
 [
   "js/zoneZipMap.js",
   "js/variables.js",
+  "js/pricingConfig.js",
   "js/mockData.js",
   "js/calculator.js",
   "js/googleSheet.js",

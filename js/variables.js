@@ -88,6 +88,12 @@
       unacceptableWeightLb: 200,
       onePersonMaxDimensionSumFt: 11,
     },
+    itemHandlingMultipliers: {
+      standard: 1,
+      fragile: 1.1,
+      nonStackable: 1.25,
+      crated: 1.15,
+    },
     packagingRates: {
       None: 0,
       "Blanket Wrap": 8,

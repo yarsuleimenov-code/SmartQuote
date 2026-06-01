@@ -174,7 +174,7 @@
             ${statusOptions(currentStatus)}
           </select>
         </td>
-        <td class="px-4 py-3">v1</td>
+        <td class="px-4 py-3">${escapeHtml(snapshot.formulaVersion || "v1")}</td>
         <td class="px-4 py-3">
           <div class="flex flex-col items-end gap-2">
             <div class="flex justify-end gap-2">

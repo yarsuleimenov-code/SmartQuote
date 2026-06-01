@@ -8,6 +8,8 @@
     const timestamp = new Date().toISOString();
     const quoteId = quote.quoteId || quote.estimateId || `QUOTE-${Date.now()}`;
     const estimateId = quote.estimateId || quoteId;
+    const manualAdjustment = result.totals.manualAdjustment || 0;
+    const displayedAdditionalCharges = (result.totals.additionalCharges || 0) + manualAdjustment;
     return {
       schema_version: 1,
       source: "zaberman-calculator-local",
@@ -42,7 +44,8 @@
         operational_cost: result.totals.operationalCost,
         route_cost: result.totals.routeCost,
         labor_cost: result.totals.laborCost,
-        additional_charges: result.totals.additionalCharges,
+        additional_charges: displayedAdditionalCharges,
+        calculated_additional_charges: result.totals.additionalCharges,
         packaging: result.totals.packaging,
         storage: result.totals.storage,
         insurance: result.totals.insurance,
@@ -57,7 +60,9 @@
       required_crew: result.requiredCrew || 0,
       warnings: result.warnings || [],
       protection_plan: result.totals.insurance > 0 ? "Full Coverage" : "Basic Liability",
-      manual_adjustment: result.totals.manualAdjustment,
+      manual_adjustment: manualAdjustment,
+      formula_version: window.CalculatorVariables?.formulaVersion || "unknown",
+      variables_snapshot: window.PricingConfig?.snapshot?.() || null,
       notes: quote.options?.notes || "",
     };
   }

@@ -122,6 +122,8 @@
       const saved = {
         ...snapshot,
         estimateId,
+        formulaVersion: snapshot.formulaVersion || window.CalculatorVariables?.formulaVersion || "unknown",
+        variablesSnapshot: snapshot.variablesSnapshot || window.PricingConfig?.snapshot?.() || null,
         quote: snapshot.quote ? { ...snapshot.quote, estimateId } : snapshot.quote,
         snapshotId: snapshot.snapshotId || createId("estimate"),
       };
