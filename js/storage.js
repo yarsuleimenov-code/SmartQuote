@@ -154,6 +154,23 @@
       localStorage.setItem(estimateSnapshotKey, JSON.stringify(snapshot));
       return snapshot;
     },
+    updateEstimateSnapshot(id, patch) {
+      const snapshots = normalizeEstimates();
+      const index = snapshots.findIndex((snapshot) => snapshot.snapshotId === id);
+      if (index < 0) return null;
+      const updated = {
+        ...snapshots[index],
+        ...patch,
+        statusUpdatedAt: patch.status && !patch.statusUpdatedAt ? new Date().toISOString() : patch.statusUpdatedAt || snapshots[index].statusUpdatedAt,
+        updatedAt: new Date().toISOString(),
+      };
+      snapshots[index] = updated;
+      writeJson(estimateSnapshotsKey, snapshots);
+      if (localStorage.getItem(currentEstimateKey) === id) {
+        localStorage.setItem(estimateSnapshotKey, JSON.stringify(updated));
+      }
+      return updated;
+    },
     clearEstimateSnapshot() {
       localStorage.removeItem(estimateSnapshotKey);
       localStorage.removeItem(currentEstimateKey);

@@ -1,4 +1,7 @@
 (function () {
+  const statuses = ["Generated", "Sent", "Viewed", "Negotiation", "Approved", "Rejected", "Expired", "Converted to Invoice"];
+  let allSnapshots = [];
+
   function byId(id) {
     return document.getElementById(id);
   }
@@ -31,19 +34,52 @@
       .replace(/'/g, "&#039;");
   }
 
-  function renderCounts(count) {
-    byId("estimateCount").textContent = String(count);
-    byId("activeEstimateCount").textContent = String(count);
-    byId("sentCount").textContent = String(count);
-    byId("viewedCount").textContent = "0";
-    byId("approvedCount").textContent = "0";
+  function displayStatus(snapshot) {
+    const raw = snapshot.status || "Generated";
+    if (raw === "quick-generated" || raw === "generated" || raw === "breakdown-generated") return "Generated";
+    return statuses.includes(raw) ? raw : "Generated";
+  }
+
+  function statusClass(status) {
+    const classes = {
+      Generated: "bg-blue-100 text-blue-700 border-blue-200",
+      Sent: "bg-slate-100 text-slate-700 border-slate-200",
+      Viewed: "bg-indigo-100 text-indigo-700 border-indigo-200",
+      Negotiation: "bg-amber-100 text-amber-800 border-amber-200",
+      Approved: "bg-green-100 text-green-700 border-green-200",
+      Rejected: "bg-red-100 text-red-700 border-red-200",
+      Expired: "bg-red-100 text-red-700 border-red-200",
+      "Converted to Invoice": "bg-teal-100 text-teal-700 border-teal-200",
+    };
+    return classes[status] || classes.Generated;
+  }
+
+  function statusOptions(selected) {
+    return statuses.map((status) => `<option${status === selected ? " selected" : ""}>${status}</option>`).join("");
+  }
+
+  function renderCounts(snapshots) {
+    const statusCounts = snapshots.reduce((acc, snapshot) => {
+      const status = displayStatus(snapshot);
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+    const inactive = (statusCounts.Expired || 0) + (statusCounts.Rejected || 0);
+    const active = snapshots.length - inactive;
+
+    byId("estimateCount").textContent = String(snapshots.length);
+    byId("activeEstimateCount").textContent = String(active);
+    byId("sentCount").textContent = String(snapshots.length);
+    byId("viewedCount").textContent = String(statusCounts.Viewed || 0);
+    byId("approvedCount").textContent = String(statusCounts.Approved || 0);
+    byId("expiredRejectedCount").textContent = String(inactive);
   }
 
   function renderEmpty() {
-    renderCounts(0);
+    renderCounts([]);
     byId("estimateRows").innerHTML = `
       <tr>
-        <td colspan="9" class="px-4 py-12 text-center text-slate-500">
+        <td colspan="10" class="px-4 py-12 text-center text-slate-500">
           <div class="flex flex-col items-center gap-3">
             <i data-lucide="file-badge" class="w-8 h-8 text-slate-300"></i>
             <div>
@@ -57,18 +93,68 @@
     `;
   }
 
+  function searchableText(snapshot) {
+    const quote = snapshot.quote || {};
+    const result = snapshot.result || {};
+    return [
+      snapshot.estimateId,
+      quote.estimateId,
+      quote.customer?.leadName,
+      quote.customer?.name,
+      quote.customer?.phone,
+      quote.customer?.email,
+      result.pickupZone,
+      result.deliveryZone,
+      quote.route?.pickupZip,
+      quote.route?.deliveryZip,
+    ].join(" ").toLowerCase();
+  }
+
+  function filteredSnapshots() {
+    const query = byId("estimateSearch").value.trim().toLowerCase();
+    const status = byId("estimateStatusFilter").value;
+    const sort = byId("estimateSort").value;
+
+    const filtered = allSnapshots.filter((snapshot) => {
+      const matchesQuery = !query || searchableText(snapshot).includes(query);
+      const matchesStatus = status === "All Estimates" || displayStatus(snapshot) === status;
+      return matchesQuery && matchesStatus;
+    });
+
+    return filtered.sort((a, b) => {
+      if (sort === "Expiration date") return String(b.validUntil || "").localeCompare(String(a.validUntil || ""));
+      if (sort === "Final price") return Number(b.result?.totals?.finalPrice || 0) - Number(a.result?.totals?.finalPrice || 0);
+      if (sort === "Status") return displayStatus(a).localeCompare(displayStatus(b));
+      return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+    });
+  }
+
   function renderEstimates(snapshots) {
-    renderCounts(snapshots.length);
+    renderCounts(allSnapshots);
+    if (!snapshots.length) {
+      byId("estimateRows").innerHTML = `
+        <tr>
+          <td colspan="10" class="px-4 py-8 text-center text-slate-500">No estimates match the current filters.</td>
+        </tr>
+      `;
+      return;
+    }
+
     byId("estimateRows").innerHTML = snapshots.map((snapshot) => {
       const quote = snapshot.quote || {};
       const result = snapshot.result || {};
       const snapshotId = snapshot.snapshotId || "";
+      const currentStatus = displayStatus(snapshot);
       return `
       <tr>
         <td class="px-4 py-3 font-semibold text-slate-800">${escapeHtml(snapshot.estimateId || quote.estimateId || "EST-LOCAL")}</td>
         <td class="px-4 py-3">
+          <p class="font-semibold text-slate-800">${escapeHtml(quote.customer?.leadName || "-")}</p>
+          <p class="text-xs text-slate-400">CRM lead name</p>
+        </td>
+        <td class="px-4 py-3">
           <div>
-            <p class="font-medium text-slate-800">${escapeHtml(quote.customer?.name || quote.customer?.leadName || "-")}</p>
+            <p class="font-medium text-slate-800">${escapeHtml(quote.customer?.name || "-")}</p>
             <p class="text-xs text-slate-400">${escapeHtml(quote.customer?.email || quote.customer?.phone || "-")}</p>
           </div>
         </td>
@@ -81,7 +167,11 @@
         <td class="px-4 py-3 font-semibold text-slate-800">${currency(result.totals?.finalPrice)}</td>
         <td class="px-4 py-3">${dateLabel(snapshot.createdAt)}</td>
         <td class="px-4 py-3">${dateLabel(snapshot.validUntil)}</td>
-        <td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">Generated</span></td>
+        <td class="px-4 py-3">
+          <select data-status-estimate="${escapeHtml(snapshotId)}" class="rounded-lg border px-2 py-1 text-xs font-semibold ${statusClass(currentStatus)}">
+            ${statusOptions(currentStatus)}
+          </select>
+        </td>
         <td class="px-4 py-3">v1</td>
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">
@@ -97,9 +187,34 @@
     `;
     }).join("");
 
+    bindRowActions();
+  }
+
+  function renderCurrentView() {
+    if (!allSnapshots.length) {
+      renderEmpty();
+      return;
+    }
+    renderEstimates(filteredSnapshots());
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function bindRowActions() {
     byId("estimateRows").querySelectorAll("[data-select-estimate]").forEach((link) => {
       link.addEventListener("click", () => {
         window.CalculatorStorage.selectEstimateSnapshot(link.dataset.selectEstimate);
+      });
+    });
+
+    byId("estimateRows").querySelectorAll("[data-status-estimate]").forEach((select) => {
+      select.addEventListener("change", () => {
+        const updated = window.CalculatorStorage.updateEstimateSnapshot(select.dataset.statusEstimate, {
+          status: select.value,
+          statusUpdatedAt: new Date().toISOString(),
+        });
+        if (!updated) return;
+        allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
+        renderCurrentView();
       });
     });
 
@@ -115,24 +230,23 @@
     byId("estimateRows").querySelectorAll("[data-delete-estimate]").forEach((button) => {
       button.addEventListener("click", () => {
         window.CalculatorStorage.deleteEstimateSnapshot(button.dataset.deleteEstimate);
-        const updatedSnapshots = window.CalculatorStorage.listEstimateSnapshots();
-        if (updatedSnapshots.length) {
-          renderEstimates(updatedSnapshots);
-        } else {
-          renderEmpty();
-        }
-        if (window.lucide) lucide.createIcons();
+        allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
+        renderCurrentView();
       });
     });
   }
 
+  function bindFilters() {
+    ["estimateSearch", "estimateStatusFilter", "estimateSort"].forEach((id) => {
+      byId(id).addEventListener("input", renderCurrentView);
+      byId(id).addEventListener("change", renderCurrentView);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    const snapshots = window.CalculatorStorage.listEstimateSnapshots();
-    if (snapshots.length) {
-      renderEstimates(snapshots);
-    } else {
-      renderEmpty();
-    }
+    bindFilters();
+    allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
+    renderCurrentView();
     if (window.lucide) lucide.createIcons();
   });
 })();

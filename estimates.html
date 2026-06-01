@@ -93,7 +93,7 @@
 
         <div class="bg-white rounded-xl border border-slate-200 p-4">
           <p class="text-xs text-slate-400">Expired / Rejected</p>
-          <p class="text-2xl font-bold text-red-700 mt-1">0</p>
+          <p id="expiredRejectedCount" class="text-2xl font-bold text-red-700 mt-1">0</p>
         </div>
 
       </section>
@@ -105,13 +105,14 @@
 
           <div>
             <label class="text-xs text-slate-400">Search</label>
-            <input class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Customer, estimate ID, route..." />
+            <input id="estimateSearch" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Lead name, customer, estimate ID, route..." />
           </div>
 
           <div>
             <label class="text-xs text-slate-400">Status</label>
-            <select class="mt-1 w-full border rounded-lg px-3 py-2">
+            <select id="estimateStatusFilter" class="mt-1 w-full border rounded-lg px-3 py-2">
               <option>All Estimates</option>
+              <option>Generated</option>
               <option>Sent</option>
               <option>Viewed</option>
               <option>Negotiation</option>
@@ -133,7 +134,7 @@
 
           <div>
             <label class="text-xs text-slate-400">Sort by</label>
-            <select class="mt-1 w-full border rounded-lg px-3 py-2">
+            <select id="estimateSort" class="mt-1 w-full border rounded-lg px-3 py-2">
               <option>Sent date</option>
               <option>Expiration date</option>
               <option>Final price</option>
@@ -183,11 +184,12 @@
 
         <div class="overflow-x-auto border border-slate-200 rounded-xl">
 
-          <table class="w-full text-sm min-w-[1300px]">
+          <table class="w-full text-sm min-w-[1500px]">
 
             <thead class="bg-slate-50 text-slate-500">
               <tr>
                 <th class="text-left px-4 py-3">Estimate ID</th>
+                <th class="text-left px-4 py-3">Lead Name</th>
                 <th class="text-left px-4 py-3">Customer</th>
                 <th class="text-left px-4 py-3">Route</th>
                 <th class="text-left px-4 py-3">Final Price</th>
@@ -201,7 +203,7 @@
 
             <tbody id="estimateRows" class="divide-y divide-slate-200">
               <tr>
-                <td colspan="9" class="px-4 py-12 text-center text-slate-500">
+                <td colspan="10" class="px-4 py-12 text-center text-slate-500">
                   <div class="flex flex-col items-center gap-3">
                     <i data-lucide="file-badge" class="w-8 h-8 text-slate-300"></i>
                     <div>
