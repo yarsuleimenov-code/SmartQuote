@@ -177,9 +177,78 @@
             </section>
           </aside>
         </div>
+
+        <section class="mt-6 bg-white rounded-lg border border-slate-200 overflow-hidden">
+          <button
+            onclick="toggleQuickNotes()"
+            class="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition"
+          >
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-slate-800">Quick Quote Notes</h3>
+              <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+            </div>
+            <i id="quickNotesChevron" data-lucide="chevron-down" class="w-5 h-5 text-slate-500 transition-transform"></i>
+          </button>
+
+          <div id="quickNotesContent" class="hidden border-t border-slate-200 p-5 text-sm text-slate-600 space-y-5">
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">Purpose</h4>
+              <p>Quick Quote is used for a fast preliminary price range when the customer has not provided all details needed for a full estimate.</p>
+            </div>
+
+            <div>
+              <h4 class="font-semibold text-slate-800 mb-2">Recommended Workflow</h4>
+              <ul class="list-disc ml-5 space-y-1">
+                <li>Select pickup and delivery zones.</li>
+                <li>Choose an item template or use Custom.</li>
+                <li>Enter approximate volume, weight, and quantity.</li>
+                <li>Use Copy for repeated items and Clear to reset a row.</li>
+                <li>Review Price Drivers before giving the customer a range.</li>
+                <li>Convert to Full Quote when the lead is ready for a final estimate.</li>
+              </ul>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <h4 class="font-semibold text-slate-800 mb-2">Built-in Assumptions</h4>
+                <ul class="list-disc ml-5 space-y-1">
+                  <li>Default crew is 2 people.</li>
+                  <li>Volume is rounded up to the next whole cu ft.</li>
+                  <li>Vehicle is selected automatically by volume and weight.</li>
+                  <li>Templates fill common volume, weight, and handling flags.</li>
+                </ul>
+              </div>
+
+              <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <h4 class="font-semibold text-slate-800 mb-2">Price Drivers</h4>
+                <ul class="list-disc ml-5 space-y-1">
+                  <li>Route distance and zones.</li>
+                  <li>Rounded shipment volume.</li>
+                  <li>Weight and selected vehicle.</li>
+                  <li>Default crew and delivery priority.</li>
+                  <li>Packaging or handling assumptions from templates.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">
+              <h4 class="font-semibold mb-2">Important Limitation</h4>
+              <p>Quick Quote is not a final customer estimate. Use it to decide whether the lead should move into a Full Quote with exact addresses, access conditions, item details, insurance, storage, and final customer-facing estimate generation.</p>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   </div>
+
+  <script>
+    function toggleQuickNotes() {
+      const content = document.getElementById("quickNotesContent");
+      const chevron = document.getElementById("quickNotesChevron");
+      content.classList.toggle("hidden");
+      chevron.classList.toggle("rotate-180");
+    }
+  </script>
 
   <script src="sidebar.js"></script>
   <script src="js/zoneZipMap.js"></script>
