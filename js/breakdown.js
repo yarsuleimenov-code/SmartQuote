@@ -186,7 +186,7 @@
     setText("bdAccessFees", currency(totals.accessFees));
     setText("bdOptionFees", currency(totals.optionFees));
     setText("bdManualAdjustment", currency(totals.manualAdjustment));
-    setText("bdAdditionalTotal", currency(totals.additionalCharges));
+    setText("bdAdditionalTotal", currency(totals.additionalCharges + totals.manualAdjustment));
     setText("bdEffectiveVolume", `${Math.ceil(Number(totals.effectiveVolume || 0))} cu ft`);
     setText("bdTotalWeight", `${Number(totals.totalWeight || 0).toFixed(0)} lb`);
     setText(
