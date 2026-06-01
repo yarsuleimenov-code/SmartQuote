@@ -41,6 +41,21 @@
     return `quick-item-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }
 
+  function createDisplayId(prefix) {
+    const now = new Date();
+    const date = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("");
+    const time = [
+      String(now.getHours()).padStart(2, "0"),
+      String(now.getMinutes()).padStart(2, "0"),
+      String(now.getSeconds()).padStart(2, "0"),
+    ].join("");
+    return `${prefix}-${date}-${time}-${Math.floor(Math.random() * 900 + 100)}`;
+  }
+
   function escapeHtml(value) {
     return String(value ?? "")
       .replace(/&/g, "&amp;")
@@ -63,6 +78,7 @@
       crated: false,
     },
   ];
+  let currentDraftId = "";
 
   function readItemControl(control) {
     const card = control.closest("[data-quick-item-id]");
@@ -123,12 +139,12 @@
     };
   }
 
-  function buildQuote() {
+  function buildQuote(estimateId = "QQ-NEW") {
     const pickupZone = byId("quickPickupZone").value;
     const deliveryZone = byId("quickDeliveryZone").value;
     const priority = byId("quickDeliveryPriority").value;
     return {
-      estimateId: "QQ-NEW",
+      estimateId,
       status: "draft",
       customer: {
         leadName: byId("quickLeadName").value.trim(),
@@ -305,15 +321,22 @@
   }
 
   function saveFullDraft() {
-    const { quote } = updateSummary();
+    currentDraftId = currentDraftId || createDisplayId("QQ-D");
+    const quote = buildQuote(currentDraftId);
     window.CalculatorStorage.save(quote);
-    byId("quickSaveState").textContent = "Saved";
+    byId("quickDraftIdLabel").textContent = currentDraftId;
+    byId("quickSaveState").textContent = `Saved ${currentDraftId}`;
   }
 
   function saveEstimateSnapshot() {
-    const { quote, result } = updateSummary();
-    window.CalculatorStorage.save(quote);
+    currentDraftId = currentDraftId || createDisplayId("QQ-D");
+    const draftQuote = buildQuote(currentDraftId);
+    window.CalculatorStorage.save(draftQuote);
+    const estimateId = createDisplayId("EST");
+    const quote = buildQuote(estimateId);
+    const result = window.PricingCalculator.calculateQuote(quote);
     window.CalculatorStorage.saveEstimateSnapshot(buildSnapshot(quote, result));
+    byId("quickDraftIdLabel").textContent = currentDraftId;
   }
 
   function bindEvents() {

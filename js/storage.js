@@ -24,6 +24,25 @@
     return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }
 
+  function createDisplayId(prefix) {
+    const now = new Date();
+    const date = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("");
+    const time = [
+      String(now.getHours()).padStart(2, "0"),
+      String(now.getMinutes()).padStart(2, "0"),
+      String(now.getSeconds()).padStart(2, "0"),
+    ].join("");
+    return `${prefix}-${date}-${time}-${Math.floor(Math.random() * 900 + 100)}`;
+  }
+
+  function isPlaceholderId(value) {
+    return !value || ["QQ-NEW", "EST-NEW", "EST-291"].includes(value);
+  }
+
   function normalizeDrafts() {
     const drafts = readJson(draftsKey, []);
     if (drafts.length) return drafts;
@@ -50,12 +69,15 @@
 
   window.CalculatorStorage = {
     save(draft) {
+      const estimateId = isPlaceholderId(draft.estimateId) ? createDisplayId("DRAFT") : draft.estimateId;
       const snapshot = {
         ...draft,
+        estimateId,
         localId: draft.localId || createId("draft"),
         updatedAt: new Date().toISOString(),
       };
       draft.localId = snapshot.localId;
+      draft.estimateId = snapshot.estimateId;
 
       const drafts = normalizeDrafts();
       const index = drafts.findIndex((entry) => entry.localId === snapshot.localId);
@@ -102,8 +124,13 @@
       }
     },
     saveEstimateSnapshot(snapshot) {
+      const estimateId = isPlaceholderId(snapshot.estimateId || snapshot.quote?.estimateId)
+        ? createDisplayId("EST")
+        : snapshot.estimateId || snapshot.quote?.estimateId;
       const saved = {
         ...snapshot,
+        estimateId,
+        quote: snapshot.quote ? { ...snapshot.quote, estimateId } : snapshot.quote,
         snapshotId: snapshot.snapshotId || createId("estimate"),
       };
 
