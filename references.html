@@ -140,14 +140,14 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє С‚РёРїРѕРІ СѓРїР°РєРѕРІРєРё, РґРѕСЃС‚СѓРїРЅС‹С… Р±СЂРѕРєРµСЂСѓ РїСЂРё СЃРѕР·РґР°РЅРёРё quote.</p>
+                <p><b>Purpose:</b> Packaging options shown to brokers during item-level quote creation.</p>
 
                 <p class="mt-2">
-                  Packaging Type РІС‹Р±РёСЂР°РµС‚СЃСЏ РЅР° item-level. РЎС‚РѕРёРјРѕСЃС‚СЊ СѓРїР°РєРѕРІРєРё Рё РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РґРѕР»Р¶РЅС‹ РїСЂРёРјРµРЅСЏС‚СЊСЃСЏ С‡РµСЂРµР· pricing engine.
+                  Packaging type can set default handling guidance for items. Brokers should still be able to override values in a quote when needed.
                 </p>
 
                 <p class="mt-2">
-                  Custom Crate РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРІСЏР·Р°РЅ СЃ РѕС‚РґРµР»СЊРЅРѕР№ crating formula: material + labor.
+                  Custom Crate should be handled by a dedicated crating rule when pricing governance is enabled.
                 </p>
               </div>
             </div>
@@ -270,15 +270,14 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє С‚РёРїРѕРІС‹С… РїСЂРµРґРјРµС‚РѕРІ РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЂР°Р±РѕС‚С‹ Р±СЂРѕРєРµСЂР°.</p>
+                <p><b>Purpose:</b> Item templates help brokers enter common shipment items faster.</p>
 
                 <p class="mt-2">
-                  Item template РјРѕР¶РµС‚ РїРѕРґСЃС‚Р°РІР»СЏС‚СЊ default dimensions, weight, packaging Рё handling flags.
-                  Р‘СЂРѕРєРµСЂ РґРѕР»Р¶РµРЅ РёРјРµС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёР·РјРµРЅРёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РІСЂСѓС‡РЅСѓСЋ РІ quote.
+                  Templates can provide default dimensions, weight, packaging, and handling flags. These are reference defaults, not exact SKU-specific measurements.
                 </p>
 
                 <p class="mt-2">
-                  Р­С‚Рѕ РѕСЃРѕР±РµРЅРЅРѕ РїРѕР»РµР·РЅРѕ РґР»СЏ С‡Р°СЃС‚С‹С… items: sofa, dining table, monitor, cabinet, mirror.
+                  Brokers should review and adjust item details before generating the final estimate.
                 </p>
               </div>
             </div>
@@ -307,55 +306,97 @@
             </thead>
 
             <tbody class="divide-y divide-slate-200">
-
+              <!-- Demo seed dimensions; not SKU-specific measurements. -->
               <tr>
                 <td class="px-4 py-3 font-medium text-slate-800">Sofa</td>
                 <td class="px-4 py-3">Furniture</td>
-                <td class="px-4 py-3">84 Г— 36 Г— 34 in</td>
+                <td class="px-4 py-3">84 x 36 x 34 in</td>
                 <td class="px-4 py-3">180 lb</td>
                 <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
                 <td class="px-4 py-3 text-slate-500">Standard</td>
-
-                <td class="px-4 py-3 text-center">
-                  <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" checked class="accent-teal-500" />
-                    <span class="text-xs text-slate-500">Active</span>
-                  </label>
-                </td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
               </tr>
-
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Loveseat</td>
+                <td class="px-4 py-3">Furniture</td>
+                <td class="px-4 py-3">60 x 35 x 34 in</td>
+                <td class="px-4 py-3">120 lb</td>
+                <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
+                <td class="px-4 py-3 text-slate-500">Standard</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
               <tr>
                 <td class="px-4 py-3 font-medium text-slate-800">Dining Table</td>
                 <td class="px-4 py-3">Furniture</td>
-                <td class="px-4 py-3">72 Г— 40 Г— 30 in</td>
+                <td class="px-4 py-3">72 x 40 x 30 in</td>
                 <td class="px-4 py-3">220 lb</td>
                 <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
                 <td class="px-4 py-3 text-slate-500">May require 2 people</td>
-
-                <td class="px-4 py-3 text-center">
-                  <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" checked class="accent-teal-500" />
-                    <span class="text-xs text-slate-500">Active</span>
-                  </label>
-                </td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
               </tr>
-
               <tr>
-                <td class="px-4 py-3 font-medium text-slate-800">Glass Monitor</td>
+                <td class="px-4 py-3 font-medium text-slate-800">Coffee Table</td>
+                <td class="px-4 py-3">Furniture</td>
+                <td class="px-4 py-3">48 x 24 x 18 in</td>
+                <td class="px-4 py-3">70 lb</td>
+                <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
+                <td class="px-4 py-3 text-slate-500">Standard</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Dresser</td>
+                <td class="px-4 py-3">Furniture</td>
+                <td class="px-4 py-3">58 x 20 x 36 in</td>
+                <td class="px-4 py-3">160 lb</td>
+                <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
+                <td class="px-4 py-3 text-slate-500">Heavy</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Nightstand</td>
+                <td class="px-4 py-3">Furniture</td>
+                <td class="px-4 py-3">24 x 18 x 28 in</td>
+                <td class="px-4 py-3">45 lb</td>
+                <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
+                <td class="px-4 py-3 text-slate-500">Standard</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Queen Mattress</td>
+                <td class="px-4 py-3">Bedding</td>
+                <td class="px-4 py-3">80 x 60 x 12 in</td>
+                <td class="px-4 py-3">100 lb</td>
+                <td class="px-4 py-3 text-slate-500">None</td>
+                <td class="px-4 py-3 text-slate-500">Bulky</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">King Mattress</td>
+                <td class="px-4 py-3">Bedding</td>
+                <td class="px-4 py-3">80 x 76 x 12 in</td>
+                <td class="px-4 py-3">130 lb</td>
+                <td class="px-4 py-3 text-slate-500">None</td>
+                <td class="px-4 py-3 text-slate-500">Bulky</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">TV / Monitor</td>
                 <td class="px-4 py-3">Electronics</td>
-                <td class="px-4 py-3">30 Г— 8 Г— 22 in</td>
-                <td class="px-4 py-3">25 lb</td>
+                <td class="px-4 py-3">55 x 6 x 32 in</td>
+                <td class="px-4 py-3">45 lb</td>
                 <td class="px-4 py-3 text-slate-500">TV / Monitor Box</td>
                 <td class="px-4 py-3 text-slate-500">Fragile</td>
-
-                <td class="px-4 py-3 text-center">
-                  <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" checked class="accent-teal-500" />
-                    <span class="text-xs text-slate-500">Active</span>
-                  </label>
-                </td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
               </tr>
-
+              <tr>
+                <td class="px-4 py-3 font-medium text-slate-800">Floor Lamp</td>
+                <td class="px-4 py-3">Decor</td>
+                <td class="px-4 py-3">16 x 16 x 60 in</td>
+                <td class="px-4 py-3">20 lb</td>
+                <td class="px-4 py-3 text-slate-500">Bubble Protection</td>
+                <td class="px-4 py-3 text-slate-500">Fragile</td>
+                <td class="px-4 py-3 text-center"><label class="inline-flex items-center gap-2"><input type="checkbox" checked class="accent-teal-500" /><span class="text-xs text-slate-500">Active</span></label></td>
+              </tr>
             </tbody>
 
           </table>
@@ -381,15 +422,14 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє service areas СЃ С‡РёСЃР»РѕРІС‹РјРё regional cost values.</p>
+                <p><b>Purpose:</b> Service Areas define regional cost values used by route and access calculations.</p>
 
                 <p class="mt-2">
-                  РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РєРѕРЅРєСЂРµС‚РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕ Р·РѕРЅРµ.
-                  РџРїРѕР·РІРѕР»СЏРµС‚ СѓРїСЂР°РІР»СЏС‚СЊ tolls, parking Рё ticket risk РѕС‚РґРµР»СЊРЅРѕ РґР»СЏ РєР°Р¶РґРѕРіРѕ СЂРµРіРёРѕРЅР°.
+                  Use zone-level values to manage toll fees, parking fees, ticket risk, and surcharge separately for each region.
                 </p>
 
                 <p class="mt-2">
-                  Р•СЃР»Рё fee РЅРµ РїСЂРёРјРµРЅСЏРµС‚СЃСЏ, Р·РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 0.
+                  If a regional component does not apply, keep its value at 0.
                 </p>
               </div>
             </div>
@@ -651,15 +691,7 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє РґРѕСЃС‚СѓРїРЅС‹С… insurance options.</p>
-
-                <p class="mt-2">
-                  Insurance Type РІС‹Р±РёСЂР°РµС‚СЃСЏ РІ quote. Р Р°СЃС‡С‘С‚ fee РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ pricing engine С‡РµСЂРµР· variables.
-                </p>
-
-                <p class="mt-2">
-                  Basic Liability РїРѕРєСЂС‹РІР°РµС‚ $0.60/lb, Full Coverage Р·Р°РІРёСЃРёС‚ РѕС‚ declared value.
-                </p>
+                <p>Insurance options shown to brokers during quote creation. Basic Liability is based on $0.60 per lb coverage. Full Coverage is based on declared value.</p>
               </div>
             </div>
           </div>
@@ -739,48 +771,37 @@
           <div class="text-sm text-slate-600 space-y-5">
 
             <div>
-              <h4 class="font-semibold text-slate-800 mb-2">Р¦РµР»СЊ СЃС‚СЂР°РЅРёС†С‹</h4>
+              <h4 class="font-semibold text-slate-800 mb-2">Purpose</h4>
               <p>
-                References.html СЏРІР»СЏРµС‚СЃСЏ Р±СѓРґСѓС‰РµР№ admin-РїР°РЅРµР»СЊСЋ СѓРїСЂР°РІР»РµРЅРёСЏ СЃРїСЂР°РІРѕС‡РЅРёРєР°РјРё.
-                РћРЅР° РѕРїСЂРµРґРµР»СЏРµС‚, РєР°РєРёРµ Р·РЅР°С‡РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅС‹ Р±СЂРѕРєРµСЂСѓ Рё pricing engine РїСЂРё СЃРѕР·РґР°РЅРёРё quote.
+                References are admin-managed lookup tables used by the broker workflow and pricing engine.
               </p>
             </div>
 
             <div>
-              <h4 class="font-semibold text-slate-800 mb-2">Р Р°Р·РґРµР»РµРЅРёРµ References Рё Variables</h4>
+              <h4 class="font-semibold text-slate-800 mb-2">References vs Variables</h4>
               <p>
-                References РѕС‚РІРµС‡Р°СЋС‚ Р·Р° РґРѕСЃС‚СѓРїРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ: vehicle types, packaging types, item templates, zones Рё insurance types.
-                Variables РѕС‚РІРµС‡Р°СЋС‚ Р·Р° СЃС‚Р°РІРєРё, РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ Рё С„РѕСЂРјСѓР»С‹ СЂР°СЃС‡С‘С‚Р°.
+                References define selectable business entities, such as vehicles, packaging types, item templates, service areas, and insurance types. Variables define numeric pricing inputs and calculation parameters.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">Active / Inactive Logic</h4>
               <p>
-                Active checkbox РїРѕР·РІРѕР»СЏРµС‚ РѕС‚РєР»СЋС‡Р°С‚СЊ Р·РЅР°С‡РµРЅРёРµ Р±РµР· С„РёР·РёС‡РµСЃРєРѕРіРѕ СѓРґР°Р»РµРЅРёСЏ.
-                РћС‚РєР»СЋС‡С‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ РґРѕР»Р¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РЅРѕРІС‹С… СЂР°СЃС‡С‘С‚Р°С…, РЅРѕ РґРѕР»Р¶РЅРѕ РѕСЃС‚Р°РІР°С‚СЊСЃСЏ РґРѕСЃС‚СѓРїРЅС‹Рј РІ historical estimates.
+                The Active flag controls whether a reference item is available for new quotes. Inactive records should remain stored for audit history and existing estimates.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">Regional Rules</h4>
               <p>
-                Service Areas РёСЃРїРѕР»СЊР·СѓСЋС‚ numeric regional values
-                Р­С‚Рѕ РїРѕР·РІРѕР»СЏРµС‚ Р·Р°РґР°РІР°С‚СЊ tolls, parking, ticket risk Рё surcharge РѕС‚РґРµР»СЊРЅРѕ РґР»СЏ РєР°Р¶РґРѕР№ Р·РѕРЅС‹.
-              </p>
-            
-              <p class="mt-2">
-                Р•СЃР»Рё regional component РЅРµ РїСЂРёРјРµРЅСЏРµС‚СЃСЏ, Р·РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 0.
-                Р­С‚Рѕ СѓРїСЂРѕС‰Р°РµС‚ pricing formula Рё СЃРЅРёР¶Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ IF-СѓСЃР»РѕРІРёР№.
+                Service Areas contain regional charges such as toll fees, parking fees, ticket risk, and zone surcharge. If a component does not apply, use 0.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">Best Practice</h4>
               <p>
-                Р’ production СЃРїСЂР°РІРѕС‡РЅРёРєРё РґРѕР»Р¶РЅС‹ С…СЂР°РЅРёС‚СЊСЃСЏ РІ database reference tables,
-                РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С‡РµСЂРµР· IDs Рё СѓРїСЂР°РІР»СЏС‚СЊСЃСЏ admin role.
-                Pricing engine РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ СЃ IDs Рё active status, Р° РЅРµ СЃ С‚РµРєСЃС‚РѕРІС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё.
+                Do not delete reference records that may already be used in historical estimates. Use Active = false instead.
               </p>
             </div>
 

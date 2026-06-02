@@ -149,8 +149,7 @@
           </span>
         </td>
         <td class="px-4 py-3 text-right whitespace-nowrap">
-          <button type="button" data-action="edit" data-id="${safeText(vehicle.vehicleId)}" class="text-teal-700 hover:text-teal-900 font-semibold mr-3">Edit</button>
-          <button type="button" data-action="deactivate" data-id="${safeText(vehicle.vehicleId)}" class="text-amber-700 hover:text-amber-900 font-semibold" ${vehicle.active === false ? "disabled" : ""}>Deactivate</button>
+          <button type="button" data-action="edit" data-id="${safeText(vehicle.vehicleId)}" class="text-teal-700 hover:text-teal-900 font-semibold">Edit</button>
         </td>
       </tr>
     `).join("");
@@ -243,15 +242,6 @@
       }
       if (action === "edit") {
         fillForm(vehicles.find((vehicle) => vehicle.vehicleId === id));
-        return;
-      }
-      if (action === "deactivate") {
-        const vehicle = vehicles.find((entry) => entry.vehicleId === id);
-        if (!vehicle) return;
-        vehicle.active = false;
-        const result = await persistVehicles();
-        render(root);
-        showPersistResult(result);
       }
     });
   }
