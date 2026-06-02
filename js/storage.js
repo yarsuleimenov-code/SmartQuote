@@ -116,6 +116,8 @@
       }
     },
     saveEstimateSnapshot(snapshot) {
+      const variablesSnapshot = snapshot.variablesSnapshot || window.PricingConfig?.snapshot?.() || null;
+      const calculationTimestamp = snapshot.calculationTimestamp || snapshot.createdAt || new Date().toISOString();
       const estimateId = isPlaceholderId(snapshot.estimateId || snapshot.quote?.estimateId)
         ? createDisplayId("EST")
         : snapshot.estimateId || snapshot.quote?.estimateId;
@@ -123,7 +125,13 @@
         ...snapshot,
         estimateId,
         formulaVersion: snapshot.formulaVersion || window.CalculatorVariables?.formulaVersion || "unknown",
-        variablesSnapshot: snapshot.variablesSnapshot || window.PricingConfig?.snapshot?.() || null,
+        variablesVersion: snapshot.variablesVersion || variablesSnapshot?.variablesVersion || "unknown",
+        variablesSnapshot,
+        calculationTimestamp,
+        sourceDraftId: snapshot.sourceDraftId || snapshot.quote?.localId || localStorage.getItem(currentDraftKey) || null,
+        fuelPricesUsed: snapshot.fuelPricesUsed || variablesSnapshot?.fuelPrices || null,
+        vehicleUsed: snapshot.vehicleUsed || snapshot.result?.vehicle || null,
+        totalPrice: snapshot.totalPrice ?? snapshot.result?.totals?.finalPrice ?? 0,
         quote: snapshot.quote ? { ...snapshot.quote, estimateId } : snapshot.quote,
         snapshotId: snapshot.snapshotId || createId("estimate"),
       };
