@@ -4,6 +4,8 @@
       name: "Sprinter 488 cu ft",
       volume: 488.1,
       payload: 3704,
+      fuelType: "Diesel",
+      mpg: 18.5819178101,
       fuelPerMile: 0.3345833333,
       maintenancePerMile: 0.26725568,
       fuelPerMilePerCuFt: 0.0006854811173,
@@ -15,6 +17,8 @@
       name: "Box truck 16 ft",
       volume: 800,
       payload: 4300,
+      fuelType: "Diesel",
+      mpg: 18.24907749,
       fuelPerMile: 0.3406857143,
       maintenancePerMile: 1.106,
       fuelPerMilePerCuFt: 0.0004258571429,
@@ -26,6 +30,8 @@
       name: "Box truck 20 ft",
       volume: 1200,
       payload: 10000,
+      fuelType: "Diesel",
+      mpg: 13.4202739717,
       fuelPerMile: 0.4632692308,
       maintenancePerMile: 1.284571429,
       fuelPerMilePerCuFt: 0.0003860576923,
@@ -37,6 +43,8 @@
       name: "Penske 26 ft",
       volume: 1650,
       payload: 8800,
+      fuelType: "Diesel",
+      mpg: 9.776153425,
       fuelPerMile: 0.6359556494,
       maintenancePerMile: 0.5386438596,
       fuelPerMilePerCuFt: 0.0003854276663,
@@ -48,6 +56,10 @@
 
   window.CalculatorVariables = {
     formulaVersion: "excel-derived-v0.1",
+    variablesVersion: "baseline-2026-06-02",
+    updatedAt: "2026-06-02T00:00:00.000+05:00",
+    updatedBy: "System",
+    changeNotes: "UAT-approved runtime baseline captured before Interactive Variables MVP.",
     settings: {
       insuranceRate: 0.025,
       insuranceFixedFee: 15,
@@ -105,6 +117,20 @@
       "Basic Liability": { rate: 0, fixedFee: 0 },
       "Full Coverage": { rate: 0.025, fixedFee: 15 },
     },
+    fuelPrices: [
+      {
+        fuelType: "Regular",
+        currentAvg: 4.555,
+        fuelSurchargePct: 10,
+        internalFuelPrice: 5.0105,
+      },
+      {
+        fuelType: "Diesel",
+        currentAvg: 5.652,
+        fuelSurchargePct: 10,
+        internalFuelPrice: 6.2172,
+      },
+    ],
     vehicleTypes,
     distanceMatrix: {
       "CA North": { "CA North": 31.09, "CA South": 400, "DC Area": 2800, "NY Area": 2800, Boston: 2800, TX: 1450 },

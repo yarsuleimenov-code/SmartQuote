@@ -47,6 +47,37 @@
     return window.CalculatorVariables.vehicleTypes.find((vehicle) => vehicle.name === name) || fallback;
   }
 
+  function readFuelPrices() {
+    const fallback = window.CalculatorVariables.fuelPrices || [];
+    return window.PricingConfig?.readStorageBucket?.("fuelPrices", fallback) || fallback;
+  }
+
+  function getFuelPrice(vehicle) {
+    const fuelType = vehicle.fuelType || "Diesel";
+    return readFuelPrices().find((fuel) => fuel.fuelType === fuelType) || null;
+  }
+
+  function internalFuelPrice(vehicle) {
+    const fuel = getFuelPrice(vehicle);
+    if (!fuel) return null;
+    const currentAvg = number(fuel.currentAvg);
+    const fuelSurchargePct = number(fuel.fuelSurchargePct);
+    return currentAvg * (1 + fuelSurchargePct / 100);
+  }
+
+  function fuelCostPerMile(vehicle) {
+    const calculatedInternalFuelPrice = internalFuelPrice(vehicle);
+    const mpg = number(vehicle.mpg);
+    if (calculatedInternalFuelPrice && mpg > 0) return calculatedInternalFuelPrice / mpg;
+    return number(vehicle.fuelPerMile);
+  }
+
+  function fuelCostPerUnitMile(vehicle, isVolume) {
+    const denominator = isVolume ? number(vehicle.volume) : number(vehicle.payload);
+    if (denominator > 0) return fuelCostPerMile(vehicle) / denominator;
+    return number(isVolume ? vehicle.fuelPerMilePerCuFt : vehicle.fuelPerMilePerLb);
+  }
+
   function itemWarning(item, volume, totalWeight) {
     const rules = window.CalculatorVariables.warningRules;
     const dimensionSumFt = (number(item.length) + number(item.width) + number(item.height)) / 12;
@@ -120,14 +151,14 @@
     const deliveryWarehouse = pickupWarehouse;
     const deliveryTruck = amount * (isVolume ? settings.truckLoadingPerCuFtMinute / 2 : settings.truckLoadingPerLbMinute / 2);
     const interstateMaintenance = amount * interstateDistance * (isVolume ? interstateVehicle.maintenancePerMilePerCuFt : interstateVehicle.maintenancePerMilePerLb);
-    const interstateFuel = amount * interstateDistance * (isVolume ? interstateVehicle.fuelPerMilePerCuFt : interstateVehicle.fuelPerMilePerLb);
+    const interstateFuel = amount * interstateDistance * fuelCostPerUnitMile(interstateVehicle, isVolume);
     const interstateDriverDenominator = isVolume ? interstateVehicle.volume : interstateVehicle.payload;
     const interstateDriver = (settings.interstateDriverCostPerMile / interstateDriverDenominator) * interstateDistance * amount * interstateTeam;
     const damageSurcharge = amount * (isVolume ? settings.repairCostPerCuFt : settings.repairCostPerLb);
 
     const pickupCost =
       pickupDistance * pickupVehicle.maintenancePerMile +
-      pickupDistance * pickupVehicle.fuelPerMile +
+      pickupDistance * fuelCostPerMile(pickupVehicle) +
       Math.max(pickupLoadMinutes, settings.minLoadingMinutes) * settings.wagePerMinute * pickupTeam +
       settings.pickupWagePerMile * pickupDistance * pickupTeam +
       settings.dispatchFee +
@@ -138,7 +169,7 @@
 
     const deliveryCost =
       deliveryDistance * deliveryVehicle.maintenancePerMile +
-      deliveryDistance * deliveryVehicle.fuelPerMile +
+      deliveryDistance * fuelCostPerMile(deliveryVehicle) +
       Math.max(deliveryUnloadMinutes, settings.minLoadingMinutes - 10) * settings.wagePerMinute * deliveryTeam +
       settings.pickupWagePerMile * deliveryDistance * deliveryTeam +
       settings.dispatchFee +
