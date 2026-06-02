@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -28,16 +28,16 @@
     <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
 
       <div>
-        <p class="text-xs text-slate-400">Zaberman LLC › Admin</p>
+        <p class="text-xs text-slate-400">Zaberman LLC вЂє Admin</p>
         <h2 class="text-lg font-semibold text-slate-800">References</h2>
       </div>
 
       <div class="flex items-center gap-3">
-        <button class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
+        <button class="px-4 py-2 rounded-lg border border-slate-300 text-slate-400 bg-white opacity-60 cursor-not-allowed" disabled>
           Export
         </button>
 
-        <button class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
+        <button class="px-4 py-2 rounded-lg bg-slate-300 text-white opacity-70 cursor-not-allowed" disabled>
           Save Changes
         </button>
       </div>
@@ -88,7 +88,7 @@
             <label class="text-xs text-slate-400">Group</label>
             <select class="mt-1 w-full border rounded-lg px-3 py-2">
               <option>All references</option>
-              <option>Vehicle Types</option>
+              <option>Vehicles</option>
               <option>Packaging Types</option>
               <option>Item Catalog</option>
               <option>Service Areas</option>
@@ -121,100 +121,8 @@
 
       </section>
 
-      <!-- VEHICLE TYPES -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <div class="flex items-center justify-between mb-4">
-
-          <div class="flex items-center gap-2">
-            <div>
-              <h3 class="font-bold text-slate-800">Vehicle Types</h3>
-              <p class="text-xs text-slate-400 mt-1">
-                Vehicles available for automatic vehicle fit and operational planning.
-              </p>
-            </div>
-
-            <div class="relative group">
-              <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
-
-              <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>Назначение:</b> справочник доступных vans/trucks для automatic vehicle fit.</p>
-
-                <p class="mt-2">
-                  Pricing engine использует Capacity, Max Weight и Fuel Type для подбора транспорта и расчёта operational cost.
-                </p>
-
-                <p class="mt-2">
-                  Active checkbox отключает транспорт для новых расчётов без удаления исторических данных.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <button class="px-3 py-2 rounded-lg bg-teal-500 text-white text-sm hover:bg-teal-600">
-            Add Vehicle
-          </button>
-
-        </div>
-
-        <div class="overflow-x-auto border border-slate-200 rounded-xl">
-
-          <table class="w-full text-sm min-w-[1100px]">
-
-            <thead class="bg-slate-50 text-slate-500">
-              <tr>
-                <th class="text-left px-4 py-3">Vehicle</th>
-                <th class="text-left px-4 py-3">Category</th>
-                <th class="text-left px-4 py-3">Capacity</th>
-                <th class="text-left px-4 py-3">Max Weight</th>
-                <th class="text-left px-4 py-3">Fuel Type</th>
-                <th class="text-left px-4 py-3">Used In</th>
-                <th class="text-center px-4 py-3">Active</th>
-              </tr>
-            </thead>
-
-            <tbody class="divide-y divide-slate-200">
-
-              <tr>
-                <td class="px-4 py-3 font-medium text-slate-800">Sprinter 488</td>
-                <td class="px-4 py-3">Van</td>
-                <td class="px-4 py-3">488 cu ft</td>
-                <td class="px-4 py-3">3000 lb</td>
-                <td class="px-4 py-3">Diesel</td>
-                <td class="px-4 py-3 text-slate-500">Vehicle fit / fuel cost</td>
-
-                <td class="px-4 py-3 text-center">
-                  <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" checked class="accent-teal-500" />
-                    <span class="text-xs text-slate-500">Active</span>
-                  </label>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="px-4 py-3 font-medium text-slate-800">Enterprise 26 ft</td>
-                <td class="px-4 py-3">Truck</td>
-                <td class="px-4 py-3">1700 cu ft</td>
-                <td class="px-4 py-3">10000 lb</td>
-                <td class="px-4 py-3">Diesel</td>
-                <td class="px-4 py-3 text-slate-500">Vehicle fit / fuel cost</td>
-
-                <td class="px-4 py-3 text-center">
-                  <label class="inline-flex items-center gap-2">
-                    <input type="checkbox" checked class="accent-teal-500" />
-                    <span class="text-xs text-slate-500">Active</span>
-                  </label>
-                </td>
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
+      <!-- VEHICLES -->
+      <section id="vehiclesReferenceRoot" class="bg-white rounded-xl border border-slate-200 p-5 mb-6"></section>
       <!-- PACKAGING TYPES -->
       <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
 
@@ -232,14 +140,14 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>Назначение:</b> справочник типов упаковки, доступных брокеру при создании quote.</p>
+                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє С‚РёРїРѕРІ СѓРїР°РєРѕРІРєРё, РґРѕСЃС‚СѓРїРЅС‹С… Р±СЂРѕРєРµСЂСѓ РїСЂРё СЃРѕР·РґР°РЅРёРё quote.</p>
 
                 <p class="mt-2">
-                  Packaging Type выбирается на item-level. Стоимость упаковки и коэффициенты должны применяться через pricing engine.
+                  Packaging Type РІС‹Р±РёСЂР°РµС‚СЃСЏ РЅР° item-level. РЎС‚РѕРёРјРѕСЃС‚СЊ СѓРїР°РєРѕРІРєРё Рё РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РґРѕР»Р¶РЅС‹ РїСЂРёРјРµРЅСЏС‚СЊСЃСЏ С‡РµСЂРµР· pricing engine.
                 </p>
 
                 <p class="mt-2">
-                  Custom Crate должен быть связан с отдельной crating formula: material + labor.
+                  Custom Crate РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЃРІСЏР·Р°РЅ СЃ РѕС‚РґРµР»СЊРЅРѕР№ crating formula: material + labor.
                 </p>
               </div>
             </div>
@@ -362,15 +270,15 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>Назначение:</b> справочник типовых предметов для ускорения работы брокера.</p>
+                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє С‚РёРїРѕРІС‹С… РїСЂРµРґРјРµС‚РѕРІ РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЂР°Р±РѕС‚С‹ Р±СЂРѕРєРµСЂР°.</p>
 
                 <p class="mt-2">
-                  Item template может подставлять default dimensions, weight, packaging и handling flags.
-                  Брокер должен иметь возможность изменить значения вручную в quote.
+                  Item template РјРѕР¶РµС‚ РїРѕРґСЃС‚Р°РІР»СЏС‚СЊ default dimensions, weight, packaging Рё handling flags.
+                  Р‘СЂРѕРєРµСЂ РґРѕР»Р¶РµРЅ РёРјРµС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёР·РјРµРЅРёС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РІСЂСѓС‡РЅСѓСЋ РІ quote.
                 </p>
 
                 <p class="mt-2">
-                  Это особенно полезно для частых items: sofa, dining table, monitor, cabinet, mirror.
+                  Р­С‚Рѕ РѕСЃРѕР±РµРЅРЅРѕ РїРѕР»РµР·РЅРѕ РґР»СЏ С‡Р°СЃС‚С‹С… items: sofa, dining table, monitor, cabinet, mirror.
                 </p>
               </div>
             </div>
@@ -403,7 +311,7 @@
               <tr>
                 <td class="px-4 py-3 font-medium text-slate-800">Sofa</td>
                 <td class="px-4 py-3">Furniture</td>
-                <td class="px-4 py-3">84 × 36 × 34 in</td>
+                <td class="px-4 py-3">84 Г— 36 Г— 34 in</td>
                 <td class="px-4 py-3">180 lb</td>
                 <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
                 <td class="px-4 py-3 text-slate-500">Standard</td>
@@ -419,7 +327,7 @@
               <tr>
                 <td class="px-4 py-3 font-medium text-slate-800">Dining Table</td>
                 <td class="px-4 py-3">Furniture</td>
-                <td class="px-4 py-3">72 × 40 × 30 in</td>
+                <td class="px-4 py-3">72 Г— 40 Г— 30 in</td>
                 <td class="px-4 py-3">220 lb</td>
                 <td class="px-4 py-3 text-slate-500">Blanket Wrap</td>
                 <td class="px-4 py-3 text-slate-500">May require 2 people</td>
@@ -435,7 +343,7 @@
               <tr>
                 <td class="px-4 py-3 font-medium text-slate-800">Glass Monitor</td>
                 <td class="px-4 py-3">Electronics</td>
-                <td class="px-4 py-3">30 × 8 × 22 in</td>
+                <td class="px-4 py-3">30 Г— 8 Г— 22 in</td>
                 <td class="px-4 py-3">25 lb</td>
                 <td class="px-4 py-3 text-slate-500">TV / Monitor Box</td>
                 <td class="px-4 py-3 text-slate-500">Fragile</td>
@@ -473,15 +381,15 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>Назначение:</b> справочник service areas с числовыми regional cost values.</p>
+                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє service areas СЃ С‡РёСЃР»РѕРІС‹РјРё regional cost values.</p>
 
                 <p class="mt-2">
-                  Используются конкретные значения по зоне.
-                  Ппозволяет управлять tolls, parking и ticket risk отдельно для каждого региона.
+                  РСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РєРѕРЅРєСЂРµС‚РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїРѕ Р·РѕРЅРµ.
+                  РџРїРѕР·РІРѕР»СЏРµС‚ СѓРїСЂР°РІР»СЏС‚СЊ tolls, parking Рё ticket risk РѕС‚РґРµР»СЊРЅРѕ РґР»СЏ РєР°Р¶РґРѕРіРѕ СЂРµРіРёРѕРЅР°.
                 </p>
 
                 <p class="mt-2">
-                  Если fee не применяется, значение должно быть 0.
+                  Р•СЃР»Рё fee РЅРµ РїСЂРёРјРµРЅСЏРµС‚СЃСЏ, Р·РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 0.
                 </p>
               </div>
             </div>
@@ -743,14 +651,14 @@
               <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
 
               <div class="absolute hidden group-hover:block z-50 w-96 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
-                <p><b>Назначение:</b> справочник доступных insurance options.</p>
+                <p><b>РќР°Р·РЅР°С‡РµРЅРёРµ:</b> СЃРїСЂР°РІРѕС‡РЅРёРє РґРѕСЃС‚СѓРїРЅС‹С… insurance options.</p>
 
                 <p class="mt-2">
-                  Insurance Type выбирается в quote. Расчёт fee выполняется pricing engine через variables.
+                  Insurance Type РІС‹Р±РёСЂР°РµС‚СЃСЏ РІ quote. Р Р°СЃС‡С‘С‚ fee РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ pricing engine С‡РµСЂРµР· variables.
                 </p>
 
                 <p class="mt-2">
-                  Basic Liability покрывает $0.60/lb, Full Coverage зависит от declared value.
+                  Basic Liability РїРѕРєСЂС‹РІР°РµС‚ $0.60/lb, Full Coverage Р·Р°РІРёСЃРёС‚ РѕС‚ declared value.
                 </p>
               </div>
             </div>
@@ -831,48 +739,48 @@
           <div class="text-sm text-slate-600 space-y-5">
 
             <div>
-              <h4 class="font-semibold text-slate-800 mb-2">Цель страницы</h4>
+              <h4 class="font-semibold text-slate-800 mb-2">Р¦РµР»СЊ СЃС‚СЂР°РЅРёС†С‹</h4>
               <p>
-                References.html является будущей admin-панелью управления справочниками.
-                Она определяет, какие значения доступны брокеру и pricing engine при создании quote.
+                References.html СЏРІР»СЏРµС‚СЃСЏ Р±СѓРґСѓС‰РµР№ admin-РїР°РЅРµР»СЊСЋ СѓРїСЂР°РІР»РµРЅРёСЏ СЃРїСЂР°РІРѕС‡РЅРёРєР°РјРё.
+                РћРЅР° РѕРїСЂРµРґРµР»СЏРµС‚, РєР°РєРёРµ Р·РЅР°С‡РµРЅРёСЏ РґРѕСЃС‚СѓРїРЅС‹ Р±СЂРѕРєРµСЂСѓ Рё pricing engine РїСЂРё СЃРѕР·РґР°РЅРёРё quote.
               </p>
             </div>
 
             <div>
-              <h4 class="font-semibold text-slate-800 mb-2">Разделение References и Variables</h4>
+              <h4 class="font-semibold text-slate-800 mb-2">Р Р°Р·РґРµР»РµРЅРёРµ References Рё Variables</h4>
               <p>
-                References отвечают за доступные значения: vehicle types, packaging types, item templates, zones и insurance types.
-                Variables отвечают за ставки, коэффициенты и формулы расчёта.
+                References РѕС‚РІРµС‡Р°СЋС‚ Р·Р° РґРѕСЃС‚СѓРїРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ: vehicle types, packaging types, item templates, zones Рё insurance types.
+                Variables РѕС‚РІРµС‡Р°СЋС‚ Р·Р° СЃС‚Р°РІРєРё, РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ Рё С„РѕСЂРјСѓР»С‹ СЂР°СЃС‡С‘С‚Р°.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">Active / Inactive Logic</h4>
               <p>
-                Active checkbox позволяет отключать значение без физического удаления.
-                Отключённое значение не должно использоваться в новых расчётах, но должно оставаться доступным в historical estimates.
+                Active checkbox РїРѕР·РІРѕР»СЏРµС‚ РѕС‚РєР»СЋС‡Р°С‚СЊ Р·РЅР°С‡РµРЅРёРµ Р±РµР· С„РёР·РёС‡РµСЃРєРѕРіРѕ СѓРґР°Р»РµРЅРёСЏ.
+                РћС‚РєР»СЋС‡С‘РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ РґРѕР»Р¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІ РЅРѕРІС‹С… СЂР°СЃС‡С‘С‚Р°С…, РЅРѕ РґРѕР»Р¶РЅРѕ РѕСЃС‚Р°РІР°С‚СЊСЃСЏ РґРѕСЃС‚СѓРїРЅС‹Рј РІ historical estimates.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">Regional Rules</h4>
               <p>
-                Service Areas используют numeric regional values
-                Это позволяет задавать tolls, parking, ticket risk и surcharge отдельно для каждой зоны.
+                Service Areas РёСЃРїРѕР»СЊР·СѓСЋС‚ numeric regional values
+                Р­С‚Рѕ РїРѕР·РІРѕР»СЏРµС‚ Р·Р°РґР°РІР°С‚СЊ tolls, parking, ticket risk Рё surcharge РѕС‚РґРµР»СЊРЅРѕ РґР»СЏ РєР°Р¶РґРѕР№ Р·РѕРЅС‹.
               </p>
             
               <p class="mt-2">
-                Если regional component не применяется, значение должно быть 0.
-                Это упрощает pricing formula и снижает количество IF-условий.
+                Р•СЃР»Рё regional component РЅРµ РїСЂРёРјРµРЅСЏРµС‚СЃСЏ, Р·РЅР°С‡РµРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ 0.
+                Р­С‚Рѕ СѓРїСЂРѕС‰Р°РµС‚ pricing formula Рё СЃРЅРёР¶Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ IF-СѓСЃР»РѕРІРёР№.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">Best Practice</h4>
               <p>
-                В production справочники должны храниться в database reference tables,
-                использоваться через IDs и управляться admin role.
-                Pricing engine должен работать с IDs и active status, а не с текстовыми значениями.
+                Р’ production СЃРїСЂР°РІРѕС‡РЅРёРєРё РґРѕР»Р¶РЅС‹ С…СЂР°РЅРёС‚СЊСЃСЏ РІ database reference tables,
+                РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ С‡РµСЂРµР· IDs Рё СѓРїСЂР°РІР»СЏС‚СЊСЃСЏ admin role.
+                Pricing engine РґРѕР»Р¶РµРЅ СЂР°Р±РѕС‚Р°С‚СЊ СЃ IDs Рё active status, Р° РЅРµ СЃ С‚РµРєСЃС‚РѕРІС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё.
               </p>
             </div>
 
@@ -899,7 +807,11 @@
 
   lucide.createIcons();
 </script>
-<script src="js/readOnlyAdminPage.js"></script>
+<script src="js/variables.js"></script>
+<script src="js/pricingConfig.js"></script>
+<script src="js/config.js"></script>
+<script src="js/pricingAdminStorage.js"></script>
+<script src="js/referencesVehicles.js"></script>
 <script src="sidebar.js"></script>
 </body>
 </html>

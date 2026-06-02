@@ -52,6 +52,18 @@ PricingCalculator.calculateQuote()
 
 `formulas.html` is documentation only.
 
+## Vehicle Compatibility
+
+`References` is the canonical business screen for vehicles. It displays business-facing `mpg`, `fuelType`, capacity, payload, passenger capacity, and active status.
+
+`calculationMpg` is a temporary compatibility field used by `js/calculator.js` when calculating fuel cost:
+
+```text
+fuelCostPerMile = internalFuelPrice / (calculationMpg || mpg)
+```
+
+It exists to keep the UAT-approved pricing baseline stable while References exposes the business MPG values from the vehicle reference list. In the future, business and calculation MPG should be reconciled into a single agreed value per vehicle, then `calculationMpg` can be removed.
+
 ## Snapshot Rule
 
 Generated estimates store:

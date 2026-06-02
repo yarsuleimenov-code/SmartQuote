@@ -39,12 +39,13 @@
   }
 
   function getVehicle(effectiveVolume, totalWeight) {
-    const vehicles = window.CalculatorVariables.vehicleTypes;
+    const vehicles = window.PricingConfig?.getActiveVehicles?.() || window.CalculatorVariables.vehicleTypes.filter((vehicle) => vehicle.active !== false);
     return vehicles.find((vehicle) => effectiveVolume <= vehicle.volume && totalWeight <= vehicle.payload) || vehicles[vehicles.length - 1];
   }
 
   function getVehicleByName(name, fallback) {
-    return window.CalculatorVariables.vehicleTypes.find((vehicle) => vehicle.name === name) || fallback;
+    const vehicles = window.PricingConfig?.getActiveVehicles?.() || window.CalculatorVariables.vehicleTypes.filter((vehicle) => vehicle.active !== false);
+    return vehicles.find((vehicle) => vehicle.name === name || vehicle.vehicleName === name) || fallback;
   }
 
   function readFuelPrices() {
@@ -67,7 +68,7 @@
 
   function fuelCostPerMile(vehicle) {
     const calculatedInternalFuelPrice = internalFuelPrice(vehicle);
-    const mpg = number(vehicle.mpg);
+    const mpg = number(vehicle.calculationMpg || vehicle.mpg);
     if (calculatedInternalFuelPrice && mpg > 0) return calculatedInternalFuelPrice / mpg;
     return number(vehicle.fuelPerMile);
   }

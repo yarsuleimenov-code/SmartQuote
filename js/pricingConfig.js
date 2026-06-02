@@ -54,6 +54,54 @@
     return true;
   }
 
+  function vehicleIdFromName(name) {
+    return String(name || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || `vehicle-${Date.now()}`;
+  }
+
+  function normalizeVehicle(vehicle) {
+    const raw = vehicle || {};
+    const vehicleName = raw.vehicleName || raw.name || "";
+    const capacityCuFt = Number(raw.capacityCuFt ?? raw.volume ?? 0);
+    const maxWeightLb = Number(raw.maxWeightLb ?? raw.payload ?? 0);
+    const maintenanceCostPerMile = Number(raw.maintenanceCostPerMile ?? raw.maintenancePerMile ?? raw.costPerMile ?? 0);
+    const fuelPerMile = Number(raw.fuelPerMile || 0);
+    const volume = capacityCuFt;
+    const payload = maxWeightLb;
+    const calculationMpg = Number(raw.calculationMpg || 0);
+    const normalized = {
+      ...cloneData(raw),
+      vehicleId: raw.vehicleId || vehicleIdFromName(vehicleName),
+      vehicleName,
+      name: vehicleName,
+      category: raw.category || "Vehicle",
+      capacityCuFt,
+      volume,
+      maxWeightLb,
+      payload,
+      fuelType: raw.fuelType === "Regular" ? "Regular" : "Diesel",
+      mpg: Number(raw.mpg || 0),
+      calculationMpg: calculationMpg || Number(raw.mpg || 0),
+      passengerCapacity: Math.max(Number(raw.passengerCapacity || 1), 1),
+      maintenanceCostPerMile,
+      maintenancePerMile: maintenanceCostPerMile,
+      active: raw.active !== false,
+    };
+
+    normalized.fuelPerMile = fuelPerMile;
+    normalized.fuelPerMilePerCuFt = Number(raw.fuelPerMilePerCuFt || (volume > 0 ? fuelPerMile / volume : 0));
+    normalized.fuelPerMilePerLb = Number(raw.fuelPerMilePerLb || (payload > 0 ? fuelPerMile / payload : 0));
+    normalized.maintenancePerMilePerCuFt = Number(raw.maintenancePerMilePerCuFt || (volume > 0 ? maintenanceCostPerMile / volume : 0));
+    normalized.maintenancePerMilePerLb = Number(raw.maintenancePerMilePerLb || (payload > 0 ? maintenanceCostPerMile / payload : 0));
+    return normalized;
+  }
+
+  function normalizeVehicles(vehicles) {
+    return (Array.isArray(vehicles) ? vehicles : []).map(normalizeVehicle);
+  }
+
   function isPlainObject(value) {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
   }
@@ -74,6 +122,7 @@
 
   function snapshot() {
     const current = window.CalculatorVariables || {};
+    const vehicles = readVehicles();
     return {
       formulaVersion: current.formulaVersion || "unknown",
       variablesVersion: current.variablesVersion || "unknown",
@@ -85,7 +134,7 @@
       packagingRates: cloneData(current.packagingRates),
       protectionPlans: cloneData(current.protectionPlans),
       fuelPrices: cloneData(readJson(storageKeys.fuelPrices, current.fuelPrices || [])),
-      vehicleTypes: cloneData(current.vehicleTypes),
+      vehicleTypes: cloneData(vehicles),
       distanceMatrix: cloneData(current.distanceMatrix),
       itemHandlingMultipliers: cloneData(current.itemHandlingMultipliers),
     };
@@ -130,10 +179,14 @@
 
   function initializeStorageStructure() {
     if (!canUseLocalStorage()) return false;
+    const existingVehicles = readJson(storageKeys.vehicles, null);
+    if (!Array.isArray(existingVehicles) || existingVehicles.length === 0 || existingVehicles.some((vehicle) => !vehicle.vehicleId)) {
+      window.localStorage.setItem(storageKeys.vehicles, JSON.stringify(normalizeVehicles(window.CalculatorVariables?.vehicleTypes || [])));
+    }
+    applyVehiclesToRuntime();
     const currentSnapshot = snapshot();
     writeJsonIfMissing(storageKeys.currentVariables, currentSnapshot);
     writeJsonIfMissing(storageKeys.variablesVersions, [baselineRecord()]);
-    writeJsonIfMissing(storageKeys.vehicles, cloneData(window.CalculatorVariables?.vehicleTypes || []));
     writeJsonIfMissing(storageKeys.fuelPrices, defaultFuelPrices());
     writeJsonIfMissing(storageKeys.drafts, []);
     writeJsonIfMissing(storageKeys.estimates, []);
@@ -141,8 +194,32 @@
     return true;
   }
 
+  function readVehicles() {
+    const stored = readJson(storageKeys.vehicles, null);
+    const source = Array.isArray(stored) && stored.length ? stored : window.CalculatorVariables?.vehicleTypes || [];
+    return normalizeVehicles(source);
+  }
+
+  function getActiveVehicles() {
+    const active = readVehicles().filter((vehicle) => vehicle.active !== false);
+    return active.length ? active : readVehicles();
+  }
+
+  function saveVehicles(vehicles) {
+    const normalized = normalizeVehicles(vehicles);
+    if (canUseLocalStorage()) window.localStorage.setItem(storageKeys.vehicles, JSON.stringify(normalized));
+    window.CalculatorVariables.vehicleTypes = normalized;
+    return normalized;
+  }
+
+  function applyVehiclesToRuntime() {
+    window.CalculatorVariables.vehicleTypes = readVehicles();
+    return window.CalculatorVariables.vehicleTypes;
+  }
+
   function applySavedConfig() {
     mergeInto(window.CalculatorVariables, readSavedConfig());
+    applyVehiclesToRuntime();
     return window.CalculatorVariables;
   }
 
@@ -156,6 +233,10 @@
     readStorageBucket(name, fallback = null) {
       return readJson(storageKeys[name] || name, fallback);
     },
+    normalizeVehicle,
+    readVehicles,
+    getActiveVehicles,
+    saveVehicles,
     saveAdminConfig(config) {
       writeSavedConfig(config);
       const applied = applySavedConfig();
@@ -173,4 +254,5 @@
 
   applySavedConfig();
   initializeStorageStructure();
+  applyVehiclesToRuntime();
 })();

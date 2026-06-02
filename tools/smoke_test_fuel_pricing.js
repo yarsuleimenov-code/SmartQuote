@@ -107,7 +107,7 @@ if (dieselHigherSurcharge.totals.finalPrice <= dieselHigherCurrentAvg.totals.fin
 }
 
 const regularContext = loadContext();
-const regularQuote = buildQuote(regularContext, "Sprinter 488 cu ft", "Regular");
+const regularQuote = buildQuote(regularContext, "Box truck 16 ft", "Regular");
 const regularBaseline = calculate(regularContext, regularQuote);
 setFuel(regularContext, "Regular", 8, 10);
 const regularHigherCurrentAvg = calculate(regularContext, regularQuote);
