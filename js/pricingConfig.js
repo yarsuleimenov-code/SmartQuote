@@ -4,12 +4,14 @@
     currentVariables: "currentVariables",
     variablesVersions: "variablesVersions",
     vehicles: "vehicles",
+    vehiclesSeedVersion: "vehiclesSeedVersion",
     fuelPrices: "fuelPrices",
     drafts: "drafts",
     estimates: "estimates",
     calculationLogs: "calculationLogs",
   };
   const baseline = cloneData(window.CalculatorVariables || {});
+  const vehiclesSeedVersion = "business-seed-2026-06-02-v2";
 
   function cloneData(value) {
     return JSON.parse(JSON.stringify(value || {}));
@@ -102,6 +104,56 @@
     return (Array.isArray(vehicles) ? vehicles : []).map(normalizeVehicle);
   }
 
+  function seedVehicleById() {
+    return new Map(normalizeVehicles(baseline.vehicleTypes || []).map((vehicle) => [vehicle.vehicleId, vehicle]));
+  }
+
+  function seedVehicleByName() {
+    return new Map(normalizeVehicles(baseline.vehicleTypes || []).map((vehicle) => [vehicle.vehicleName, vehicle]));
+  }
+
+  function mergeSeedVehicleBusinessFields(vehicle) {
+    const normalized = normalizeVehicle(vehicle);
+    const seed = seedVehicleById().get(normalized.vehicleId) || seedVehicleByName().get(normalized.vehicleName);
+    if (!seed) return normalized;
+
+    return normalizeVehicle({
+      ...normalized,
+      vehicleId: seed.vehicleId,
+      vehicleName: seed.vehicleName,
+      name: seed.vehicleName,
+      category: seed.category,
+      capacityCuFt: seed.capacityCuFt,
+      maxWeightLb: seed.maxWeightLb,
+      fuelType: seed.fuelType,
+      mpg: seed.mpg,
+      calculationMpg: seed.calculationMpg,
+      passengerCapacity: seed.passengerCapacity,
+      maintenanceCostPerMile: seed.maintenanceCostPerMile,
+      totalPriceReference: seed.totalPriceReference,
+      milesLastReference: seed.milesLastReference,
+      active: normalized.active !== false,
+    });
+  }
+
+  function migrateVehiclesSeedIfNeeded() {
+    if (!canUseLocalStorage()) return false;
+    const currentSeedVersion = window.localStorage.getItem(storageKeys.vehiclesSeedVersion);
+    const existingVehicles = readJson(storageKeys.vehicles, null);
+    const needsSeed = !Array.isArray(existingVehicles) || existingVehicles.length === 0 || existingVehicles.some((vehicle) => !vehicle.vehicleId);
+    if (needsSeed) {
+      window.localStorage.setItem(storageKeys.vehicles, JSON.stringify(normalizeVehicles(window.CalculatorVariables?.vehicleTypes || [])));
+      window.localStorage.setItem(storageKeys.vehiclesSeedVersion, vehiclesSeedVersion);
+      return true;
+    }
+    if (currentSeedVersion !== vehiclesSeedVersion) {
+      window.localStorage.setItem(storageKeys.vehicles, JSON.stringify(existingVehicles.map(mergeSeedVehicleBusinessFields)));
+      window.localStorage.setItem(storageKeys.vehiclesSeedVersion, vehiclesSeedVersion);
+      return true;
+    }
+    return false;
+  }
+
   function isPlainObject(value) {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
   }
@@ -179,10 +231,7 @@
 
   function initializeStorageStructure() {
     if (!canUseLocalStorage()) return false;
-    const existingVehicles = readJson(storageKeys.vehicles, null);
-    if (!Array.isArray(existingVehicles) || existingVehicles.length === 0 || existingVehicles.some((vehicle) => !vehicle.vehicleId)) {
-      window.localStorage.setItem(storageKeys.vehicles, JSON.stringify(normalizeVehicles(window.CalculatorVariables?.vehicleTypes || [])));
-    }
+    migrateVehiclesSeedIfNeeded();
     applyVehiclesToRuntime();
     const currentSnapshot = snapshot();
     writeJsonIfMissing(storageKeys.currentVariables, currentSnapshot);

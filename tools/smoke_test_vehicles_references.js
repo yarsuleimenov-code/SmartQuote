@@ -39,6 +39,31 @@ function loadContext({ withLocalStorage = true } = {}) {
   return { context, localStorage };
 }
 
+function loadContextWithStoredVehicles(storedVehicles, seedVersion = "old-seed") {
+  const localStorage = createLocalStorage();
+  localStorage.setItem("vehicles", JSON.stringify(storedVehicles));
+  localStorage.setItem("vehiclesSeedVersion", seedVersion);
+  const context = {
+    window: { localStorage },
+    console,
+    localStorage,
+  };
+  context.window.window = context.window;
+  vm.createContext(context);
+
+  [
+    "js/zoneZipMap.js",
+    "js/variables.js",
+    "js/pricingConfig.js",
+    "js/mockData.js",
+    "js/calculator.js",
+  ].forEach((file) => {
+    vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: file });
+  });
+
+  return { context, localStorage };
+}
+
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -62,7 +87,14 @@ const enterprise = vehicles.find((vehicle) => vehicle.vehicleId === "enterprise-
 assert(vehicles.length >= 5, "Expected seeded vehicle list to include at least five vehicles.");
 assert(sprinter?.fuelType === "Diesel", "Expected Sprinter 488 to use Diesel.");
 assert(box16?.fuelType === "Regular", "Expected Box truck 16 ft to be a real Regular vehicle.");
+assert(sprinter?.category === "Van", "Expected Sprinter category Van.");
+assert(box16?.category === "Box Truck", "Expected Box truck 16 category Box Truck.");
+assert(box16?.passengerCapacity === 3, "Expected Box truck 16 passenger capacity 3.");
+assert(sprinter?.passengerCapacity === 2, "Expected Sprinter passenger capacity 2.");
+assert(box16?.mpg === 14, "Expected Box truck 16 business MPG 14.");
+assert(box16?.calculationMpg !== box16?.mpg, "Expected Box truck 16 calculationMpg to remain separate from business MPG.");
 assert(enterprise?.vehicleName === "Enterprise 26 ft", "Expected Enterprise 26 ft seed vehicle.");
+assert(enterprise?.mpg === 9.47 && enterprise?.passengerCapacity === 3, "Expected Enterprise business MPG 9.47 and passenger capacity 3.");
 assert(box16.volume === box16.capacityCuFt && box16.payload === box16.maxWeightLb, "Expected legacy volume/payload compatibility fields.");
 
 const editedVehicles = vehicles.map((vehicle) => (
@@ -96,16 +128,53 @@ assert(fallback.length >= 5, "Expected vehicle fallback to work without localSto
 const storedVehicles = JSON.parse(localStorage.getItem("vehicles"));
 assert(Array.isArray(storedVehicles) && storedVehicles.length >= 5, "Expected vehicles localStorage bucket to persist canonical vehicles.");
 
+const staleStoredVehicles = [{
+  vehicleId: "box-truck-16",
+  vehicleName: "Box truck 16 ft",
+  name: "Box truck 16 ft",
+  category: "Vehicle",
+  capacityCuFt: 800,
+  maxWeightLb: 4300,
+  fuelType: "Diesel",
+  mpg: 18.24907749,
+  passengerCapacity: 1,
+  maintenanceCostPerMile: 1.106,
+  active: false,
+}];
+const staleContext = loadContextWithStoredVehicles(staleStoredVehicles).context;
+const migratedBox16 = staleContext.window.PricingConfig.readVehicles().find((vehicle) => vehicle.vehicleId === "box-truck-16");
+assert(migratedBox16.fuelType === "Regular", "Expected stale Box truck 16 fuelType to migrate to Regular.");
+assert(migratedBox16.category === "Box Truck", "Expected stale Box truck 16 category to migrate to Box Truck.");
+assert(migratedBox16.passengerCapacity === 3, "Expected stale Box truck 16 passenger capacity to migrate to 3.");
+assert(migratedBox16.mpg === 14, "Expected stale Box truck 16 business MPG to migrate to 14.");
+assert(migratedBox16.calculationMpg !== migratedBox16.mpg, "Expected migrated Box truck 16 calculationMpg to stay separate.");
+assert(migratedBox16.active === false, "Expected stale active=false to be preserved during seed migration.");
+
 console.log(JSON.stringify({
   seededVehicles: vehicles.length,
   boxTruck16FuelType: box16.fuelType,
   sprinterFuelType: sprinter.fuelType,
+  sprinterCategory: sprinter.category,
+  sprinterPassengerCapacity: sprinter.passengerCapacity,
+  boxTruck16Category: box16.category,
+  boxTruck16PassengerCapacity: box16.passengerCapacity,
+  boxTruck16BusinessMpg: box16.mpg,
+  boxTruck16CalculationMpg: box16.calculationMpg,
+  enterpriseBusinessMpg: enterprise.mpg,
   activeAfterDeactivate: activeVehicles.length,
   editedBoxTruck16: {
     mpg: editedBox16.mpg,
     fuelType: editedBox16.fuelType,
   },
   fallbackVehicleCount: fallback.length,
+  migratedBoxTruck16: {
+    fuelType: migratedBox16.fuelType,
+    category: migratedBox16.category,
+    passengerCapacity: migratedBox16.passengerCapacity,
+    mpg: migratedBox16.mpg,
+    calculationMpg: migratedBox16.calculationMpg,
+    active: migratedBox16.active,
+  },
   calculationFinalPrice: result.totals.finalPrice,
   blankFinalPrice: blankResult.totals.finalPrice,
 }, null, 2));
