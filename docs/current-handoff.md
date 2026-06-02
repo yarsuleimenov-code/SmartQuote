@@ -6,8 +6,8 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` after References UX/data and encoding fixes.
-- Stage 5 workflow QA and handoff stabilization in progress in the current working tree.
+- `main` remote hash: `058c6cf8d1b8bbda2480fb7391b84918f4b89295`.
+- Stage 5 workflow QA and handoff stabilization completed.
 
 Implemented:
 
@@ -157,3 +157,51 @@ Recommended scope:
 3. Add visible storage health/status on My Drafts and My Estimates.
 4. Keep pricing formulas unchanged.
 5. Do not enable Save Variables until preview/versioning governance is ready.
+
+## Project Pause / Business Testing Handoff
+
+Pause date: June 2, 2026.
+
+Current remote `main` hash:
+
+- `058c6cf8d1b8bbda2480fb7391b84918f4b89295`
+
+Reason for pause:
+
+- The project is being handed to brokers / business users for primary business testing.
+
+Expected return to development:
+
+- In 5-6 calendar days.
+
+Ready now:
+
+- Broker flow has been checked.
+- Variables UI is runtime-driven.
+- Fuel Prices participate in calculation.
+- Vehicles are managed in References.
+- Estimate snapshot contains audit fields.
+- Stage 5 workflow smoke test has been added.
+
+Intentionally not enabled:
+
+- Save Variables.
+- Preview Before Save.
+- Full storage reliability / export-import.
+- Security/config refactor.
+- Backend migration.
+
+Known risks:
+
+- Browser visual QA was manual / limited.
+- localStorage remains the primary working storage.
+- `calculationMpg` temporarily preserves the UAT baseline.
+- Business feedback may change priorities.
+
+How to resume work:
+
+1. Collect feedback from brokers.
+2. Classify feedback as P0/P1/P2/P3.
+3. Fix broker flow blockers first.
+4. Do not enable new pricing features before feedback triage.
+5. Then move to Storage Reliability and Backup UX if feedback does not reveal more critical issues.
