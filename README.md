@@ -6,9 +6,25 @@ Hi-fi wireframe и visual technical specification для production-разраб
 
 ---
 
+# Current MVP Status
+
+The project has progressed beyond a static wireframe. It is currently a localStorage-based SmartQuote MVP for test-mode broker workflow validation.
+
+Current implemented baseline:
+
+- working broker quote flow from Quick Quote / Full Quote to Estimate Document;
+- local JavaScript pricing calculation aligned with accepted business test cases;
+- multiple local drafts and generated estimate snapshots;
+- Pricing Admin Google Sheets layer for audit / backup experiments;
+- runtime-driven Variables screen with Save Variables intentionally disabled;
+- Fuel Prices and runtime Vehicles participate in calculation;
+- backend migration, production security hardening, and governed Save Variables are not enabled yet.
+
+---
+
 # Важное предупреждение
 
-Этот репозиторий является **hi-fi wireframe / visual technical specification**, а не production-ready реализацией.
+Этот репозиторий является **test-mode MVP / visual technical specification**, а не production-ready реализацией.
 
 Текущий код используется для демонстрации:
 

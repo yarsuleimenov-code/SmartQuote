@@ -46,7 +46,11 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Primary calculation flow is accepted for current business assumptions.
 - `js/calculator.js` is treated as UAT-approved baseline and should not be changed during workflow or admin-screen work.
 - New broker adjustments should use `Special Labor Adjustment`: people x hours x hourly rate. Legacy `manualAdjustment` is preserved only for older draft/snapshot compatibility.
-- Quote Draft does not expose the special labor hourly rate; it remains an internal/CFO-approved value. `Item Ref. Price` is calculated read-only from the final quote amount split across billable item rows.
+- Quote Draft does not expose the special labor hourly rate; it remains an internal/CFO-approved value.
+- `Item Ref. Price` is a read-only allocation metric, not a pricing input and not an additional cost component.
+- Primary item allocation formula: `itemReferencePrice = totalQuoteAmount x (itemTotalWeight / orderTotalWeight)`.
+- If total order weight is `0`, fallback formula: `itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVolume)`.
+- If both total weight and effective volume are `0`, item reference price is `0`.
 - `My Drafts`, `My Estimates`, `Cost Breakdown`, and `Estimate Document` are linked to local snapshots.
 
 ## Next Business Handoff Priorities

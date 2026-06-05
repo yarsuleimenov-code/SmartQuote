@@ -6,8 +6,10 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` remote hash: `3065ff4f485e1a7e3a8253974076b4029d99c693`.
+- `main` / `HEAD` hash: `c0a7854360d7f7f51607ad05cef302506f648aa3`.
+- Commit: `Add labor-based adjustment and item unit economics`.
 - Stage 5 workflow QA and handoff stabilization completed.
+- After the pause handoff, a controlled business feedback sprint was completed.
 
 Implemented:
 
@@ -28,6 +30,11 @@ Implemented:
 - References Vehicles use business-facing fields while preserving compatibility fields.
 - Item Catalog seed data and References encoding were cleaned up.
 - Stage 5 workflow smoke test covers storage/snapshot/navigation basics.
+- `Special Labor Adjustment` replaces direct dollar `Manual Adjustment` for new broker adjustments.
+- Extra Labor Rate is hidden from broker UI and defaults to `$50/hour`.
+- `Item Ref. Price` is calculated as a unit economics allocation metric: weight-based first, effective-volume fallback.
+- `Effective $/cu ft` is shown in broker and admin contexts.
+- Broker summary hides Margin and Operational Cost; internal details remain in Cost Breakdown.
 
 ## Business Feedback Sprint
 
@@ -170,6 +177,7 @@ The mixed key model is intentional for the current MVP. Existing fallback/migrat
 - Google Sheets Pricing Admin layer exists as audit/backup, not as a required runtime dependency.
 - Security/config endpoint handling is intentionally simple for test MVP.
 - Browser visual QA may require manual review if Codex in-app browser runtime is unavailable.
+- `drafts.html`, `estimates.html`, and parts of `estimate-document.html` still contain mojibake / encoding issues. Treat this as a small UI cleanup task before a business demo or during Stage 6 if storage UX touches those screens.
 
 ## Known Risks
 
@@ -221,9 +229,10 @@ Admin quote management:
 
 Pause date: June 2, 2026.
 
-Current remote `main` hash:
+Current `main` / `HEAD` after post-pause controlled feedback sprint:
 
-- `058c6cf8d1b8bbda2480fb7391b84918f4b89295`
+- `c0a7854360d7f7f51607ad05cef302506f648aa3`
+- Commit: `Add labor-based adjustment and item unit economics`.
 
 Reason for pause:
 
@@ -241,6 +250,7 @@ Ready now:
 - Vehicles are managed in References.
 - Estimate snapshot contains audit fields.
 - Stage 5 workflow smoke test has been added.
+- Controlled feedback sprint has added labor-based adjustment, item unit economics allocation, and effective cost per cubic foot.
 
 Intentionally not enabled:
 
