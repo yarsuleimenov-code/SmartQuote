@@ -57,6 +57,16 @@
     `;
   }
 
+  function renderStorageWarning() {
+    const health = window.StorageBackup?.storageHealth?.();
+    if (!health?.corrupted?.length) return "";
+    return `
+      <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        Some local storage records are corrupted: ${escapeHtml(health.corrupted.join(", "))}. Export a backup before editing drafts.
+      </div>
+    `;
+  }
+
   function renderDrafts(drafts) {
     byId("draftCount").textContent = String(drafts.length);
     byId("draftRows").innerHTML = drafts.map((draft) => {
@@ -110,6 +120,7 @@
 
     byId("draftRows").querySelectorAll("[data-delete-draft]").forEach((button) => {
       button.addEventListener("click", () => {
+        if (!window.confirm("Delete this local draft? This cannot be undone unless you have a backup.")) return;
         window.CalculatorStorage.deleteDraft(button.dataset.deleteDraft);
         const updatedDrafts = window.CalculatorStorage.listDrafts();
         if (updatedDrafts.length) {
@@ -124,6 +135,8 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const drafts = window.CalculatorStorage.listDrafts();
+    const tableSection = byId("draftRows")?.closest("section");
+    if (tableSection) tableSection.insertAdjacentHTML("afterbegin", renderStorageWarning());
     if (drafts.length) {
       renderDrafts(drafts);
     } else {

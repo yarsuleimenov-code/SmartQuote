@@ -28,7 +28,7 @@
 
       <div>
         <p class="text-xs text-slate-400">
-          Zaberman LLC › Broker Calculator
+          Zaberman LLC > Broker Calculator
         </p>
 
         <h2 class="text-lg font-semibold text-slate-800">
@@ -76,6 +76,8 @@
         </div>
 
       </section>
+
+      <div id="storageBackupRoot"></div>
 
       <!-- FILTERS -->
       <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
@@ -135,12 +137,11 @@
 
               <div class="absolute hidden group-hover:block z-50 w-80 p-4 bg-white border border-slate-200 rounded-xl shadow-xl text-xs text-slate-600 left-0 top-6">
                 <p>
-                  <b>Назначение:</b> список сохранённых черновиков quote.
+                  <b>Purpose:</b> list of saved quote drafts.
                 </p>
 
                 <p class="mt-2">
-                  Брокер может открыть draft, продолжить редактирование,
-                  создать копию или удалить устаревший черновик.
+                  A broker can open a draft, continue editing, create a copy, or delete an outdated local draft.
                 </p>
               </div>
             </div>
@@ -221,45 +222,43 @@
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">
-                Цель страницы
+                Purpose
               </h4>
 
               <p>
-                My Drafts используется для хранения и продолжения работы с quote,
-                которые ещё не были отправлены клиенту.
+                My Drafts stores quote drafts that have not yet been sent to the customer.
               </p>
 
               <p class="mt-2">
-                Это снижает риск потери расчётов и позволяет брокеру возвращаться
-                к незавершённым заявкам без повторного заполнения данных.
+                This reduces the risk of losing work and lets a broker continue an unfinished lead without re-entering data.
               </p>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">
-                Основной сценарий
+                Main Workflow
               </h4>
 
               <ul class="list-disc ml-5 space-y-2">
-                <li>Брокер начал quote, но не завершил отправку estimate.</li>
-                <li>Система автоматически сохранила draft.</li>
-                <li>Брокер открывает My Drafts.</li>
-                <li>Выбирает нужный draft.</li>
-                <li>Продолжает редактирование на основном экране калькулятора.</li>
+                <li>A broker started a quote but did not generate the final estimate.</li>
+                <li>The system saved the draft locally.</li>
+                <li>The broker opens My Drafts.</li>
+                <li>The broker selects the needed draft.</li>
+                <li>The broker continues editing on the main calculator screen.</li>
               </ul>
             </div>
 
             <div>
               <h4 class="font-semibold text-slate-800 mb-2">
-                Будущая логика
+                Future Logic
               </h4>
 
               <ul class="list-disc ml-5 space-y-2">
-                <li>Auto-save каждые 15–30 секунд.</li>
-                <li>Version history для отправленных estimate.</li>
-                <li>Draft ownership по брокеру.</li>
-                <li>Duplicate draft для похожих заказов.</li>
-                <li>Soft delete вместо полного удаления.</li>
+                <li>Auto-save every 15-30 seconds.</li>
+                <li>Version history for generated estimates.</li>
+                <li>Draft ownership by broker.</li>
+                <li>Duplicate draft for similar orders.</li>
+                <li>Soft delete instead of permanent deletion.</li>
               </ul>
             </div>
 
@@ -291,6 +290,7 @@
 <script src="js/pricingConfig.js"></script>
 <script src="js/calculator.js"></script>
 <script src="js/storage.js"></script>
+<script src="js/storageBackup.js"></script>
 <script src="js/drafts.js"></script>
 <script src="sidebar.js"></script>
 </body>

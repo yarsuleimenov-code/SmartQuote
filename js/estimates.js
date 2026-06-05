@@ -93,6 +93,16 @@
     `;
   }
 
+  function renderStorageWarning() {
+    const health = window.StorageBackup?.storageHealth?.();
+    if (!health?.corrupted?.length) return "";
+    return `
+      <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        Some local storage records are corrupted: ${escapeHtml(health.corrupted.join(", "))}. Export a backup before updating estimate statuses.
+      </div>
+    `;
+  }
+
   function searchableText(snapshot) {
     const quote = snapshot.quote || {};
     const result = snapshot.result || {};
@@ -248,6 +258,7 @@
 
     byId("estimateRows").querySelectorAll("[data-delete-estimate]").forEach((button) => {
       button.addEventListener("click", () => {
+        if (!window.confirm("Delete this local estimate snapshot? This cannot be undone unless you have a backup.")) return;
         window.CalculatorStorage.deleteEstimateSnapshot(button.dataset.deleteEstimate);
         allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
         renderCurrentView();
@@ -274,6 +285,8 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     bindFilters();
+    const tableSection = byId("estimateRows")?.closest("section");
+    if (tableSection) tableSection.insertAdjacentHTML("afterbegin", renderStorageWarning());
     allSnapshots = window.CalculatorStorage.listEstimateSnapshots();
     renderCurrentView();
     if (window.lucide) lucide.createIcons();

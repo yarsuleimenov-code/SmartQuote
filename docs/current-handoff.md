@@ -35,6 +35,7 @@ Implemented:
 - `Item Ref. Price` is calculated as a unit economics allocation metric: weight-based first, effective-volume fallback.
 - `Effective $/cu ft` is shown in broker and admin contexts.
 - Broker summary hides Margin and Operational Cost; internal details remain in Cost Breakdown.
+- Stage 6 Storage Reliability MVP adds local JSON backup/export-import for broker storage buckets.
 
 ## Business Feedback Sprint
 
@@ -168,6 +169,16 @@ Calculator workflow keys:
 
 The mixed key model is intentional for the current MVP. Existing fallback/migration paths keep empty or stale storage from breaking the UI. Consolidation can wait until the storage reliability stage.
 
+Stage 6 Storage Reliability MVP:
+
+- `js/storageBackup.js` exports selected localStorage keys into a JSON backup file.
+- Backup includes `backupVersion`, `exportedAt`, `appCheckpoint`, and raw storage payload.
+- Import validates the JSON file before writing.
+- Invalid imports are rejected without overwriting current data.
+- Before a valid import, the current local storage payload is saved to `zaberman-storage-preimport-backup`.
+- Backup UI is available on `drafts.html` and `estimates.html`.
+- `docs/storage-reliability-audit.md` documents current keys, risks, and decisions.
+
 ## Intentional Limits
 
 - Save Variables is disabled intentionally.
@@ -177,7 +188,7 @@ The mixed key model is intentional for the current MVP. Existing fallback/migrat
 - Google Sheets Pricing Admin layer exists as audit/backup, not as a required runtime dependency.
 - Security/config endpoint handling is intentionally simple for test MVP.
 - Browser visual QA may require manual review if Codex in-app browser runtime is unavailable.
-- `drafts.html`, `estimates.html`, and parts of `estimate-document.html` still contain mojibake / encoding issues. Treat this as a small UI cleanup task before a business demo or during Stage 6 if storage UX touches those screens.
+- Drafts / Estimates / Estimate Document encoding cleanup was completed after Stage 6 visual review; keep future UI helper text in English or ASCII-safe copy when practical.
 
 ## Known Risks
 
@@ -186,17 +197,19 @@ The mixed key model is intentional for the current MVP. Existing fallback/migrat
 - `calculationMpg` must be reconciled with business MPG before production governance.
 - Drafts are live recalculations, so old drafts can change if variables are changed later.
 - Estimate snapshots are frozen and should be used for customer-facing documents.
+- Backup/import is manual and browser-local; users still need to export backups regularly.
+- Pre-import backup is local only and can also be lost if browser storage is cleared.
 
 ## Next Recommended Stage
 
-Recommended next stage: Storage Reliability and Backup UX.
+Current stage: Stage 6 Storage Reliability and Backup UX MVP.
 
 Business reason:
 
 - The calculator is now calculation-stable and workflow-smoke-stable.
 - The next risk is accidental local data loss, not pricing logic.
 
-Recommended scope:
+Implemented scope:
 
 1. Export all drafts/estimates/pricing admin buckets to a JSON backup.
 2. Import backup with validation and clear user warnings.

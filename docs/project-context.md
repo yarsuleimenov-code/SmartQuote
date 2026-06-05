@@ -37,6 +37,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - UI for Full Quote is in `index.html` and `js/ui.js`.
 - Quick Quote logic is in `quick-quote.html` and `js/quickQuote.js`.
 - Local/browser storage is used for multiple drafts and generated estimate snapshots; Google Sheets integration exists through Apps Script endpoint.
+- Stage 6 adds a local JSON backup/export-import MVP for drafts, estimates, runtime pricing buckets, and current selection keys.
 - Generated estimate snapshots include `formulaVersion` and `variablesSnapshot`.
 - `variables.html` and `references.html` are intentionally read-only until interactive Pricing Engine governance is finished.
 - `formulas.html` is documentation only, not an executable pricing engine.
@@ -52,14 +53,15 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - If total order weight is `0`, fallback formula: `itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVolume)`.
 - If both total weight and effective volume are `0`, item reference price is `0`.
 - `My Drafts`, `My Estimates`, `Cost Breakdown`, and `Estimate Document` are linked to local snapshots.
+- `My Drafts` and `My Estimates` include compact Storage / Backup controls and local storage health warnings.
 
 ## Next Business Handoff Priorities
 
 1. Interactive Variables MVP with a limited safe variable set.
 2. Variables impact preview against accepted benchmark cases before saving.
-3. Export/import local backup for drafts and estimates.
-4. Final broker flow QA from Quick Quote to Estimate Document.
-5. Google Sheets backup/audit stabilization.
+3. Final broker flow QA from Quick Quote to Estimate Document.
+4. Google Sheets backup/audit stabilization.
+5. Plan backend/shared storage only after business testing confirms the broker flow.
 
 ## Work Style
 
