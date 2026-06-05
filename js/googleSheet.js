@@ -8,8 +8,9 @@
     const timestamp = new Date().toISOString();
     const quoteId = quote.quoteId || quote.estimateId || `QUOTE-${Date.now()}`;
     const estimateId = quote.estimateId || quoteId;
-    const manualAdjustment = result.totals.manualAdjustment || 0;
-    const displayedAdditionalCharges = (result.totals.additionalCharges || 0) + manualAdjustment;
+    const legacyManualAdjustment = result.totals.manualAdjustment || 0;
+    const extraLaborCost = result.totals.extraLaborCost || 0;
+    const displayedAdditionalCharges = (result.totals.additionalCharges || 0) + legacyManualAdjustment + extraLaborCost;
     return {
       schema_version: 1,
       source: "zaberman-calculator-local",
@@ -46,6 +47,11 @@
         labor_cost: result.totals.laborCost,
         additional_charges: displayedAdditionalCharges,
         calculated_additional_charges: result.totals.additionalCharges,
+        extra_labor_cost: extraLaborCost,
+        extra_labor_people: result.totals.extraLaborPeople || 0,
+        extra_labor_hours: result.totals.extraLaborHours || 0,
+        extra_labor_rate: result.totals.extraLaborRate || 0,
+        effective_cost_per_cu_ft: result.totals.effectiveCostPerCuFt || 0,
         packaging: result.totals.packaging,
         storage: result.totals.storage,
         insurance: result.totals.insurance,
@@ -60,7 +66,14 @@
       required_crew: result.requiredCrew || 0,
       warnings: result.warnings || [],
       protection_plan: result.totals.insurance > 0 ? "Full Coverage" : "Basic Liability",
-      manual_adjustment: manualAdjustment,
+      manual_adjustment: legacyManualAdjustment,
+      legacy_manual_adjustment: legacyManualAdjustment,
+      extra_labor: {
+        people: result.totals.extraLaborPeople || 0,
+        hours: result.totals.extraLaborHours || 0,
+        rate: result.totals.extraLaborRate || 0,
+        cost: extraLaborCost,
+      },
       formula_version: window.CalculatorVariables?.formulaVersion || "unknown",
       variables_snapshot: window.PricingConfig?.snapshot?.() || null,
       notes: quote.options?.notes || "",

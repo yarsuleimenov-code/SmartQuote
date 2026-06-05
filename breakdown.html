@@ -138,8 +138,9 @@
                     <tr><td class="px-4 py-3 font-medium text-slate-800">Coverage</td><td class="px-4 py-3 text-slate-500">Selected protection cost, included in operational calculation when applicable</td><td id="bdInsurance" class="px-4 py-3 text-right font-semibold">$0</td></tr>
                     <tr><td class="px-4 py-3 font-medium text-slate-800">Access Fees</td><td class="px-4 py-3 text-slate-500">COI, stairs, long carry, narrow access</td><td id="bdAccessFees" class="px-4 py-3 text-right font-semibold">$0</td></tr>
                     <tr><td class="px-4 py-3 font-medium text-slate-800">Priority / Options</td><td class="px-4 py-3 text-slate-500">Priority date and order-level options</td><td id="bdOptionFees" class="px-4 py-3 text-right font-semibold">$0</td></tr>
-                    <tr><td class="px-4 py-3 font-medium text-slate-800">Manual Adjustment</td><td class="px-4 py-3 text-slate-500">Manager-approved additional charge for costs not covered by pricing variables</td><td id="bdManualAdjustment" class="px-4 py-3 text-right font-semibold">$0</td></tr>
-                    <tr class="bg-slate-50"><td class="px-4 py-3 font-bold text-slate-800">Additional Charges Total</td><td class="px-4 py-3 text-slate-500">Additional charges including manual adjustment before final rounding</td><td id="bdAdditionalTotal" class="px-4 py-3 text-right font-bold">$0</td></tr>
+                    <tr><td class="px-4 py-3 font-medium text-slate-800">Special Labor</td><td id="bdSpecialLaborFormula" class="px-4 py-3 text-slate-500">Extra labor people x hours x rate</td><td id="bdSpecialLabor" class="px-4 py-3 text-right font-semibold">$0</td></tr>
+                    <tr><td class="px-4 py-3 font-medium text-slate-800">Legacy Manual Adjustment</td><td class="px-4 py-3 text-slate-500">Read-only compatibility for older drafts</td><td id="bdManualAdjustment" class="px-4 py-3 text-right font-semibold">$0</td></tr>
+                    <tr class="bg-slate-50"><td class="px-4 py-3 font-bold text-slate-800">Additional Charges Total</td><td class="px-4 py-3 text-slate-500">Additional charges including special labor and legacy adjustment before final rounding</td><td id="bdAdditionalTotal" class="px-4 py-3 text-right font-bold">$0</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -156,6 +157,7 @@
                       <th class="text-right px-4 py-3">Volume</th>
                       <th class="text-right px-4 py-3">Effective Volume</th>
                       <th class="text-right px-4 py-3">Weight</th>
+                      <th class="text-right px-4 py-3">Item Ref. Price</th>
                       <th class="text-left px-4 py-3">Warning</th>
                     </tr>
                   </thead>
@@ -179,9 +181,10 @@
                   <code class="block mt-2 text-xs text-slate-600">CEILING(Raw Price, 10)</code>
                   <p id="bdRoundedFormula" class="text-xs text-slate-500 mt-2">-</p>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
                   <div class="bg-slate-50 border border-slate-200 rounded-lg p-3"><p class="text-xs text-slate-400">Effective Volume</p><p id="bdEffectiveVolume" class="text-lg font-bold text-slate-800">0</p></div>
                   <div class="bg-slate-50 border border-slate-200 rounded-lg p-3"><p class="text-xs text-slate-400">Total Weight</p><p id="bdTotalWeight" class="text-lg font-bold text-slate-800">0</p></div>
+                  <div class="bg-slate-50 border border-slate-200 rounded-lg p-3"><p class="text-xs text-slate-400">Effective Cost per Cubic Foot</p><p id="bdEffectiveCostPerCuFt" class="text-lg font-bold text-slate-800">$0</p></div>
                 </div>
                 <div>
                   <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">Warnings</p>

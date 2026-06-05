@@ -25,6 +25,9 @@
       deliveryType: "Consolidated Route",
       requestedDate: "",
       manualAdjustment: 0,
+      extraLaborPeople: 0,
+      extraLaborHours: 0,
+      extraLaborRate: 50,
       notes: "",
     },
     items: [
@@ -74,6 +77,9 @@
       deliveryType: "Consolidated Route",
       requestedDate: "",
       manualAdjustment: 0,
+      extraLaborPeople: 0,
+      extraLaborHours: 0,
+      extraLaborRate: 50,
       notes: "",
     },
     items: [

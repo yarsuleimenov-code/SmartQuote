@@ -149,10 +149,11 @@
             <td class="px-4 py-3 text-right">${Number(item.volume || 0).toFixed(1)} cu ft</td>
             <td class="px-4 py-3 text-right">${Math.ceil(Number(item.effectiveVolume || 0))} cu ft</td>
             <td class="px-4 py-3 text-right">${Number(item.totalWeight || 0).toFixed(0)} lb</td>
+            <td class="px-4 py-3 text-right">${currency(item.itemReferencePrice || 0)}</td>
             <td class="px-4 py-3 ${item.warning && item.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${escapeHtml(item.warning || "OK")}</td>
           </tr>
         `).join("")
-      : `<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400">No billable items in this quote.</td></tr>`;
+      : `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400">No billable items in this quote.</td></tr>`;
   }
 
   function renderWarnings(warnings) {
@@ -164,7 +165,7 @@
   function renderBreakdown({ source, sourceType, recordId, quote, result, estimateId }) {
     const totals = result.totals;
     const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
-    const displayedAdditionalCharges = Number(totals.additionalCharges || 0) + Number(totals.manualAdjustment || 0);
+    const displayedAdditionalCharges = Number(totals.additionalCharges || 0) + Number(totals.manualAdjustment || 0) + Number(totals.extraLaborCost || 0);
     byId("bdSourceType").value = sourceType || "estimate";
     const selectedRecordId = populateRecordSelect(sourceType || "estimate", recordId);
     byId("bdRecordSelect").value = selectedRecordId || "";
@@ -188,10 +189,16 @@
     setText("bdInsurance", currency(totals.insurance));
     setText("bdAccessFees", currency(totals.accessFees));
     setText("bdOptionFees", currency(totals.optionFees));
+    setText("bdSpecialLabor", currency(totals.extraLaborCost));
+    setText(
+      "bdSpecialLaborFormula",
+      `${totals.extraLaborPeople || 0} people x ${totals.extraLaborHours || 0} hours x ${currency(totals.extraLaborRate || 0)}/hour`
+    );
     setText("bdManualAdjustment", currency(totals.manualAdjustment));
     setText("bdAdditionalTotal", currency(displayedAdditionalCharges));
     setText("bdEffectiveVolume", `${Math.ceil(Number(totals.effectiveVolume || 0))} cu ft`);
     setText("bdTotalWeight", `${Number(totals.totalWeight || 0).toFixed(0)} lb`);
+    setText("bdEffectiveCostPerCuFt", totals.totalVolume > 0 ? currency(totals.effectiveCostPerCuFt) : "N/A");
     setText(
       "bdRawFormula",
       `${currency(totals.operationalCost)} + ${currency(displayedAdditionalCharges)} + ${currency(totals.margin)} = ${currency(totals.rawPrice)}`

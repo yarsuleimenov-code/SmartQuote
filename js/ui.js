@@ -38,7 +38,7 @@
         "pickupZip", "deliveryZip", "pickupAddress", "deliveryAddress",
         "pickupAddressType", "deliveryAddressType", "pickupFloor", "deliveryFloor",
         "pickupLongCarry", "deliveryLongCarry", "pickupCrew", "deliveryCrew", "helperRequirement", "deliveryType",
-        "requestedDate", "manualAdjustment", "notes",
+        "requestedDate", "extraLaborPeople", "extraLaborHours", "notes",
       ].forEach((id) => {
         fields[id] = byId(id);
       });
@@ -64,8 +64,17 @@
       fields.helperRequirement.value = quote.options.helperRequirement || "Auto";
       fields.deliveryType.value = quote.options.deliveryType || "Consolidated Route";
       fields.requestedDate.value = quote.options.requestedDate || "";
-      fields.manualAdjustment.value = quote.options.manualAdjustment || 0;
+      fields.extraLaborPeople.value = quote.options.extraLaborPeople || 0;
+      fields.extraLaborHours.value = quote.options.extraLaborHours || 0;
       fields.notes.value = quote.options.notes || "";
+      const legacyNote = byId("legacyManualAdjustmentNote");
+      const legacyManualAdjustment = number(quote.options.manualAdjustment);
+      if (legacyNote) {
+        legacyNote.classList.toggle("hidden", legacyManualAdjustment <= 0);
+        legacyNote.textContent = legacyManualAdjustment > 0
+          ? `Legacy manual adjustment ${currency(legacyManualAdjustment)} is preserved from an older draft. New adjustments should use special labor fields.`
+          : "";
+      }
 
       ["pickupCoi", "pickupStairs", "pickupElevatorUnavailable", "pickupNarrowAccess"].forEach((id) => {
         byId(id).checked = Boolean(quote.access.pickup[id.replace("pickup", "").charAt(0).toLowerCase() + id.replace("pickup", "").slice(1)]);
@@ -112,13 +121,17 @@
           crew: number(fields.deliveryCrew.value),
         },
       };
+      const legacyManualAdjustment = number(quote.options?.manualAdjustment);
       quote.options = {
         exclusiveDelivery: byId("exclusiveDelivery").checked,
         priorityDate: byId("priorityDate").checked,
         helperRequirement: fields.helperRequirement.value,
         deliveryType: fields.deliveryType.value,
         requestedDate: fields.requestedDate.value,
-        manualAdjustment: number(fields.manualAdjustment.value),
+        extraLaborPeople: number(fields.extraLaborPeople.value),
+        extraLaborHours: number(fields.extraLaborHours.value),
+        extraLaborRate: quote.options?.extraLaborRate === undefined ? 50 : number(quote.options.extraLaborRate),
+        manualAdjustment: legacyManualAdjustment,
         notes: fields.notes.value.trim(),
       };
     }
@@ -207,9 +220,13 @@
                 <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
                 <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />N-stack</label>
                 <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
-                <label class="col-span-5">
+                <label class="col-span-3">
                   <span class="text-xs text-slate-400">Comment</span>
                   <input data-field="comment" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white" value="${escapeHtml(item.comment)}" />
+                </label>
+                <label class="col-span-2">
+                  <span class="text-xs text-slate-400">Item Ref. Price</span>
+                  <span data-computed="itemReferencePrice" class="mt-1 flex h-[38px] items-center rounded-lg border border-slate-200 bg-slate-50 px-2 font-semibold text-slate-700">${currency(computed.itemReferencePrice || 0)}</span>
                 </label>
               </div>
             </td>
@@ -234,7 +251,6 @@
     }
 
     function updateSummary() {
-      const displayedAdditionalCharges = result.totals.additionalCharges + result.totals.manualAdjustment;
       byId("routeStatus").textContent = result.routeSupported ? "Route Ready" : "Unsupported ZIP";
       byId("routeStatus").className = result.routeSupported
         ? "px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold"
@@ -247,17 +263,20 @@
         ? `P ${result.crew.pickup} / D ${result.crew.delivery}`
         : "0";
       byId("finalPrice").textContent = currency(result.totals.finalPrice);
-      byId("marginAmount").textContent = `Margin ${currency(result.totals.margin)}`;
-      byId("operationalCost").textContent = currency(result.totals.operationalCost);
-      byId("additionalCharges").textContent = currency(displayedAdditionalCharges);
-      byId("margin").textContent = currency(result.totals.margin);
-      byId("rawPrice").textContent = currency(result.totals.rawPrice);
-      byId("roundingDelta").textContent = currency(result.totals.roundingDelta);
-      byId("packagingCost").textContent = currency(result.totals.packaging);
-      byId("storageCost").textContent = currency(result.totals.storage);
-      byId("insuranceCost").textContent = currency(result.totals.insurance);
-      byId("accessFees").textContent = currency(result.totals.accessFees);
-      byId("optionFees").textContent = currency(result.totals.optionFees);
+      byId("summaryFinalPrice").textContent = currency(result.totals.finalPrice);
+      byId("summaryTotalVolume").textContent = `${result.totals.totalVolume.toFixed(1)} cu ft`;
+      byId("summaryTotalWeight").textContent = `${result.totals.totalWeight.toFixed(0)} lb`;
+      byId("effectiveCostSummary").textContent = `Effective $/cu ft ${currency(result.totals.effectiveCostPerCuFt)}`;
+      byId("effectiveCostPerCuFt").textContent = result.totals.totalVolume > 0 ? currency(result.totals.effectiveCostPerCuFt) : "N/A";
+      byId("summaryExtraLaborHours").textContent = `${result.totals.extraLaborHours || 0}`;
+      byId("summaryExtraLaborCost").textContent = currency(result.totals.extraLaborCost);
+      byId("extraLaborCostPreview").textContent = currency(result.totals.extraLaborCost);
+      byId("summaryRoute").textContent = `${result.pickupZone} -> ${result.deliveryZone}`;
+      byId("summaryVehicle").textContent = result.vehicle.name;
+      byId("summaryCrew").textContent = result.requiredCrew
+        ? `P ${result.crew.pickup} / D ${result.crew.delivery}`
+        : "0";
+      byId("summarySpecialHandling").textContent = currency(result.totals.extraLaborCost);
       byId("effectiveVolume").textContent = `${Math.ceil(result.totals.effectiveVolume || 0)} cu ft`;
       byId("totalVolume").textContent = `${result.totals.totalVolume.toFixed(1)} cu ft`;
       byId("totalWeight").textContent = `${result.totals.totalWeight.toFixed(0)} lb`;
@@ -278,6 +297,11 @@
         validUntil: validUntil.toISOString(),
         estimateId: quote.estimateId || "EST-291",
         status: "generated",
+        extraLaborPeople: result.totals.extraLaborPeople,
+        extraLaborHours: result.totals.extraLaborHours,
+        extraLaborRate: result.totals.extraLaborRate,
+        extraLaborCost: result.totals.extraLaborCost,
+        effectiveCostPerCuFt: result.totals.effectiveCostPerCuFt,
         quote: JSON.parse(JSON.stringify(quote)),
         result: JSON.parse(JSON.stringify(result)),
       };
@@ -290,8 +314,10 @@
         const effectiveVolume = itemRows.map((row) => row.querySelector('[data-computed="effectiveVolume"]')).find(Boolean);
         const totalWeight = itemRows.map((row) => row.querySelector('[data-computed="totalWeight"]')).find(Boolean);
         const warning = itemRows.map((row) => row.querySelector('[data-computed="warning"]')).find(Boolean);
+        const itemReferencePrice = itemRows.map((row) => row.querySelector('[data-computed="itemReferencePrice"]')).find(Boolean);
         if (effectiveVolume) effectiveVolume.textContent = item.effectiveVolume || 0;
         if (totalWeight) totalWeight.textContent = item.totalWeight || 0;
+        if (itemReferencePrice) itemReferencePrice.textContent = currency(item.itemReferencePrice || 0);
         if (!warning) return;
         warning.textContent = item.warning || "OK";
         warning.className = item.warning && item.warning !== "OK" ? "text-amber-700" : "text-green-700";

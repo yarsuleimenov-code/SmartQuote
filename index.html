@@ -186,30 +186,47 @@
 
             <section class="bg-white rounded-lg border border-slate-200 p-5">
               <h3 class="font-bold text-slate-800 mb-4">Quote Options</h3>
-              <div class="grid grid-cols-3 gap-4 text-sm">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="exclusiveDelivery" data-recalculate type="checkbox" class="accent-teal-500" />Exclusive delivery</label>
                 <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="priorityDate" data-recalculate type="checkbox" class="accent-teal-500" />Priority date</label>
-                <label>
-                  <span class="text-xs text-slate-400">Manual adjustment</span>
-                  <input id="manualAdjustment" data-recalculate type="number" class="mt-1 w-full border rounded-lg px-3 py-2" />
-                </label>
+                <div class="md:col-span-3 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2">
+                  <div class="grid grid-cols-12 gap-3 items-end">
+                    <div class="col-span-4">
+                      <p class="font-semibold text-slate-800">Special Labor Adjustment</p>
+                      <p class="text-xs text-slate-500 mt-1">Extra labor / special handling time</p>
+                    </div>
+                    <label class="col-span-3">
+                      <span class="text-xs text-slate-400">Extra Labor People</span>
+                      <input id="extraLaborPeople" data-recalculate type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white" />
+                    </label>
+                    <label class="col-span-3">
+                      <span class="text-xs text-slate-400">Extra Labor Hours</span>
+                      <input id="extraLaborHours" data-recalculate type="number" min="0" step="0.25" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white" />
+                    </label>
+                    <div class="col-span-2 text-right">
+                      <p class="text-xs text-slate-400">Extra Labor Cost</p>
+                      <p id="extraLaborCostPreview" class="text-lg font-bold text-amber-700">$0</p>
+                    </div>
+                  </div>
+                  <p id="legacyManualAdjustmentNote" class="hidden mt-2 text-xs text-amber-700"></p>
+                </div>
                 <label>
                   <span class="text-xs text-slate-400">Helper Requirement</span>
-                  <select id="helperRequirement" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
+                  <select id="helperRequirement" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2 bg-white">
                     <option>Auto</option><option>1 helper</option><option>2 helpers</option><option>3 helpers</option>
                   </select>
                 </label>
                 <label>
                   <span class="text-xs text-slate-400">Delivery Type</span>
-                  <select id="deliveryType" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
+                  <select id="deliveryType" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2 bg-white">
                     <option>Consolidated Route</option><option>Exclusive Delivery</option>
                   </select>
                 </label>
                 <label>
                   <span class="text-xs text-slate-400">Requested Date</span>
-                  <input id="requestedDate" data-recalculate type="date" class="mt-1 w-full border rounded-lg px-3 py-2" />
+                  <input id="requestedDate" data-recalculate type="date" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white" />
                 </label>
-                <label class="col-span-3">
+                <label class="md:col-span-3">
                   <span class="text-xs text-slate-400">Notes</span>
                   <textarea id="notes" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2" rows="3"></textarea>
                 </label>
@@ -234,7 +251,7 @@
                 <div class="flex items-end justify-between mt-2">
                   <h2 id="finalPrice" class="text-5xl font-bold text-slate-800">$0</h2>
                   <div class="text-right text-sm">
-                    <p id="marginAmount" class="text-green-600 font-semibold">Margin $0</p>
+                    <p id="effectiveCostSummary" class="text-teal-700 font-semibold">Effective $/cu ft $0</p>
                     <p class="text-slate-400">Rounded up to $10</p>
                   </div>
                 </div>
@@ -242,24 +259,24 @@
 
               <div class="p-5 space-y-5">
                 <div>
-                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-3">Price Structure</p>
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-3">Broker Summary</p>
                   <div class="space-y-2 text-sm">
-                    <div class="flex justify-between"><span>Operational Cost</span><span id="operationalCost" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Additional Charges</span><span id="additionalCharges" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Margin</span><span id="margin" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Raw Price</span><span id="rawPrice" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Rounding Delta</span><span id="roundingDelta" class="font-semibold text-teal-600">$0</span></div>
+                    <div class="flex justify-between"><span>Total Price</span><span id="summaryFinalPrice" class="font-semibold">$0</span></div>
+                    <div class="flex justify-between"><span>Total Volume</span><span id="summaryTotalVolume" class="font-semibold">0 cu ft</span></div>
+                    <div class="flex justify-between"><span>Total Weight</span><span id="summaryTotalWeight" class="font-semibold">0 lb</span></div>
+                    <div class="flex justify-between"><span>Effective $/cu ft</span><span id="effectiveCostPerCuFt" class="font-semibold">$0</span></div>
+                    <div class="flex justify-between"><span>Extra Labor Hours</span><span id="summaryExtraLaborHours" class="font-semibold">0</span></div>
+                    <div class="flex justify-between"><span>Extra Labor Cost</span><span id="summaryExtraLaborCost" class="font-semibold">$0</span></div>
                   </div>
                 </div>
 
                 <div class="pt-4 border-t border-slate-200">
-                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-3">Cost Components</p>
+                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-3">Customer Conversation</p>
                   <div class="space-y-2 text-sm">
-                    <div class="flex justify-between"><span>Packaging / Handling</span><span id="packagingCost" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Storage</span><span id="storageCost" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Coverage</span><span id="insuranceCost" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Access Fees</span><span id="accessFees" class="font-semibold">$0</span></div>
-                    <div class="flex justify-between"><span>Priority/Options</span><span id="optionFees" class="font-semibold">$0</span></div>
+                    <div class="flex justify-between"><span>Route</span><span id="summaryRoute" class="font-semibold">-</span></div>
+                    <div class="flex justify-between"><span>Vehicle Fit</span><span id="summaryVehicle" class="font-semibold">-</span></div>
+                    <div class="flex justify-between"><span>Required Crew</span><span id="summaryCrew" class="font-semibold">0</span></div>
+                    <div class="flex justify-between"><span>Special Handling</span><span id="summarySpecialHandling" class="font-semibold">$0</span></div>
                   </div>
                 </div>
 

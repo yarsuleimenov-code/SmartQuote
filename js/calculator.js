@@ -134,6 +134,22 @@
     return crew > 0 ? crew : null;
   }
 
+  function specialLaborAdjustment(options = {}) {
+    const extraLaborPeople = Math.max(0, number(options.extraLaborPeople));
+    const extraLaborHours = Math.max(0, number(options.extraLaborHours));
+    const extraLaborRate = Math.max(0, options.extraLaborRate === undefined || options.extraLaborRate === "" ? 50 : number(options.extraLaborRate));
+    const extraLaborCost = extraLaborPeople > 0 && extraLaborHours > 0
+      ? extraLaborPeople * extraLaborHours * extraLaborRate
+      : 0;
+    return {
+      extraLaborPeople,
+      extraLaborHours,
+      extraLaborRate,
+      extraLaborCost,
+      legacyManualAdjustment: Math.max(0, number(options.manualAdjustment)),
+    };
+  }
+
   function pickupLoadingMinutes(volume) {
     const settings = window.CalculatorVariables.settings;
     if (volume < settings.loadingVolumeThresholdCuFt) {
@@ -258,17 +274,32 @@
     const brokeredPrice = selectedCosts ? selectedCosts.priceExcludingBrokerFee / (1 - settings.brokerFeeRate) : 0;
     const operationalCost = quote.options.exclusiveDelivery ? excelServiceCost * settings.exclusiveDeliveryMultiplier : excelServiceCost;
     const additionalCharges = storage + accessFees + optionFees;
-    const rawPrice = hasBillableItems ? brokeredPrice + additionalCharges + number(quote.options.manualAdjustment) : 0;
-    const margin = Math.max(0, rawPrice - operationalCost - additionalCharges - number(quote.options.manualAdjustment));
+    const specialLabor = specialLaborAdjustment(quote.options);
+    const appliedExtraLaborCost = hasBillableItems ? specialLabor.extraLaborCost : 0;
+    const appliedLegacyManualAdjustment = hasBillableItems ? specialLabor.legacyManualAdjustment : 0;
+    const quoteAdjustment = appliedExtraLaborCost + appliedLegacyManualAdjustment;
+    const rawPrice = hasBillableItems ? brokeredPrice + additionalCharges + quoteAdjustment : 0;
+    const margin = Math.max(0, rawPrice - operationalCost - additionalCharges - quoteAdjustment);
     const finalPrice = hasBillableItems ? roundUp(rawPrice, settings.rounding) : 0;
     const roundingDelta = finalPrice - rawPrice;
+    const effectiveCostPerCuFt = hasBillableItems && totalVolume > 0 ? finalPrice / totalVolume : 0;
+    const itemReferenceAllocationMethod = totalWeight > 0 ? "weight" : effectiveVolume > 0 ? "effectiveVolume" : "none";
+    const pricedItems = calculatedItems.map((item) => ({
+      ...item,
+      itemReferencePrice: money(itemReferenceAllocationMethod === "weight"
+        ? finalPrice * (item.totalWeight / totalWeight)
+        : itemReferenceAllocationMethod === "effectiveVolume"
+          ? finalPrice * (item.effectiveVolume / effectiveVolume)
+          : 0),
+      itemReferenceAllocationMethod,
+    }));
 
     return {
       pickupZone,
       deliveryZone,
       routeSupported: Boolean(distance),
       distance: distance || 0,
-      items: calculatedItems,
+      items: pricedItems,
       vehicle,
       requiredCrew,
       crew: {
@@ -290,7 +321,14 @@
         accessFees: money(accessFees),
         optionFees: money(optionFees),
         margin: money(margin),
-        manualAdjustment: money(number(quote.options.manualAdjustment)),
+        manualAdjustment: money(appliedLegacyManualAdjustment),
+        legacyManualAdjustment: money(appliedLegacyManualAdjustment),
+        extraLaborPeople: specialLabor.extraLaborPeople,
+        extraLaborHours: money(specialLabor.extraLaborHours),
+        extraLaborRate: money(specialLabor.extraLaborRate),
+        extraLaborCost: money(appliedExtraLaborCost),
+        effectiveCostPerCuFt: money(effectiveCostPerCuFt),
+        itemReferenceAllocationMethod,
         rawPrice: money(rawPrice),
         roundingDelta: money(roundingDelta),
         finalPrice: money(finalPrice),

@@ -89,7 +89,7 @@ Result:
 - Local calculator works against accepted benchmark assumptions.
 - Drafts and estimates can be stored locally.
 - Estimate snapshots contain formula and variables metadata.
-- Manual Adjustment is shown as part of Additional Charges for business explanation while preserved separately for audit.
+- Special Labor Adjustment replaces direct broker dollar adjustment: people x hours x internal hourly rate. Quote Draft exposes only people/hours; the rate is internal/CFO-approved. Legacy `manualAdjustment` is preserved only for older draft/snapshot compatibility.
 
 Verification:
 

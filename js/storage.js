@@ -132,6 +132,11 @@
         fuelPricesUsed: snapshot.fuelPricesUsed || variablesSnapshot?.fuelPrices || null,
         vehicleUsed: snapshot.vehicleUsed || snapshot.result?.vehicle || null,
         totalPrice: snapshot.totalPrice ?? snapshot.result?.totals?.finalPrice ?? 0,
+        extraLaborPeople: snapshot.extraLaborPeople ?? snapshot.result?.totals?.extraLaborPeople ?? snapshot.quote?.options?.extraLaborPeople ?? 0,
+        extraLaborHours: snapshot.extraLaborHours ?? snapshot.result?.totals?.extraLaborHours ?? snapshot.quote?.options?.extraLaborHours ?? 0,
+        extraLaborRate: snapshot.extraLaborRate ?? snapshot.result?.totals?.extraLaborRate ?? snapshot.quote?.options?.extraLaborRate ?? 50,
+        extraLaborCost: snapshot.extraLaborCost ?? snapshot.result?.totals?.extraLaborCost ?? 0,
+        effectiveCostPerCuFt: snapshot.effectiveCostPerCuFt ?? snapshot.result?.totals?.effectiveCostPerCuFt ?? 0,
         quote: snapshot.quote ? { ...snapshot.quote, estimateId } : snapshot.quote,
         snapshotId: snapshot.snapshotId || createId("estimate"),
       };

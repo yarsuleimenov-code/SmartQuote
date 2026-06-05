@@ -6,7 +6,7 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` remote hash: `058c6cf8d1b8bbda2480fb7391b84918f4b89295`.
+- `main` remote hash: `3065ff4f485e1a7e3a8253974076b4029d99c693`.
 - Stage 5 workflow QA and handoff stabilization completed.
 
 Implemented:
@@ -28,6 +28,44 @@ Implemented:
 - References Vehicles use business-facing fields while preserving compatibility fields.
 - Item Catalog seed data and References encoding were cleaned up.
 - Stage 5 workflow smoke test covers storage/snapshot/navigation basics.
+
+## Business Feedback Sprint
+
+Scope for the controlled post-testing sprint:
+
+- Replace direct dollar `Manual Adjustment` with labor-based `Special Labor Adjustment`.
+- Add calculated read-only item-level `Item Ref. Price` as a unit economics allocation metric.
+- Add `Effective $/cu ft` for broker-facing pricing clarity.
+- Keep broker-facing summary customer-safe.
+- Keep internal margin, operational cost, and formula audit in Cost Breakdown.
+
+Current labor adjustment rule:
+
+```text
+extraLaborCost = extraLaborPeople x extraLaborHours x extraLaborRate
+```
+
+Default labor adjustment values:
+
+- people: `0`
+- hours: `0`
+- rate: `$50/hour`
+
+The hourly rate is not editable in Quote Draft. It remains an internal/CFO-approved rate for the current MVP and is saved in snapshots for audit. Legacy `manualAdjustment` may still exist in old drafts/snapshots and should remain read-only compatibility data. New broker adjustments should use special labor fields only.
+
+Current item reference price rule:
+
+```text
+itemReferencePrice = totalQuoteAmount x (itemTotalWeight / orderTotalWeight)
+```
+
+If total order weight is `0`, fallback to effective volume:
+
+```text
+itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVolume)
+```
+
+If both total weight and effective volume are `0`, item reference price is `0`. This is a display/allocation metric only, not a pricing input or cost component.
 
 ## Calculation Rule
 
@@ -157,6 +195,27 @@ Recommended scope:
 3. Add visible storage health/status on My Drafts and My Estimates.
 4. Keep pricing formulas unchanged.
 5. Do not enable Save Variables until preview/versioning governance is ready.
+
+## Business Feedback Backlog
+
+ZIP density / area pricing:
+
+- Not part of the current sprint.
+- Requires a separate ZIP / area control screen.
+- Proposed area types:
+  - `A` core area = `0%`.
+  - `B` = `+20%`.
+  - `C` = `+50%`.
+  - `D` = `+70%`.
+- Requires ZIP reference data.
+- Requires pricing impact preview before release.
+
+Admin quote management:
+
+- Not part of the current sprint.
+- Admin should eventually see employee calculations.
+- Admin should eventually edit employee calculations.
+- Requires shared storage, ownership, audit log, and permissions.
 
 ## Project Pause / Business Testing Handoff
 

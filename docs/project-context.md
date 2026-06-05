@@ -45,7 +45,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 
 - Primary calculation flow is accepted for current business assumptions.
 - `js/calculator.js` is treated as UAT-approved baseline and should not be changed during workflow or admin-screen work.
-- `Manual Adjustment` is displayed as part of Additional Charges for broker-facing price explanation, while the raw calculation fields still preserve the separate value for audit.
+- New broker adjustments should use `Special Labor Adjustment`: people x hours x hourly rate. Legacy `manualAdjustment` is preserved only for older draft/snapshot compatibility.
+- Quote Draft does not expose the special labor hourly rate; it remains an internal/CFO-approved value. `Item Ref. Price` is calculated read-only from the final quote amount split across billable item rows.
 - `My Drafts`, `My Estimates`, `Cost Breakdown`, and `Estimate Document` are linked to local snapshots.
 
 ## Next Business Handoff Priorities
