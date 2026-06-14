@@ -27,6 +27,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - `Eff. volume` is rounded up to a whole cubic foot in the calculation model.
 - Empty items and name-only items must not create a non-zero quote.
 - Quick Quote defaults to 2-person crew assumption.
+- Quick Quote item selection is sourced from References Item Catalog through `js/itemCatalog.js`.
+- Quick Quote -> Full Quote transfer preserves catalog dimensions when volume has not been manually overridden; otherwise it falls back to approximate volume-based dimensions.
 
 ## Current Architecture
 

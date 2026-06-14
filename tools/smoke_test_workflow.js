@@ -206,6 +206,10 @@ const estimateDocumentJs = fs.readFileSync("js/estimateDocument.js", "utf8");
 const estimatesJs = fs.readFileSync("js/estimates.js", "utf8");
 const draftsHtml = fs.readFileSync("drafts.html", "utf8");
 const draftsJs = fs.readFileSync("js/drafts.js", "utf8");
+const quickQuoteHtml = fs.readFileSync("quick-quote.html", "utf8");
+const quickQuoteJs = fs.readFileSync("js/quickQuote.js", "utf8");
+const itemCatalogJs = fs.readFileSync("js/itemCatalog.js", "utf8");
+const referencesHtml = fs.readFileSync("references.html", "utf8");
 assert(quoteDraftHtml.includes("Direct Pickup"), "Expected Direct Pickup capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Direct Delivery"), "Expected Direct Delivery capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Elevator available"), "Expected elevatorAvailable capture in Quote Draft.");
@@ -232,6 +236,14 @@ assert(draftsHtml.includes("draftStatusFilter"), "Expected My Drafts to expose w
 assert(draftsJs.includes("Continue Quote"), "Expected My Drafts primary action to continue quote.");
 assert(draftsJs.includes("Review Cost"), "Expected My Drafts to expose live draft cost review.");
 assert(draftsJs.includes("Missing Route"), "Expected My Drafts to classify incomplete route drafts.");
+assert(quickQuoteHtml.includes("js/itemCatalog.js"), "Expected Quick Quote to load References Item Catalog source.");
+assert(quickQuoteJs.includes("ReferenceItemCatalog"), "Expected Quick Quote templates to come from References Item Catalog.");
+assert(quickQuoteJs.includes("Catalog Item"), "Expected Quick Quote item selector to be labeled as Catalog Item.");
+assert(quickQuoteJs.includes("pickupDirect"), "Expected Quick Quote transfer to preserve Direct fields for Full Quote.");
+assert(quickQuoteJs.includes("elevatorAvailable"), "Expected Quick Quote transfer to preserve elevator availability defaults.");
+assert(itemCatalogJs.includes("Dining Table") && itemCatalogJs.includes("TV / Monitor"), "Expected Item Catalog source to include reference furniture/electronics templates.");
+assert(referencesHtml.includes("js/itemCatalog.js"), "Expected References to use the shared Item Catalog source.");
+assert(referencesHtml.includes("js/referencesItemCatalog.js"), "Expected References Item Catalog table to render from shared source.");
 
 console.log(JSON.stringify({
   draftId: savedDraft.localId,

@@ -9,17 +9,6 @@
     "CA South": "90021",
   };
 
-  const itemTemplates = {
-    custom: { label: "Custom", name: "", volume: 0, weight: 0, fragile: false, nonStackable: false, crated: false },
-    box: { label: "Box", name: "Box", volume: 3, weight: 40, fragile: false, nonStackable: false, crated: false },
-    chair: { label: "Chair", name: "Chair", volume: 17, weight: 40, fragile: false, nonStackable: false, crated: false },
-    sofa: { label: "Sofa", name: "Sofa", volume: 35, weight: 150, fragile: false, nonStackable: false, crated: false },
-    table: { label: "Table", name: "Table", volume: 21, weight: 120, fragile: false, nonStackable: false, crated: false },
-    cabinet: { label: "Cabinet", name: "Cabinet", volume: 25, weight: 120, fragile: false, nonStackable: false, crated: false },
-    mattress: { label: "Mattress", name: "Mattress", volume: 45, weight: 80, fragile: false, nonStackable: true, crated: false },
-    mirror: { label: "Artwork / Mirror", name: "Artwork / Mirror", volume: 8, weight: 40, fragile: true, nonStackable: true, crated: false },
-  };
-
   function byId(id) {
     return document.getElementById(id);
   }
@@ -35,6 +24,38 @@
   function number(value) {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function catalogItems() {
+    const catalog = window.ReferenceItemCatalog?.active?.() || [];
+    return catalog.length
+      ? catalog
+      : [{ id: "custom", label: "Custom", name: "", length: 0, width: 0, height: 0, weight: 0, packaging: "Blanket Wrap", flags: "Standard" }];
+  }
+
+  function catalogById(id) {
+    return window.ReferenceItemCatalog?.byId?.(id) || catalogItems().find((item) => item.id === id) || catalogItems()[0];
+  }
+
+  function volumeFromDimensions(item) {
+    return number(item.length) && number(item.width) && number(item.height)
+      ? Math.ceil(number(item.length) * number(item.width) * number(item.height) / 1728)
+      : 0;
+  }
+
+  function flagsFromCatalog(item) {
+    const flags = String(item.flags || "").toLowerCase();
+    return {
+      fragile: flags.includes("fragile"),
+      nonStackable: flags.includes("bulky") || flags.includes("non-stack"),
+      crated: /crate/i.test(item.packaging || ""),
+    };
+  }
+
+  function brokerPackaging(item) {
+    if (/crate/i.test(item.packaging || "")) return "Custom Crate";
+    if (item.packaging === "None") return "None";
+    return "Blanket Wrap";
   }
 
   function createId() {
@@ -68,6 +89,7 @@
       fragile: false,
       nonStackable: false,
       crated: false,
+      packaging: "Blanket Wrap",
     },
   ];
   let currentDraftId = "";
@@ -93,41 +115,50 @@
   }
 
   function applyTemplate(item, templateKey) {
-    const template = itemTemplates[templateKey] || itemTemplates.custom;
-    item.template = templateKey;
+    const template = catalogById(templateKey);
+    const flags = flagsFromCatalog(template);
+    item.template = template.id;
     item.name = template.name;
-    item.volume = template.volume;
+    item.volume = volumeFromDimensions(template);
+    item.length = number(template.length);
+    item.width = number(template.width);
+    item.height = number(template.height);
     item.weight = template.weight;
     item.qty = item.qty || 1;
-    item.fragile = template.fragile;
-    item.nonStackable = template.nonStackable;
-    item.crated = template.crated;
+    item.packaging = brokerPackaging(template);
+    item.fragile = flags.fragile;
+    item.nonStackable = flags.nonStackable;
+    item.crated = flags.crated;
   }
 
   function renderTemplateOptions(selected) {
-    return Object.entries(itemTemplates).map(([value, template]) => (
-      `<option value="${value}"${value === selected ? " selected" : ""}>${template.label}</option>`
+    return catalogItems().map((template) => (
+      `<option value="${template.id}"${template.id === selected ? " selected" : ""}>${template.label}</option>`
     )).join("");
   }
 
   function quickItemToFullItem(item) {
     const volume = Math.ceil(Math.max(number(item.volume), 0));
+    const dimensionVolume = volumeFromDimensions(item);
+    const useCatalogDimensions = number(item.length) && number(item.width) && number(item.height) && (!volume || dimensionVolume === volume);
     return {
       id: item.id,
       name: item.name,
-      length: volume * 12,
-      width: 12,
-      height: 12,
+      length: useCatalogDimensions ? number(item.length) : volume * 12,
+      width: useCatalogDimensions ? number(item.width) : 12,
+      height: useCatalogDimensions ? number(item.height) : 12,
       weight: number(item.weight),
       qty: number(item.qty, 1),
-      packaging: item.crated ? "Custom Crate" : item.fragile ? "Bubble Protection" : "Blanket Wrap",
+      packaging: item.packaging || (item.crated ? "Custom Crate" : "Blanket Wrap"),
       insurance: "Basic Liability",
+      protectionPlan: "RV",
+      protectionLegacyType: "Basic Liability",
       declaredValue: 0,
       storageDays: 0,
       fragile: Boolean(item.fragile),
       nonStackable: Boolean(item.nonStackable),
       crated: Boolean(item.crated),
-      comment: item.name ? "Created from Quick Quote" : "",
+      comment: item.name ? "Created from Quick Quote Item Catalog" : "",
     };
   }
 
@@ -151,12 +182,16 @@
         deliveryAddress: `${deliveryZone} quick quote zone`,
       },
       access: {
-        pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: QUICK_DEFAULT_CREW },
-        delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: QUICK_DEFAULT_CREW },
+        pickup: { addressType: "House", coi: false, stairs: false, elevatorAvailable: true, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: QUICK_DEFAULT_CREW },
+        delivery: { addressType: "House", coi: false, stairs: false, elevatorAvailable: true, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: QUICK_DEFAULT_CREW },
       },
       options: {
         exclusiveDelivery: priority === "Exclusive Delivery",
         priorityDate: priority === "Requested Date",
+        pickupDirect: false,
+        pickupDirectDate: "",
+        deliveryDirect: false,
+        deliveryDirectDate: "",
         helperRequirement: "Auto",
         deliveryType: priority === "Exclusive Delivery" ? "Exclusive Delivery" : "Consolidated Route",
         requestedDate: "",
@@ -175,7 +210,7 @@
       <div data-quick-item-id="${item.id}" class="border border-slate-200 rounded-lg p-4 bg-slate-50">
         <div class="grid grid-cols-12 gap-3 items-end text-sm">
           <label class="col-span-2">
-            <span class="text-xs text-slate-400">Template</span>
+            <span class="text-xs text-slate-400">Catalog Item</span>
             <select data-field="template" class="mt-1 w-full border rounded-lg px-3 py-2 bg-white">${renderTemplateOptions(item.template || "custom")}</select>
           </label>
           <label class="col-span-5">
@@ -219,6 +254,7 @@
       fragile: false,
       nonStackable: false,
       crated: false,
+      packaging: "Blanket Wrap",
     };
   }
 
