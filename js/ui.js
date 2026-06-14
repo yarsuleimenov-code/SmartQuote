@@ -200,12 +200,19 @@
       return `<button type="button" data-action="set-protection" data-protection="${plan}" class="rounded-md border px-3 py-2 text-xs font-semibold ${selected === plan ? "border-teal-500 bg-teal-50 text-teal-700" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"}">${label}</button>`;
     }
 
+    function protectionHelpText(protectionPlan) {
+      if (protectionPlan === "FVP") return "Requires declared value.";
+      if (protectionPlan === "DV") return "Future pricing; confirm value separately.";
+      return "";
+    }
+
     function renderItems() {
       const tbody = byId("itemsBody");
       tbody.innerHTML = quote.items.map((item, index) => {
         const computed = result.items.find((entry) => entry.id === item.id) || {};
         const unitMode = itemUnitMode(item);
         const protectionPlan = protectionPlanFromItem(item);
+        const protectionHelp = protectionHelpText(protectionPlan);
         const packagingOptions = brokerPackagingOptions();
         const groupBg = index % 2 === 0 ? "bg-white" : "bg-slate-50/70";
         const detailBg = index % 2 === 0 ? "bg-slate-50/70" : "bg-slate-100/70";
@@ -279,7 +286,7 @@
                     ${protectionButton("FVP", protectionPlan, "FVP")}
                     ${protectionButton("DV", protectionPlan, "DV")}
                   </div>
-                  <p class="mt-1 text-[11px] text-slate-400">${protectionPlan === "DV" ? "DV future pricing. Declared value must be confirmed separately." : protectionPlan === "FVP" ? "FVP uses explicit declared value." : "RV standard included protection."}</p>
+                  ${protectionHelp ? `<p class="mt-1 text-[11px] text-slate-400">${protectionHelp}</p>` : ""}
                 </div>
                 <label class="col-span-1">
                   <span class="text-xs text-slate-400">${protectionPlan === "FVP" ? "Declared Value *" : "Declared Value"}</span>
@@ -497,6 +504,7 @@
         recalculate({ renderItems: true });
       });
       byId("addItem").addEventListener("click", addItem);
+      byId("addItemBottom").addEventListener("click", addItem);
       byId("saveDraft").addEventListener("click", () => {
         readQuote();
         storage.save(quote);

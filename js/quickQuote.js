@@ -158,7 +158,7 @@
       fragile: Boolean(item.fragile),
       nonStackable: Boolean(item.nonStackable),
       crated: Boolean(item.crated),
-      comment: item.name ? "Created from Quick Quote Item Catalog" : "",
+      comment: item.name ? "Catalog transfer" : "",
     };
   }
 
@@ -401,11 +401,13 @@
       renderItems();
       updateSummary();
     });
-    byId("quickAddItem").addEventListener("click", () => {
+    const addQuickItem = () => {
       quickItems.push(createEmptyQuickItem());
       renderItems();
       updateSummary();
-    });
+    };
+    byId("quickAddItem").addEventListener("click", addQuickItem);
+    byId("quickAddItemBottom").addEventListener("click", addQuickItem);
     byId("quickSaveDraft").addEventListener("click", saveFullDraft);
     [byId("quickFullQuote"), byId("quickFullQuoteBottom")].forEach((link) => {
       link.addEventListener("click", saveFullDraft);

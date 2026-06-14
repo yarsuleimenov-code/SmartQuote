@@ -6,13 +6,15 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` / `HEAD`: `df3e472 Stabilize drafts and estimates handoff UX`.
+- `main` / `HEAD`: `52de9f6 Use item catalog for quick quote transfer`.
 - Working tree expected state: clean.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
-- Ready for decomposition of the next large business feedback package.
+- Quick Quote -> Full Quote catalog transfer slice completed.
+- Ready for Quote Draft broker-flow compactness and default validation.
 
 Checkpoint history:
 
+- `df3e472 Stabilize drafts and estimates handoff UX`.
 - `d0fb741 Clean up customer estimate document wording`.
 - `9ad5414 Rename insurance flow to protection plans`.
 - `fb4aeef Add route stage cost breakdown`.
@@ -89,6 +91,11 @@ Implemented:
   - Full Quote transfer preserves catalog dimensions when the entered volume still matches the selected catalog item.
   - If the broker overrides volume, Full Quote keeps the approximate volume-based fallback dimensions.
   - Broker-facing Quick Quote keeps Bubble Protection hidden; catalog items using Bubble map to safe broker packaging until rates/governance are approved.
+- Quote Draft defaults after Quick Quote transfer:
+  - Protection Plan defaults to `RV / Released Value`.
+  - Access defaults use floor `1`, elevator available, and Direct pickup/delivery off.
+  - Direct service dates remain empty until entered manually.
+  - Catalog transfer comments should stay compact for broker review.
 
 ## Business Feedback Sprint
 
