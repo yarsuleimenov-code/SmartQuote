@@ -57,6 +57,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - DV must not use `Item Ref. Price` as Declared Value; new protection pricing logic is deferred.
 - Quote Draft does not show a separate Crate checkbox; custom crate handling should be captured through Packaging = Custom Crate while legacy `crated` data remains compatible.
 - Estimate Document is customer-facing and must stay free of margin, operational cost, fuel internals, vehicle cost internals, and management/dispatch details.
+- My Estimates should expose only supported actions: Preview HTML/PDF, Breakdown, Reopen Draft, status tracking, and Delete. Invoice, Order, and eBOL remain future workflows until handoff rules and shared storage are defined.
+- My Drafts should expose only supported actions: Continue Quote, Review Cost, Delete, and local search/filter/sort. Draft status is derived from route/items completeness.
 - Direct Pickup / Direct Delivery are manual capture fields for the current MVP and do not affect price.
 - `250+ cu ft` may trigger a Direct review recommendation only; it must not auto-enable Direct.
 - Quote Draft must remain compact for broker input; pickup / interstate / delivery stage visibility belongs in Cost Breakdown.

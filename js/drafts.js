@@ -39,6 +39,29 @@
     return { itemText, details: `${weight} - ${volume}` };
   }
 
+  function draftStatus(draft) {
+    const hasRoute = Boolean(draft.route?.pickupZip && draft.route?.deliveryZip);
+    const hasItems = (draft.items || []).some((item) => item.name);
+    if (!hasRoute) return "Missing Route";
+    if (!hasItems) return "Missing Items";
+    return "Has Items";
+  }
+
+  function searchableText(draft, result) {
+    return [
+      draft.estimateId,
+      draft.localId,
+      draft.customer?.leadName,
+      draft.customer?.name,
+      draft.customer?.email,
+      draft.customer?.phone,
+      draft.route?.pickupZip,
+      draft.route?.deliveryZip,
+      result?.pickupZone,
+      result?.deliveryZone,
+    ].join(" ").toLowerCase();
+  }
+
   function renderEmpty() {
     byId("draftCount").textContent = "0";
     byId("draftRows").innerHTML = `
@@ -67,10 +90,45 @@
     `;
   }
 
-  function renderDrafts(drafts) {
-    byId("draftCount").textContent = String(drafts.length);
-    byId("draftRows").innerHTML = drafts.map((draft) => {
-      const result = window.PricingCalculator.calculateQuote(draft);
+  function filteredDrafts(drafts) {
+    const query = byId("draftSearch")?.value.trim().toLowerCase() || "";
+    const status = byId("draftStatusFilter")?.value || "All Drafts";
+    const sort = byId("draftSort")?.value || "Last edited";
+
+    const rows = drafts.map((draft) => ({
+      draft,
+      result: window.PricingCalculator.calculateQuote(draft),
+    })).filter((row) => {
+      const matchesQuery = !query || searchableText(row.draft, row.result).includes(query);
+      const matchesStatus = status === "All Drafts" || draftStatus(row.draft) === status;
+      return matchesQuery && matchesStatus;
+    });
+
+    return rows.sort((a, b) => {
+      if (sort === "Final price") return Number(b.result.totals?.finalPrice || 0) - Number(a.result.totals?.finalPrice || 0);
+      if (sort === "Lead name") return String(a.draft.customer?.leadName || a.draft.customer?.name || "").localeCompare(String(b.draft.customer?.leadName || b.draft.customer?.name || ""));
+      if (sort === "Item count") return (b.result.items || []).length - (a.result.items || []).length;
+      return String(b.draft.updatedAt || "").localeCompare(String(a.draft.updatedAt || ""));
+    });
+  }
+
+  function renderDraftRows(rows) {
+    if (!rows.length) {
+      byId("draftRows").innerHTML = `
+        <tr>
+          <td colspan="10" class="px-4 py-8 text-center text-slate-500">No drafts match the current filters.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    byId("draftRows").innerHTML = rows.map(({ draft, result }) => {
+      const status = draftStatus(draft);
+      const statusClass = status === "Has Items"
+        ? "bg-green-100 text-green-700"
+        : status === "Missing Route"
+          ? "bg-red-100 text-red-700"
+          : "bg-amber-100 text-amber-700";
       const summary = itemSummary(result);
       return `
       <tr>
@@ -98,13 +156,13 @@
           </div>
         </td>
         <td class="px-4 py-3 font-semibold text-slate-800">${currency(result.totals?.finalPrice)}</td>
-        <td class="px-4 py-3"><span class="px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold">Local Draft</span></td>
+        <td class="px-4 py-3"><span class="px-2 py-1 rounded-full ${statusClass} text-xs font-semibold">${escapeHtml(status)}</span></td>
         <td class="px-4 py-3">${dateLabel(draft.updatedAt)}</td>
         <td class="px-4 py-3"><p>Saved locally</p><p class="text-xs text-slate-400">Browser storage</p></td>
         <td class="px-4 py-3">
           <div class="flex justify-end gap-2">
-            <a href="index.html?loadDraft=1&draftId=${encodeURIComponent(draft.localId)}" data-open-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg bg-teal-500 text-white text-xs hover:bg-teal-600">Open</a>
-            <a href="breakdown.html?draftId=${encodeURIComponent(draft.localId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50">Breakdown</a>
+            <a href="index.html?loadDraft=1&draftId=${encodeURIComponent(draft.localId)}" data-open-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg bg-teal-500 text-white text-xs hover:bg-teal-600" title="Continue editing this draft before generating an estimate">Continue Quote</a>
+            <a href="breakdown.html?draftId=${encodeURIComponent(draft.localId)}" class="px-3 py-2 rounded-lg border border-slate-300 text-slate-600 text-xs hover:bg-slate-50" title="Review live draft cost details">Review Cost</a>
             <button data-delete-draft="${escapeHtml(draft.localId)}" class="px-3 py-2 rounded-lg border border-red-200 text-red-600 text-xs hover:bg-red-50">Delete</button>
           </div>
         </td>
@@ -112,6 +170,26 @@
     `;
     }).join("");
 
+    bindRowActions();
+  }
+
+  function renderCurrentView() {
+    const drafts = window.CalculatorStorage.listDrafts();
+    byId("draftCount").textContent = String(drafts.length);
+    if (!drafts.length) {
+      renderEmpty();
+      return;
+    }
+    renderDraftRows(filteredDrafts(drafts));
+    if (window.lucide) lucide.createIcons();
+  }
+
+  function renderDrafts(drafts) {
+    byId("draftCount").textContent = String(drafts.length);
+    renderDraftRows(drafts.map((draft) => ({ draft, result: window.PricingCalculator.calculateQuote(draft) })));
+  }
+
+  function bindRowActions() {
     byId("draftRows").querySelectorAll("[data-open-draft]").forEach((link) => {
       link.addEventListener("click", () => {
         window.CalculatorStorage.selectDraft(link.dataset.openDraft);
@@ -124,7 +202,7 @@
         window.CalculatorStorage.deleteDraft(button.dataset.deleteDraft);
         const updatedDrafts = window.CalculatorStorage.listDrafts();
         if (updatedDrafts.length) {
-          renderDrafts(updatedDrafts);
+          renderCurrentView();
         } else {
           renderEmpty();
         }
@@ -134,14 +212,15 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const drafts = window.CalculatorStorage.listDrafts();
     const tableSection = byId("draftRows")?.closest("section");
     if (tableSection) tableSection.insertAdjacentHTML("afterbegin", renderStorageWarning());
-    if (drafts.length) {
-      renderDrafts(drafts);
-    } else {
-      renderEmpty();
-    }
+    ["draftSearch", "draftStatusFilter", "draftSort"].forEach((id) => {
+      const control = byId(id);
+      if (!control) return;
+      control.addEventListener("input", renderCurrentView);
+      control.addEventListener("change", renderCurrentView);
+    });
+    renderCurrentView();
     if (window.lucide) lucide.createIcons();
   });
 })();

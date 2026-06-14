@@ -203,6 +203,9 @@ const quoteDraftUi = fs.readFileSync("js/ui.js", "utf8");
 const breakdownHtml = fs.readFileSync("breakdown.html", "utf8");
 const estimateDocumentHtml = fs.readFileSync("estimate-document.html", "utf8");
 const estimateDocumentJs = fs.readFileSync("js/estimateDocument.js", "utf8");
+const estimatesJs = fs.readFileSync("js/estimates.js", "utf8");
+const draftsHtml = fs.readFileSync("drafts.html", "utf8");
+const draftsJs = fs.readFileSync("js/drafts.js", "utf8");
 assert(quoteDraftHtml.includes("Direct Pickup"), "Expected Direct Pickup capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Direct Delivery"), "Expected Direct Delivery capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Elevator available"), "Expected elevatorAvailable capture in Quote Draft.");
@@ -219,6 +222,16 @@ assert(estimateDocumentHtml.includes("Protection Plans & Liability"), "Expected 
 assert(!estimateDocumentHtml.includes("Operational Cost"), "Expected customer estimate document not to expose Operational Cost.");
 assert(!estimateDocumentHtml.includes("Margin"), "Expected customer estimate document not to expose Margin.");
 assert(estimateDocumentJs.includes("selectedProtectionPlan"), "Expected estimate document to derive protection selection from selected plan.");
+assert(estimatesJs.includes("Preview HTML/PDF"), "Expected My Estimates to expose customer document preview action.");
+assert(estimatesJs.includes("breakdown.html?estimateId="), "Expected My Estimates to expose internal breakdown action.");
+assert(!estimatesJs.includes("orders.html?estimateId="), "Expected My Estimates not to expose unsupported Order action.");
+assert(!estimatesJs.includes("ebol.html?estimateId="), "Expected My Estimates not to expose unsupported eBOL action.");
+assert(!estimatesJs.includes("data-convert-invoice"), "Expected My Estimates not to expose unsupported invoice conversion action.");
+assert(draftsHtml.includes("draftSearch"), "Expected My Drafts to expose working search control.");
+assert(draftsHtml.includes("draftStatusFilter"), "Expected My Drafts to expose working status filter.");
+assert(draftsJs.includes("Continue Quote"), "Expected My Drafts primary action to continue quote.");
+assert(draftsJs.includes("Review Cost"), "Expected My Drafts to expose live draft cost review.");
+assert(draftsJs.includes("Missing Route"), "Expected My Drafts to classify incomplete route drafts.");
 
 console.log(JSON.stringify({
   draftId: savedDraft.localId,

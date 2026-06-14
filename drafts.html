@@ -64,7 +64,7 @@
             </div>
 
             <p class="text-sm text-slate-500 mt-1">
-              Saved quote drafts that can be opened, edited, duplicated, or deleted.
+              Saved quote drafts that can be continued, reviewed, or deleted before generating a customer estimate.
             </p>
           </div>
 
@@ -86,35 +86,33 @@
 
           <div>
             <label class="text-xs text-slate-400">Search</label>
-            <input class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Lead name, customer, route, draft ID..." />
+            <input id="draftSearch" class="mt-1 w-full border rounded-lg px-3 py-2" placeholder="Lead name, customer, route, draft ID..." />
           </div>
 
           <div>
             <label class="text-xs text-slate-400">Status</label>
-            <select class="mt-1 w-full border rounded-lg px-3 py-2">
+            <select id="draftStatusFilter" class="mt-1 w-full border rounded-lg px-3 py-2">
               <option>All Drafts</option>
-              <option>Needs Review</option>
-              <option>Ready to Send</option>
-              <option>Incomplete</option>
+              <option>Has Items</option>
+              <option>Missing Items</option>
+              <option>Missing Route</option>
             </select>
           </div>
 
           <div>
             <label class="text-xs text-slate-400">Owner</label>
-            <select class="mt-1 w-full border rounded-lg px-3 py-2">
+            <select class="mt-1 w-full border rounded-lg px-3 py-2" disabled title="Shared broker ownership requires backend/shared storage.">
               <option>My drafts</option>
-              <option>All brokers</option>
-              <option>Sales Team</option>
             </select>
           </div>
 
           <div>
             <label class="text-xs text-slate-400">Sort by</label>
-            <select class="mt-1 w-full border rounded-lg px-3 py-2">
+            <select id="draftSort" class="mt-1 w-full border rounded-lg px-3 py-2">
               <option>Last edited</option>
               <option>Final price</option>
-              <option>Customer name</option>
-              <option>Nearest route</option>
+              <option>Lead name</option>
+              <option>Item count</option>
             </select>
           </div>
 
@@ -141,7 +139,7 @@
                 </p>
 
                 <p class="mt-2">
-                  A broker can open a draft, continue editing, create a copy, or delete an outdated local draft.
+                  A broker can continue a draft, review cost details, or delete an outdated local draft. Customer estimates should be generated from the calculator after the draft is reviewed.
                 </p>
               </div>
             </div>

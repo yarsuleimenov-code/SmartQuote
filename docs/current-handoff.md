@@ -6,13 +6,14 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` / `HEAD`: `9ad5414 Rename insurance flow to protection plans`.
+- `main` / `HEAD`: `d0fb741 Clean up customer estimate document wording`.
 - Working tree expected state: clean.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Ready for decomposition of the next large business feedback package.
 
 Checkpoint history:
 
+- `9ad5414 Rename insurance flow to protection plans`.
 - `fb4aeef Add route stage cost breakdown`.
 - `ddf0743 Implement broker flow feedback cleanup`.
 - `6695bd7 Add storage backup MVP and demo cleanup`.
@@ -72,6 +73,16 @@ Implemented:
   - It must not show margin, operational cost, fuel internals, vehicle cost internals, or management/dispatch details.
   - Protection selection is displayed from the selected protection plan with legacy fallback.
   - Custom crate information should be represented through handling/packaging, not through a separate broker checkbox.
+- My Estimates handoff UX is limited to supported broker actions:
+  - Preview HTML/PDF opens the frozen customer estimate snapshot.
+  - Breakdown opens internal admin cost explanation for that snapshot.
+  - Reopen Draft creates an editable copy when changes are needed.
+  - Invoice, Order, and eBOL actions are intentionally not exposed from My Estimates until those workflows are defined.
+- My Drafts handoff UX is limited to supported broker actions:
+  - Continue Quote opens the editable local draft in Quote Draft.
+  - Review Cost opens live draft Cost Breakdown before a customer estimate is generated.
+  - Search, status filter, and sort controls operate on local draft data.
+  - Draft status is derived from route/items completeness, not from a separate approval workflow.
 
 ## Business Feedback Sprint
 
