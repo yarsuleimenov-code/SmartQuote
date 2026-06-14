@@ -185,11 +185,27 @@
       return mode === "ft" ? number(value) * 12 : number(value);
     }
 
+    function protectionPlanFromItem(item) {
+      if (["RV", "FVP", "DV"].includes(item.protectionPlan)) return item.protectionPlan;
+      if (item.insurance === "Full Coverage") return "FVP";
+      return "RV";
+    }
+
+    function legacyInsuranceFromProtection(plan) {
+      if (plan === "FVP") return "Full Coverage";
+      return "Basic Liability";
+    }
+
+    function protectionButton(plan, selected, label) {
+      return `<button type="button" data-action="set-protection" data-protection="${plan}" class="rounded-md border px-3 py-2 text-xs font-semibold ${selected === plan ? "border-teal-500 bg-teal-50 text-teal-700" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"}">${label}</button>`;
+    }
+
     function renderItems() {
       const tbody = byId("itemsBody");
       tbody.innerHTML = quote.items.map((item, index) => {
         const computed = result.items.find((entry) => entry.id === item.id) || {};
         const unitMode = itemUnitMode(item);
+        const protectionPlan = protectionPlanFromItem(item);
         const packagingOptions = brokerPackagingOptions();
         const groupBg = index % 2 === 0 ? "bg-white" : "bg-slate-50/70";
         const detailBg = index % 2 === 0 ? "bg-slate-50/70" : "bg-slate-100/70";
@@ -256,13 +272,18 @@
           <tr data-item-id="${item.id}" class="${detailBg}">
             <td colspan="9" class="px-3 pb-2">
               <div class="grid grid-cols-12 gap-3 items-end text-sm rounded-lg border border-slate-200/80 bg-white/70 p-2">
-                <label class="col-span-2">
-                  <span class="text-xs text-slate-400">Protection</span>
-                  <select data-field="insurance" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white">${itemSelect(item.insurance, Object.keys(window.CalculatorVariables.protectionPlans))}</select>
-                </label>
+                <div class="col-span-2">
+                  <span class="text-xs text-slate-400">Protection Plan</span>
+                  <div class="mt-1 flex gap-2">
+                    ${protectionButton("RV", protectionPlan, "RV")}
+                    ${protectionButton("FVP", protectionPlan, "FVP")}
+                    ${protectionButton("DV", protectionPlan, "DV")}
+                  </div>
+                  <p class="mt-1 text-[11px] text-slate-400">${protectionPlan === "DV" ? "DV future pricing. Declared value must be confirmed separately." : protectionPlan === "FVP" ? "FVP uses explicit declared value." : "RV standard included protection."}</p>
+                </div>
                 <label class="col-span-1">
-                  <span class="text-xs text-slate-400">Value</span>
-                  <input data-field="declaredValue" type="number" class="mt-1 w-full border rounded-lg px-2 py-2" value="${item.declaredValue || 0}" />
+                  <span class="text-xs text-slate-400">${protectionPlan === "FVP" ? "Declared Value *" : "Declared Value"}</span>
+                  <input data-field="declaredValue" type="number" min="0" class="mt-1 w-full border rounded-lg px-2 py-2 ${protectionPlan === "FVP" && !number(item.declaredValue) ? "border-amber-300 bg-amber-50" : ""}" value="${item.declaredValue || 0}" />
                 </label>
                 <label class="col-span-1">
                   <span class="text-xs text-slate-400">Storage</span>
@@ -270,7 +291,6 @@
                 </label>
                 <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="fragile" type="checkbox" class="accent-teal-500"${item.fragile ? " checked" : ""} />Fragile</label>
                 <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="nonStackable" type="checkbox" class="accent-teal-500"${item.nonStackable ? " checked" : ""} />N-stack</label>
-                <label class="col-span-1 flex min-w-[96px] items-center gap-2 whitespace-nowrap bg-white border border-slate-200 rounded-lg px-3 py-2"><input data-field="crated" type="checkbox" class="accent-teal-500"${item.crated ? " checked" : ""} />Crate</label>
                 <label class="col-span-3">
                   <span class="text-xs text-slate-400">Comment</span>
                   <input data-field="comment" class="mt-1 w-full border rounded-lg px-2 py-2 bg-white" value="${escapeHtml(item.comment)}" />
@@ -406,6 +426,10 @@
         item[field] = number(control.value);
       } else {
         item[field] = control.value;
+        if (field === "insurance") {
+          item.protectionPlan = protectionPlanFromItem(item);
+          item.protectionLegacyType = item.insurance;
+        }
       }
     }
 
@@ -431,6 +455,8 @@
         fragile: false,
         nonStackable: false,
         crated: false,
+        protectionPlan: "RV",
+        protectionLegacyType: "Basic Liability",
         comment: "",
       };
     }
@@ -463,6 +489,10 @@
           quote.items = quote.items.filter((item) => item.id !== row.dataset.itemId);
         } else if (event.target.dataset.action === "set-unit" && item) {
           item.unitMode = event.target.dataset.unit === "ft" ? "ft" : "in";
+        } else if (event.target.dataset.action === "set-protection" && item) {
+          item.protectionPlan = event.target.dataset.protection;
+          item.insurance = legacyInsuranceFromProtection(item.protectionPlan);
+          item.protectionLegacyType = item.insurance;
         }
         recalculate({ renderItems: true });
       });

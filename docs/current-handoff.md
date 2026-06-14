@@ -60,6 +60,11 @@ Implemented:
   - Cost Breakdown shows pickup / interstate / delivery structure for admin analysis.
   - Stage visibility exposes existing pickup / interstate / delivery costs and components already calculated by the current engine.
   - Stage visibility does not add new pricing formulas.
+- Broker-facing Insurance language was renamed to Protection Plan:
+  - `RV / Released Value` maps to current `Basic Liability` behavior.
+  - `FVP / Full Value Protection` maps to current `Full Coverage` behavior.
+  - `DV / Delivery Value` is data-capture/future-ready only and currently maps to Released Value pricing behavior.
+  - Legacy `insurance` values are preserved for calculator compatibility.
 
 ## Business Feedback Sprint
 
@@ -123,6 +128,14 @@ itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVol
 If both total weight and effective volume are `0`, item reference price is `0`. This is a display/allocation metric only, not a pricing input or cost component.
 
 Do not use `Item Ref. Price` as customer/legal Declared Value. If item-level declared value is needed later, add a separate `itemDeclaredValue` field.
+
+Current protection plan rule:
+
+- Broker UI uses quick options `RV`, `FVP`, and `DV`.
+- FVP uses the existing explicit `Declared Value` field and current Full Coverage formula.
+- RV does not require Declared Value and follows current Basic Liability behavior.
+- DV must not use `Item Ref. Price` as Declared Value.
+- New DV pricing logic is deferred until separately approved.
 
 ## Calculation Rule
 

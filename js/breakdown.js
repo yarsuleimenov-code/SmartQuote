@@ -172,10 +172,11 @@
             <td class="px-4 py-3 text-right">${Math.ceil(Number(item.effectiveVolume || 0))} cu ft</td>
             <td class="px-4 py-3 text-right">${Number(item.totalWeight || 0).toFixed(0)} lb</td>
             <td class="px-4 py-3 text-right">${currency(item.itemReferencePrice || 0)}</td>
+            <td class="px-4 py-3">${escapeHtml(item.protectionPlan || (item.insurance === "Full Coverage" ? "FVP" : "RV"))}</td>
             <td class="px-4 py-3 ${item.warning && item.warning !== "OK" ? "text-amber-700" : "text-green-700"}">${escapeHtml(item.warning || "OK")}</td>
           </tr>
         `).join("")
-      : `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400">No billable items in this quote.</td></tr>`;
+      : `<tr><td colspan="8" class="px-4 py-6 text-center text-slate-400">No billable items in this quote.</td></tr>`;
   }
 
   function renderWarnings(warnings) {

@@ -53,6 +53,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - If total order weight is `0`, fallback formula: `itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVolume)`.
 - If both total weight and effective volume are `0`, item reference price is `0`.
 - `Item Ref. Price` must not be reused as customer/legal Declared Value.
+- Broker-facing Insurance language is now Protection Plan. `RV` maps to legacy Basic Liability behavior, `FVP` maps to legacy Full Coverage behavior, and `DV` is future-ready data capture only.
+- DV must not use `Item Ref. Price` as Declared Value; new protection pricing logic is deferred.
 - Direct Pickup / Direct Delivery are manual capture fields for the current MVP and do not affect price.
 - `250+ cu ft` may trigger a Direct review recommendation only; it must not auto-enable Direct.
 - Quote Draft must remain compact for broker input; pickup / interstate / delivery stage visibility belongs in Cost Breakdown.

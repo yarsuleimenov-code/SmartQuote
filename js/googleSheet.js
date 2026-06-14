@@ -65,7 +65,7 @@
       vehicle: result.vehicle || {},
       required_crew: result.requiredCrew || 0,
       warnings: result.warnings || [],
-      protection_plan: result.totals.insurance > 0 ? "Full Coverage" : "Basic Liability",
+      protection_plan: result.totals.insurance > 0 ? "FVP / Full Value Protection" : "RV / Released Value",
       manual_adjustment: legacyManualAdjustment,
       legacy_manual_adjustment: legacyManualAdjustment,
       extra_labor: {

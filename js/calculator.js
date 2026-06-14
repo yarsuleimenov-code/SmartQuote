@@ -89,6 +89,12 @@
     return "OK";
   }
 
+  function legacyInsuranceType(item) {
+    if (item.insurance === "Basic Liability" || item.insurance === "Full Coverage") return item.insurance;
+    if (item.protectionPlan === "FVP") return "Full Coverage";
+    return "Basic Liability";
+  }
+
   function calculateItem(item) {
     const settings = window.CalculatorVariables.settings;
     const packagingRates = window.CalculatorVariables.packagingRates;
@@ -96,7 +102,8 @@
     const volume = itemVolume(item);
     const effectiveVolume = itemEffectiveVolume(item, volume);
     const totalWeight = number(item.weight) * number(item.qty, 1);
-    const protection = protectionPlans[item.insurance] || protectionPlans["Basic Liability"];
+    const legacyInsurance = legacyInsuranceType(item);
+    const protection = protectionPlans[legacyInsurance] || protectionPlans["Basic Liability"];
     const packaging = (packagingRates[item.packaging] || 0) * number(item.qty, 1);
     const insurance = protection.rate > 0 ? number(item.declaredValue) * protection.rate + protection.fixedFee : 0;
     const storage = effectiveVolume * number(item.storageDays) * settings.storagePerCuFtPerDay;
@@ -105,6 +112,9 @@
 
     return {
       ...item,
+      insurance: legacyInsurance,
+      protectionPlan: item.protectionPlan || (legacyInsurance === "Full Coverage" ? "FVP" : "RV"),
+      protectionLegacyType: legacyInsurance,
       volume: money(volume),
       effectiveVolume: money(effectiveVolume),
       totalWeight: money(totalWeight),

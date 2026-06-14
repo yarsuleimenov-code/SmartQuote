@@ -141,6 +141,10 @@ quote.options.pickupDirectDate = "2026-06-20";
 quote.options.deliveryDirect = false;
 quote.options.deliveryDirectDate = "";
 quote.items[0].unitMode = "ft";
+quote.items[0].protectionPlan = "FVP";
+quote.items[0].protectionLegacyType = "Full Coverage";
+quote.items[0].insurance = "Full Coverage";
+quote.items[0].declaredValue = 1200;
 
 assert(context.window.CalculatorStorage.save(quote), "Expected draft save to succeed.");
 const savedDraft = context.window.CalculatorStorage.load();
@@ -154,10 +158,13 @@ assert(savedDraft.options.pickupDirect === true, "Expected pickupDirect to round
 assert(savedDraft.options.pickupDirectDate === "2026-06-20", "Expected pickupDirectDate to round-trip.");
 assert(savedDraft.options.deliveryDirect === false, "Expected deliveryDirect to round-trip.");
 assert(savedDraft.items[0].unitMode === "ft", "Expected item unitMode to round-trip.");
+assert(savedDraft.items[0].protectionPlan === "FVP", "Expected protectionPlan to round-trip.");
 
 const result = context.window.PricingCalculator.calculateQuote(savedDraft);
 assert(result.totals.finalPrice > 0, "Expected workflow quote to calculate a positive total.");
 assert(savedDraft.options.deliveryDirect !== true, "Expected Direct to remain manual and not auto-enable.");
+assert(result.items[0].protectionPlan === "FVP", "Expected calculated item to expose FVP protection plan.");
+assert(result.items[0].protectionLegacyType === "Full Coverage", "Expected FVP to preserve Full Coverage compatibility.");
 assert(result.stageBreakdown?.pickup?.total > 0, "Expected pickup stage cost breakdown.");
 assert(result.stageBreakdown?.interstate?.total > 0, "Expected interstate stage cost breakdown.");
 assert(result.stageBreakdown?.delivery?.total > 0, "Expected delivery stage cost breakdown.");
@@ -192,10 +199,15 @@ const blankResult = blankContext.window.PricingCalculator.calculateQuote(clone(b
 assert(blankResult.totals.finalPrice === 0, "Expected empty quote to remain $0.");
 
 const quoteDraftHtml = fs.readFileSync("index.html", "utf8");
+const quoteDraftUi = fs.readFileSync("js/ui.js", "utf8");
 const breakdownHtml = fs.readFileSync("breakdown.html", "utf8");
 assert(quoteDraftHtml.includes("Direct Pickup"), "Expected Direct Pickup capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Direct Delivery"), "Expected Direct Delivery capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Elevator available"), "Expected elevatorAvailable capture in Quote Draft.");
+assert(quoteDraftUi.includes("Protection Plan"), "Expected broker-facing Protection Plan label in Quote Draft.");
+assert(quoteDraftUi.includes('protectionButton("RV"'), "Expected RV quick protection option.");
+assert(quoteDraftUi.includes('protectionButton("FVP"'), "Expected FVP quick protection option.");
+assert(quoteDraftUi.includes('protectionButton("DV"'), "Expected DV quick protection option.");
 assert(!quoteDraftHtml.includes(">Narrow<"), "Expected broker-facing Narrow control to be hidden.");
 assert(!quoteDraftHtml.includes("Long carry, ft"), "Expected broker-facing Long Carry control to be hidden.");
 assert(!quoteDraftHtml.includes("Bubble Protection</option>"), "Expected Bubble Protection not to be hardcoded as broker-facing option.");

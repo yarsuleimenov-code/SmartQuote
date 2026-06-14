@@ -110,7 +110,7 @@
     setText("serviceType", options.deliveryType || "Consolidated Interstate Route");
     setText("transportationTotal", finalPrice);
     setText("fullCoverageStatus", hasFullCoverage ? "Included" : "Not Included");
-    setText("protectionSelection", hasFullCoverage ? "Full Coverage Selected" : "Released Value Protection Selected");
+    setText("protectionSelection", hasFullCoverage ? "FVP / Full Value Protection Selected" : "RV / Released Value Selected");
     setText("estimateTotal", finalPrice);
     renderItems(result.items || quote.items || []);
   }
