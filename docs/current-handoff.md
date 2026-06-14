@@ -55,6 +55,11 @@ Implemented:
   - Direct Pickup and Direct Delivery are manual capture fields with separate service dates.
   - Per-item dimension unit entry uses an In / Ft toggle while stored dimensions remain normalized for calculation.
   - Bubble Protection is hidden from broker-facing packaging options.
+- Route stage visibility is intentionally placed in Cost Breakdown, not Quote Draft:
+  - Quote Draft stays compact for broker input.
+  - Cost Breakdown shows pickup / interstate / delivery structure for admin analysis.
+  - Stage visibility exposes existing pickup / interstate / delivery costs and components already calculated by the current engine.
+  - Stage visibility does not add new pricing formulas.
 
 ## Business Feedback Sprint
 
@@ -86,6 +91,13 @@ Current Direct rule for MVP:
 - Direct service date is captured separately for pickup and delivery.
 - `250+ cu ft` may show a recommendation to review Direct service, but must not automatically enable Direct.
 - Direct capture fields do not affect price until a separate pricing stage is approved.
+
+Current route stage visibility rule:
+
+- Pickup / interstate / delivery stage details belong in Cost Breakdown.
+- Quote Draft should not become a large operational planning screen.
+- Stage cards show route area, miles, vehicle, crew, mode, total stage cost, and internal component buckets from the current quote/result.
+- Stage costs are read from existing calculation output; they are for analysis and validation, not a new pricing layer.
 
 Future floor fee rule, not implemented in pricing yet:
 

@@ -158,6 +158,14 @@ assert(savedDraft.items[0].unitMode === "ft", "Expected item unitMode to round-t
 const result = context.window.PricingCalculator.calculateQuote(savedDraft);
 assert(result.totals.finalPrice > 0, "Expected workflow quote to calculate a positive total.");
 assert(savedDraft.options.deliveryDirect !== true, "Expected Direct to remain manual and not auto-enable.");
+assert(result.stageBreakdown?.pickup?.total > 0, "Expected pickup stage cost breakdown.");
+assert(result.stageBreakdown?.interstate?.total > 0, "Expected interstate stage cost breakdown.");
+assert(result.stageBreakdown?.delivery?.total > 0, "Expected delivery stage cost breakdown.");
+const stageCostTotal = result.stageBreakdown.pickup.total + result.stageBreakdown.interstate.total + result.stageBreakdown.delivery.total;
+assert(
+  Math.abs(stageCostTotal - result.totals.routeCost) <= 1,
+  "Expected stage costs to add up to route cost.",
+);
 
 assert(
   context.window.CalculatorStorage.saveEstimateSnapshot(buildEstimateSnapshot(context, savedDraft, result)),
@@ -184,12 +192,15 @@ const blankResult = blankContext.window.PricingCalculator.calculateQuote(clone(b
 assert(blankResult.totals.finalPrice === 0, "Expected empty quote to remain $0.");
 
 const quoteDraftHtml = fs.readFileSync("index.html", "utf8");
+const breakdownHtml = fs.readFileSync("breakdown.html", "utf8");
 assert(quoteDraftHtml.includes("Direct Pickup"), "Expected Direct Pickup capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Direct Delivery"), "Expected Direct Delivery capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Elevator available"), "Expected elevatorAvailable capture in Quote Draft.");
 assert(!quoteDraftHtml.includes(">Narrow<"), "Expected broker-facing Narrow control to be hidden.");
 assert(!quoteDraftHtml.includes("Long carry, ft"), "Expected broker-facing Long Carry control to be hidden.");
 assert(!quoteDraftHtml.includes("Bubble Protection</option>"), "Expected Bubble Protection not to be hardcoded as broker-facing option.");
+assert(breakdownHtml.includes("Route Stage Visibility"), "Expected Cost Breakdown to include route stage visibility.");
+assert(breakdownHtml.includes("No formula change"), "Expected route stage visibility to be marked as no formula change.");
 
 console.log(JSON.stringify({
   draftId: savedDraft.localId,

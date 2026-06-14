@@ -198,11 +198,46 @@
     const serviceCost = pickupCost + deliveryCost + interstateCost + damageSurcharge + insurance;
     const stageMargin = (pickupCost + deliveryCost + interstateCost) * settings.marginRate;
     const priceExcludingBrokerFee = serviceCost + stageMargin;
+    const pickupLabor =
+      Math.max(pickupLoadMinutes, settings.minLoadingMinutes) * settings.wagePerMinute * pickupTeam +
+      settings.pickupWagePerMile * pickupDistance * pickupTeam;
+    const deliveryLabor =
+      Math.max(deliveryUnloadMinutes, settings.minLoadingMinutes - 10) * settings.wagePerMinute * deliveryTeam +
+      settings.pickupWagePerMile * deliveryDistance * deliveryTeam;
 
     return {
       pickupCost,
       deliveryCost,
       interstateCost,
+      stageBreakdown: {
+        pickup: {
+          total: money(pickupCost),
+          components: {
+            labor: money(pickupLabor),
+            mileage: money(pickupDistance * pickupVehicle.maintenancePerMile + pickupDistance * fuelCostPerMile(pickupVehicle)),
+            handling: money(pickupWarehouse + pickupTruck + settings.packagingPerShipment),
+            managementDispatch: money(settings.managementFee + settings.dispatchFee),
+          },
+        },
+        interstate: {
+          total: money(interstateCost),
+          components: {
+            fuel: money(interstateFuel),
+            vehicleCost: money(interstateMaintenance),
+            driver: money(interstateDriver),
+            routeShare: 0,
+          },
+        },
+        delivery: {
+          total: money(deliveryCost),
+          components: {
+            labor: money(deliveryLabor),
+            mileage: money(deliveryDistance * deliveryVehicle.maintenancePerMile + deliveryDistance * fuelCostPerMile(deliveryVehicle)),
+            handling: money(deliveryWarehouse + deliveryTruck),
+            managementDispatch: money(settings.managementFee + settings.dispatchFee),
+          },
+        },
+      },
       damageSurcharge,
       serviceCost,
       stageMargin,
@@ -334,6 +369,7 @@
         finalPrice: money(finalPrice),
       },
       warnings: calculatedItems.filter((item) => item.warning !== "OK").map((item) => `${item.name}: ${item.warning}`),
+      stageBreakdown: selectedCosts?.stageBreakdown || null,
     };
   }
 

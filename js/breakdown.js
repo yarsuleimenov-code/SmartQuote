@@ -25,6 +25,28 @@
       .replace(/'/g, "&#039;");
   }
 
+  function number(value) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function vehicleName(vehicle) {
+    return vehicle?.name || vehicle?.vehicleName || "-";
+  }
+
+  function settings() {
+    return window.CalculatorVariables?.settings || {};
+  }
+
+  function localZoneDistance(zone) {
+    return number(window.CalculatorVariables?.distanceMatrix?.[zone]?.[zone]);
+  }
+
+  function modeLabel(isDirect, date, fallback) {
+    if (!isDirect) return fallback;
+    return date ? `Direct - ${date}` : "Direct - date needed";
+  }
+
   function buildSnapshot(quote, result) {
     const createdAt = new Date();
     const validUntil = new Date(createdAt.getTime() + 14 * 24 * 60 * 60 * 1000);
@@ -162,6 +184,87 @@
       : "<li>No item warnings</li>";
   }
 
+  function renderRouteStages(quote, result) {
+    const pickupMiles = localZoneDistance(result.pickupZone);
+    const deliveryMiles = localZoneDistance(result.deliveryZone);
+    const interstateVehicle = settings().interstateVehicleName || "Penske 26 ft";
+    const pickupDirect = Boolean(quote.options?.pickupDirect);
+    const deliveryDirect = Boolean(quote.options?.deliveryDirect);
+    const stageBreakdown = result.stageBreakdown || {};
+    const rows = [
+      {
+        stage: "Pickup",
+        route: result.pickupZone || "-",
+        miles: pickupMiles,
+        vehicle: vehicleName(result.vehicle),
+        crew: result.crew?.pickup ? `${result.crew.pickup} ${result.crew.pickup === 1 ? "person" : "people"}` : "0",
+        mode: modeLabel(pickupDirect, quote.options?.pickupDirectDate, "Local pickup"),
+        total: stageBreakdown.pickup?.total || 0,
+        components: [
+          ["Labor", stageBreakdown.pickup?.components?.labor],
+          ["Mileage", stageBreakdown.pickup?.components?.mileage],
+          ["Handling", stageBreakdown.pickup?.components?.handling],
+          ["Mgmt / Dispatch", stageBreakdown.pickup?.components?.managementDispatch],
+        ],
+      },
+      {
+        stage: "Interstate",
+        route: `${result.pickupZone || "-"} -> ${result.deliveryZone || "-"}`,
+        miles: number(result.distance),
+        vehicle: interstateVehicle,
+        crew: "Driver",
+        mode: "Linehaul",
+        total: stageBreakdown.interstate?.total || 0,
+        components: [
+          ["Fuel", stageBreakdown.interstate?.components?.fuel],
+          ["Vehicle Cost", stageBreakdown.interstate?.components?.vehicleCost],
+          ["Driver", stageBreakdown.interstate?.components?.driver],
+          ["Route Share", stageBreakdown.interstate?.components?.routeShare],
+        ],
+      },
+      {
+        stage: "Delivery",
+        route: result.deliveryZone || "-",
+        miles: deliveryMiles,
+        vehicle: vehicleName(result.vehicle),
+        crew: result.crew?.delivery ? `${result.crew.delivery} ${result.crew.delivery === 1 ? "person" : "people"}` : "0",
+        mode: modeLabel(deliveryDirect, quote.options?.deliveryDirectDate, "Local delivery"),
+        total: stageBreakdown.delivery?.total || 0,
+        components: [
+          ["Labor", stageBreakdown.delivery?.components?.labor],
+          ["Mileage", stageBreakdown.delivery?.components?.mileage],
+          ["Handling", stageBreakdown.delivery?.components?.handling],
+          ["Mgmt / Dispatch", stageBreakdown.delivery?.components?.managementDispatch],
+        ],
+      },
+    ];
+
+    byId("bdRouteStages").innerHTML = rows.map((row) => `
+      <article class="rounded-lg border border-slate-200 p-4">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h4 class="font-bold text-slate-800">${escapeHtml(row.stage)} Stage</h4>
+            <p class="mt-1 text-xs text-slate-500">${escapeHtml(row.route)} · ${Math.round(row.miles || 0)} mi · ${escapeHtml(row.vehicle)} · ${escapeHtml(row.crew)} · ${escapeHtml(row.mode)}</p>
+          </div>
+          <p class="text-2xl font-bold text-slate-800">${currency(row.total)}</p>
+        </div>
+        <div class="mt-4 grid grid-cols-4 gap-3">
+          ${row.components.map(([label, value]) => `
+            <div class="rounded-lg bg-slate-50 p-3">
+              <p class="text-xs text-slate-400">${escapeHtml(label)}</p>
+              <p class="mt-1 font-semibold text-slate-800">${currency(value)}</p>
+            </div>
+          `).join("")}
+        </div>
+      </article>
+    `).join("");
+
+    setText(
+      "bdRouteStageNote",
+      `Stage totals are existing calculator outputs. Pickup + Interstate + Delivery = ${currency(result.totals?.routeCost)} route cost. Pricing formulas were not changed.`
+    );
+  }
+
   function renderBreakdown({ source, sourceType, recordId, quote, result, estimateId }) {
     const totals = result.totals;
     const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
@@ -204,6 +307,7 @@
       `${currency(totals.operationalCost)} + ${currency(displayedAdditionalCharges)} + ${currency(totals.margin)} = ${currency(totals.rawPrice)}`
     );
     setText("bdRoundedFormula", `CEILING(${currency(totals.rawPrice)}, 10) = ${currency(totals.finalPrice)}`);
+    renderRouteStages(quote, result);
     renderItems(result.items || []);
     renderWarnings(result.warnings || []);
     byId("bdPayload").textContent = JSON.stringify(window.GoogleSheetIntegration.buildPayload(quote, result), null, 2);
