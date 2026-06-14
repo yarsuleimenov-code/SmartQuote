@@ -201,6 +201,8 @@ assert(blankResult.totals.finalPrice === 0, "Expected empty quote to remain $0."
 const quoteDraftHtml = fs.readFileSync("index.html", "utf8");
 const quoteDraftUi = fs.readFileSync("js/ui.js", "utf8");
 const breakdownHtml = fs.readFileSync("breakdown.html", "utf8");
+const estimateDocumentHtml = fs.readFileSync("estimate-document.html", "utf8");
+const estimateDocumentJs = fs.readFileSync("js/estimateDocument.js", "utf8");
 assert(quoteDraftHtml.includes("Direct Pickup"), "Expected Direct Pickup capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Direct Delivery"), "Expected Direct Delivery capture in Quote Draft.");
 assert(quoteDraftHtml.includes("Elevator available"), "Expected elevatorAvailable capture in Quote Draft.");
@@ -213,6 +215,10 @@ assert(!quoteDraftHtml.includes("Long carry, ft"), "Expected broker-facing Long 
 assert(!quoteDraftHtml.includes("Bubble Protection</option>"), "Expected Bubble Protection not to be hardcoded as broker-facing option.");
 assert(breakdownHtml.includes("Route Stage Visibility"), "Expected Cost Breakdown to include route stage visibility.");
 assert(breakdownHtml.includes("No formula change"), "Expected route stage visibility to be marked as no formula change.");
+assert(estimateDocumentHtml.includes("Protection Plans & Liability"), "Expected customer estimate document to use Protection Plans language.");
+assert(!estimateDocumentHtml.includes("Operational Cost"), "Expected customer estimate document not to expose Operational Cost.");
+assert(!estimateDocumentHtml.includes("Margin"), "Expected customer estimate document not to expose Margin.");
+assert(estimateDocumentJs.includes("selectedProtectionPlan"), "Expected estimate document to derive protection selection from selected plan.");
 
 console.log(JSON.stringify({
   draftId: savedDraft.localId,

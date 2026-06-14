@@ -6,13 +6,16 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` / `HEAD`: `6695bd7 Add storage backup MVP and demo cleanup`.
+- `main` / `HEAD`: `9ad5414 Rename insurance flow to protection plans`.
 - Working tree expected state: clean.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Ready for decomposition of the next large business feedback package.
 
 Checkpoint history:
 
+- `fb4aeef Add route stage cost breakdown`.
+- `ddf0743 Implement broker flow feedback cleanup`.
+- `6695bd7 Add storage backup MVP and demo cleanup`.
 - `8252547 Sync project documentation after feedback sprint`.
 - `c0a7854 Add labor-based adjustment and item unit economics`.
 - `3065ff4 Document SmartQuote pause and business testing handoff`.
@@ -65,6 +68,10 @@ Implemented:
   - `FVP / Full Value Protection` maps to current `Full Coverage` behavior.
   - `DV / Delivery Value` is data-capture/future-ready only and currently maps to Released Value pricing behavior.
   - Legacy `insurance` values are preserved for calculator compatibility.
+- Estimate Document remains customer-facing:
+  - It must not show margin, operational cost, fuel internals, vehicle cost internals, or management/dispatch details.
+  - Protection selection is displayed from the selected protection plan with legacy fallback.
+  - Custom crate information should be represented through handling/packaging, not through a separate broker checkbox.
 
 ## Business Feedback Sprint
 

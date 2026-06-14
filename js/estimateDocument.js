@@ -59,10 +59,33 @@
     const notes = [];
     if (item.fragile) notes.push("Fragile");
     if (item.nonStackable) notes.push("Non-stackable");
-    if (item.crated) notes.push("Crated");
+    if (item.crated && !/crate/i.test(item.packaging || "")) notes.push("Custom crate requested");
     if (item.warning && item.warning !== "OK") notes.push(item.warning);
     if (item.comment) notes.push(item.comment);
     return notes.join(" / ") || "Standard handling";
+  }
+
+  function protectionPlanFromItem(item) {
+    if (["RV", "FVP", "DV"].includes(item.protectionPlan)) return item.protectionPlan;
+    if (item.insurance === "Full Coverage") return "FVP";
+    return "RV";
+  }
+
+  function selectedProtectionPlan(quote, result) {
+    const items = [...(result.items || []), ...(quote.items || [])];
+    if (items.some((item) => protectionPlanFromItem(item) === "FVP")) return "FVP";
+    if (items.some((item) => protectionPlanFromItem(item) === "DV")) return "DV";
+    return "RV";
+  }
+
+  function protectionSelectionLabel(plan, totals) {
+    if (plan === "FVP") {
+      return Number(totals.insurance) > 0
+        ? "FVP / Full Value Protection Selected"
+        : "FVP / Full Value Protection Pending Declared Value";
+    }
+    if (plan === "DV") return "DV / Delivery Value Noted - Confirmation Required";
+    return "RV / Released Value Selected";
   }
 
   function renderItems(items) {
@@ -95,7 +118,8 @@
     const route = quote.route || {};
     const options = quote.options || {};
     const finalPrice = currency(totals.finalPrice);
-    const hasFullCoverage = Number(totals.insurance) > 0;
+    const protectionPlan = selectedProtectionPlan(quote, result);
+    const hasFullCoverage = protectionPlan === "FVP" && Number(totals.insurance) > 0;
 
     document.title = `Zaberman LLC Delivery Estimate | ${snapshot.estimateId || quote.estimateId || "EST-NEW"}`;
     setText("estimateId", snapshot.estimateId || quote.estimateId || "EST-NEW");
@@ -109,8 +133,8 @@
     setText("deliveryAddress", valueOrDash(route.deliveryAddress || route.deliveryZip));
     setText("serviceType", options.deliveryType || "Consolidated Interstate Route");
     setText("transportationTotal", finalPrice);
-    setText("fullCoverageStatus", hasFullCoverage ? "Included" : "Not Included");
-    setText("protectionSelection", hasFullCoverage ? "FVP / Full Value Protection Selected" : "RV / Released Value Selected");
+    setText("fullCoverageStatus", hasFullCoverage ? "Included" : protectionPlan === "FVP" ? "Pending Declared Value" : "Not Included");
+    setText("protectionSelection", protectionSelectionLabel(protectionPlan, totals));
     setText("estimateTotal", finalPrice);
     renderItems(result.items || quote.items || []);
   }
