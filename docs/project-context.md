@@ -52,6 +52,12 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Primary item allocation formula: `itemReferencePrice = totalQuoteAmount x (itemTotalWeight / orderTotalWeight)`.
 - If total order weight is `0`, fallback formula: `itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVolume)`.
 - If both total weight and effective volume are `0`, item reference price is `0`.
+- `Item Ref. Price` must not be reused as customer/legal Declared Value.
+- Direct Pickup / Direct Delivery are manual capture fields for the current MVP and do not affect price.
+- `250+ cu ft` may trigger a Direct review recommendation only; it must not auto-enable Direct.
+- Floor and elevator availability are captured for future labor/access pricing, but no floor/elevator pricing formula is active yet.
+- Future floor fee formula under discussion: `6.5 x max(floor - 3, 0) x people x item_count`.
+- Broker-facing packaging hides Bubble Protection; TV box rates and Custom Crate pricing require approved References/rates before activation.
 - `My Drafts`, `My Estimates`, `Cost Breakdown`, and `Estimate Document` are linked to local snapshots.
 - `My Drafts` and `My Estimates` include compact Storage / Backup controls and local storage health warnings.
 

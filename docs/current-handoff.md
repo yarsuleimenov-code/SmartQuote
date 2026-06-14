@@ -48,6 +48,13 @@ Implemented:
 - Valid backup import creates a pre-import backup snapshot first.
 - Corrupted storage warnings and delete confirmations were added.
 - Encoding cleanup was completed in Drafts, Estimates, and Estimate Document.
+- First post-feedback broker-flow cleanup slice keeps pricing formulas unchanged while improving data capture:
+  - Access Conditions moved under the route/address block and made collapsible.
+  - Broker-facing Long Carry and Narrow / Difficult Access controls are hidden.
+  - Address Types are limited to Warehouse, Auction, Business, Apartments, and House.
+  - Direct Pickup and Direct Delivery are manual capture fields with separate service dates.
+  - Per-item dimension unit entry uses an In / Ft toggle while stored dimensions remain normalized for calculation.
+  - Bubble Protection is hidden from broker-facing packaging options.
 
 ## Business Feedback Sprint
 
@@ -73,6 +80,22 @@ Default labor adjustment values:
 
 The hourly rate is not editable in Quote Draft. It remains an internal/CFO-approved rate for the current MVP and is saved in snapshots for audit. Legacy `manualAdjustment` may still exist in old drafts/snapshots and should remain read-only compatibility data. New broker adjustments should use special labor fields only.
 
+Current Direct rule for MVP:
+
+- Direct Pickup and Direct Delivery are manual broker/admin flags.
+- Direct service date is captured separately for pickup and delivery.
+- `250+ cu ft` may show a recommendation to review Direct service, but must not automatically enable Direct.
+- Direct capture fields do not affect price until a separate pricing stage is approved.
+
+Future floor fee rule, not implemented in pricing yet:
+
+```text
+floor_fee = 6.5 x floors_above_3 x people x item_count
+floors_above_3 = max(floor - 3, 0)
+```
+
+This should apply only when no working elevator is available. The current broker-flow slice captures floor and elevator availability only; it does not add floor pricing.
+
 Current item reference price rule:
 
 ```text
@@ -86,6 +109,8 @@ itemReferencePrice = totalQuoteAmount x (itemEffectiveVolume / orderEffectiveVol
 ```
 
 If both total weight and effective volume are `0`, item reference price is `0`. This is a display/allocation metric only, not a pricing input or cost component.
+
+Do not use `Item Ref. Price` as customer/legal Declared Value. If item-level declared value is needed later, add a separate `itemDeclaredValue` field.
 
 ## Calculation Rule
 
@@ -199,6 +224,9 @@ Stage 6 Storage Reliability MVP:
 - Preview Before Save is not implemented.
 - Fuel Prices affect calculation, but governed editing/version preview is not enabled.
 - Vehicles are editable in References, but full reference governance is not implemented.
+- TV box sizes require approved Packaging Rates in References before becoming active broker-facing options.
+- Custom Crate remains future formula work and should not be priced until the crate formula and rates are approved.
+- Item/order attachments remain P2 and should not store binary files in localStorage as a reliability promise.
 - Google Sheets Pricing Admin layer exists as audit/backup, not as a required runtime dependency.
 - Security/config endpoint handling is intentionally simple for test MVP.
 - Browser visual QA may require manual review if Codex in-app browser runtime is unavailable.

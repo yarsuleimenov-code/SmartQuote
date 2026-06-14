@@ -25,6 +25,7 @@
     let quote = initialQuote;
     const blankQuote = JSON.parse(JSON.stringify(initialQuote));
     let result = calculateQuote(quote);
+    const addressTypes = ["Warehouse", "Auction", "Business", "Apartments", "House"];
 
     const fields = {};
 
@@ -37,11 +38,29 @@
         "leadName", "customerName", "customerPhone", "customerEmail",
         "pickupZip", "deliveryZip", "pickupAddress", "deliveryAddress",
         "pickupAddressType", "deliveryAddressType", "pickupFloor", "deliveryFloor",
-        "pickupLongCarry", "deliveryLongCarry", "pickupCrew", "deliveryCrew", "helperRequirement", "deliveryType",
-        "requestedDate", "extraLaborPeople", "extraLaborHours", "notes",
+        "pickupCrew", "deliveryCrew", "pickupDirectDate", "deliveryDirectDate",
+        "helperRequirement", "deliveryType", "requestedDate", "extraLaborPeople", "extraLaborHours", "notes",
       ].forEach((id) => {
         fields[id] = byId(id);
       });
+    }
+
+    function normalizeAddressType(value) {
+      if (addressTypes.includes(value)) return value;
+      if (["Modern Apartment", "Old Apartment"].includes(value)) return "Apartments";
+      if (["Office", "Retail"].includes(value)) return "Business";
+      if (value === "Storage") return "Warehouse";
+      return "House";
+    }
+
+    function setSelectValue(select, value, fallback = "House") {
+      select.value = value;
+      if (select.value !== value) select.value = fallback;
+    }
+
+    function accessElevatorAvailable(point) {
+      if (point.elevatorAvailable !== undefined) return Boolean(point.elevatorAvailable);
+      return !Boolean(point.elevatorUnavailable);
     }
 
     function setFieldValues() {
@@ -53,14 +72,14 @@
       fields.deliveryZip.value = quote.route.deliveryZip || "";
       fields.pickupAddress.value = quote.route.pickupAddress || "";
       fields.deliveryAddress.value = quote.route.deliveryAddress || "";
-      fields.pickupAddressType.value = quote.access.pickup.addressType || "House";
-      fields.deliveryAddressType.value = quote.access.delivery.addressType || "House";
+      setSelectValue(fields.pickupAddressType, normalizeAddressType(quote.access.pickup.addressType), "House");
+      setSelectValue(fields.deliveryAddressType, normalizeAddressType(quote.access.delivery.addressType), "House");
       fields.pickupFloor.value = quote.access.pickup.floor || 1;
       fields.deliveryFloor.value = quote.access.delivery.floor || 1;
-      fields.pickupLongCarry.value = quote.access.pickup.longCarryFt || 0;
-      fields.deliveryLongCarry.value = quote.access.delivery.longCarryFt || 0;
       fields.pickupCrew.value = quote.access.pickup.crew || "";
       fields.deliveryCrew.value = quote.access.delivery.crew || "";
+      fields.pickupDirectDate.value = quote.options.pickupDirectDate || "";
+      fields.deliveryDirectDate.value = quote.options.deliveryDirectDate || "";
       fields.helperRequirement.value = quote.options.helperRequirement || "Auto";
       fields.deliveryType.value = quote.options.deliveryType || "Consolidated Route";
       fields.requestedDate.value = quote.options.requestedDate || "";
@@ -76,14 +95,18 @@
           : "";
       }
 
-      ["pickupCoi", "pickupStairs", "pickupElevatorUnavailable", "pickupNarrowAccess"].forEach((id) => {
+      ["pickupCoi", "pickupStairs"].forEach((id) => {
         byId(id).checked = Boolean(quote.access.pickup[id.replace("pickup", "").charAt(0).toLowerCase() + id.replace("pickup", "").slice(1)]);
       });
-      ["deliveryCoi", "deliveryStairs", "deliveryElevatorUnavailable", "deliveryNarrowAccess"].forEach((id) => {
+      ["deliveryCoi", "deliveryStairs"].forEach((id) => {
         byId(id).checked = Boolean(quote.access.delivery[id.replace("delivery", "").charAt(0).toLowerCase() + id.replace("delivery", "").slice(1)]);
       });
-      byId("exclusiveDelivery").checked = Boolean(quote.options.exclusiveDelivery);
-      byId("priorityDate").checked = Boolean(quote.options.priorityDate);
+      byId("pickupElevatorAvailable").checked = accessElevatorAvailable(quote.access.pickup);
+      byId("deliveryElevatorAvailable").checked = accessElevatorAvailable(quote.access.delivery);
+      byId("pickupDirect").checked = Boolean(quote.options.pickupDirect);
+      byId("deliveryDirect").checked = Boolean(quote.options.deliveryDirect);
+      byId("exclusiveDelivery").checked = false;
+      byId("priorityDate").checked = false;
     }
 
     function readQuote() {
@@ -104,27 +127,33 @@
           addressType: fields.pickupAddressType.value,
           coi: byId("pickupCoi").checked,
           stairs: byId("pickupStairs").checked,
-          elevatorUnavailable: byId("pickupElevatorUnavailable").checked,
-          narrowAccess: byId("pickupNarrowAccess").checked,
+          elevatorAvailable: byId("pickupElevatorAvailable").checked,
+          elevatorUnavailable: false,
+          narrowAccess: false,
           floor: number(fields.pickupFloor.value),
-          longCarryFt: number(fields.pickupLongCarry.value),
+          longCarryFt: 0,
           crew: number(fields.pickupCrew.value),
         },
         delivery: {
           addressType: fields.deliveryAddressType.value,
           coi: byId("deliveryCoi").checked,
           stairs: byId("deliveryStairs").checked,
-          elevatorUnavailable: byId("deliveryElevatorUnavailable").checked,
-          narrowAccess: byId("deliveryNarrowAccess").checked,
+          elevatorAvailable: byId("deliveryElevatorAvailable").checked,
+          elevatorUnavailable: false,
+          narrowAccess: false,
           floor: number(fields.deliveryFloor.value),
-          longCarryFt: number(fields.deliveryLongCarry.value),
+          longCarryFt: 0,
           crew: number(fields.deliveryCrew.value),
         },
       };
       const legacyManualAdjustment = number(quote.options?.manualAdjustment);
       quote.options = {
-        exclusiveDelivery: byId("exclusiveDelivery").checked,
-        priorityDate: byId("priorityDate").checked,
+        exclusiveDelivery: false,
+        priorityDate: false,
+        pickupDirect: byId("pickupDirect").checked,
+        pickupDirectDate: fields.pickupDirectDate.value,
+        deliveryDirect: byId("deliveryDirect").checked,
+        deliveryDirectDate: fields.deliveryDirectDate.value,
         helperRequirement: fields.helperRequirement.value,
         deliveryType: fields.deliveryType.value,
         requestedDate: fields.requestedDate.value,
@@ -140,10 +169,28 @@
       return options.map((option) => `<option${option === value ? " selected" : ""}>${option}</option>`).join("");
     }
 
+    function brokerPackagingOptions() {
+      return Object.keys(window.CalculatorVariables.packagingRates).filter((option) => option !== "Bubble Protection");
+    }
+
+    function itemUnitMode(item) {
+      return item.unitMode === "ft" ? "ft" : "in";
+    }
+
+    function displayDimension(value, mode) {
+      return mode === "ft" ? number(value) / 12 : number(value);
+    }
+
+    function normalizedDimension(value, mode) {
+      return mode === "ft" ? number(value) * 12 : number(value);
+    }
+
     function renderItems() {
       const tbody = byId("itemsBody");
       tbody.innerHTML = quote.items.map((item, index) => {
         const computed = result.items.find((entry) => entry.id === item.id) || {};
+        const unitMode = itemUnitMode(item);
+        const packagingOptions = brokerPackagingOptions();
         const groupBg = index % 2 === 0 ? "bg-white" : "bg-slate-50/70";
         const detailBg = index % 2 === 0 ? "bg-slate-50/70" : "bg-slate-100/70";
         return `
@@ -156,23 +203,27 @@
                   <input data-field="name" placeholder="Item name" class="w-56 border rounded-lg px-2 py-2" value="${escapeHtml(item.name)}" />
                 </span>
               </label>
+              <div class="mt-2 inline-flex rounded-lg border border-slate-200 bg-slate-50 p-1 text-xs font-semibold">
+                <button type="button" data-action="set-unit" data-unit="in" class="rounded-md px-2 py-1 ${unitMode === "in" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500"}">In</button>
+                <button type="button" data-action="set-unit" data-unit="ft" class="rounded-md px-2 py-1 ${unitMode === "ft" ? "bg-white text-slate-800 shadow-sm" : "text-slate-500"}">Ft</button>
+              </div>
             </td>
             <td class="px-3 pt-3">
               <label class="block">
                 <span class="text-xs text-slate-400">Length</span>
-                <input data-field="length" type="number" placeholder="L" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.length || 0}" />
+                <input data-field="length" data-dimension="true" type="number" placeholder="L" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${displayDimension(item.length, unitMode)}" />
               </label>
             </td>
             <td class="px-3 pt-3">
               <label class="block">
                 <span class="text-xs text-slate-400">Width</span>
-                <input data-field="width" type="number" placeholder="W" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.width || 0}" />
+                <input data-field="width" data-dimension="true" type="number" placeholder="W" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${displayDimension(item.width, unitMode)}" />
               </label>
             </td>
             <td class="px-3 pt-3">
               <label class="block">
                 <span class="text-xs text-slate-400">Height</span>
-                <input data-field="height" type="number" placeholder="H" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${item.height || 0}" />
+                <input data-field="height" data-dimension="true" type="number" placeholder="H" class="mt-1 w-20 border rounded-lg px-2 py-2" value="${displayDimension(item.height, unitMode)}" />
               </label>
             </td>
             <td class="px-3 pt-3">
@@ -190,7 +241,7 @@
             <td class="px-3 pt-3">
               <label class="block">
                 <span class="text-xs text-slate-400">Packaging</span>
-                <select data-field="packaging" class="mt-1 w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, Object.keys(window.CalculatorVariables.packagingRates))}</select>
+                <select data-field="packaging" class="mt-1 w-40 border rounded-lg px-2 py-2">${itemSelect(item.packaging, packagingOptions)}</select>
               </label>
             </td>
             <td class="px-3 pt-3">
@@ -284,6 +335,11 @@
         ? result.warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")
         : "<li>No item warnings</li>";
       byId("payloadPreview").textContent = JSON.stringify(sheet.buildPayload(quote, result), null, 2);
+      const directRecommendation = byId("directRecommendation");
+      if (directRecommendation) {
+        const shouldReviewDirect = (result.totals.effectiveVolume || 0) >= 250;
+        directRecommendation.classList.toggle("hidden", !shouldReviewDirect);
+      }
     }
 
     function buildEstimateSnapshot() {
@@ -344,7 +400,9 @@
       const field = control.dataset.field;
       if (control.type === "checkbox") {
         item[field] = control.checked;
-      } else if (["length", "width", "height", "weight", "qty", "declaredValue", "storageDays"].includes(field)) {
+      } else if (control.dataset.dimension === "true") {
+        item[field] = normalizedDimension(control.value, itemUnitMode(item));
+      } else if (["weight", "qty", "declaredValue", "storageDays"].includes(field)) {
         item[field] = number(control.value);
       } else {
         item[field] = control.value;
@@ -363,6 +421,7 @@
         length: 0,
         width: 0,
         height: 0,
+        unitMode: "in",
         weight: 0,
         qty: 1,
         packaging: "None",
@@ -402,6 +461,8 @@
           quote.items = [createEmptyItem(row.dataset.itemId)];
         } else if (event.target.dataset.action === "delete-item") {
           quote.items = quote.items.filter((item) => item.id !== row.dataset.itemId);
+        } else if (event.target.dataset.action === "set-unit" && item) {
+          item.unitMode = event.target.dataset.unit === "ft" ? "ft" : "in";
         }
         recalculate({ renderItems: true });
       });

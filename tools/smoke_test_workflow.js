@@ -118,14 +118,46 @@ const { context, localStorage } = loadContext({
 const quote = clone(context.window.CalculatorMockData);
 quote.estimateId = "EST-WF";
 quote.customer.leadName = "Workflow QA Smoke";
+quote.access.pickup = {
+  ...quote.access.pickup,
+  addressType: "Warehouse",
+  floor: 5,
+  elevatorAvailable: false,
+  elevatorUnavailable: false,
+  narrowAccess: false,
+  longCarryFt: 0,
+};
+quote.access.delivery = {
+  ...quote.access.delivery,
+  addressType: "Apartments",
+  floor: 4,
+  elevatorAvailable: true,
+  elevatorUnavailable: false,
+  narrowAccess: false,
+  longCarryFt: 0,
+};
+quote.options.pickupDirect = true;
+quote.options.pickupDirectDate = "2026-06-20";
+quote.options.deliveryDirect = false;
+quote.options.deliveryDirectDate = "";
+quote.items[0].unitMode = "ft";
 
 assert(context.window.CalculatorStorage.save(quote), "Expected draft save to succeed.");
 const savedDraft = context.window.CalculatorStorage.load();
 assert(savedDraft?.localId, "Expected saved draft to receive a localId.");
 assert(savedDraft.customer.leadName === "Workflow QA Smoke", "Expected saved draft lead name to round-trip.");
+assert(savedDraft.access.pickup.addressType === "Warehouse", "Expected pickup address type to round-trip.");
+assert(savedDraft.access.delivery.addressType === "Apartments", "Expected delivery address type to round-trip.");
+assert(savedDraft.access.pickup.floor === 5, "Expected pickup floor to round-trip.");
+assert(savedDraft.access.delivery.elevatorAvailable === true, "Expected delivery elevatorAvailable to round-trip.");
+assert(savedDraft.options.pickupDirect === true, "Expected pickupDirect to round-trip.");
+assert(savedDraft.options.pickupDirectDate === "2026-06-20", "Expected pickupDirectDate to round-trip.");
+assert(savedDraft.options.deliveryDirect === false, "Expected deliveryDirect to round-trip.");
+assert(savedDraft.items[0].unitMode === "ft", "Expected item unitMode to round-trip.");
 
 const result = context.window.PricingCalculator.calculateQuote(savedDraft);
 assert(result.totals.finalPrice > 0, "Expected workflow quote to calculate a positive total.");
+assert(savedDraft.options.deliveryDirect !== true, "Expected Direct to remain manual and not auto-enable.");
 
 assert(
   context.window.CalculatorStorage.saveEstimateSnapshot(buildEstimateSnapshot(context, savedDraft, result)),
@@ -150,6 +182,14 @@ assert(listedEstimates.length === 1, "Expected one generated estimate in list.")
 const blankContext = loadContext().context;
 const blankResult = blankContext.window.PricingCalculator.calculateQuote(clone(blankContext.window.CalculatorBlankQuote));
 assert(blankResult.totals.finalPrice === 0, "Expected empty quote to remain $0.");
+
+const quoteDraftHtml = fs.readFileSync("index.html", "utf8");
+assert(quoteDraftHtml.includes("Direct Pickup"), "Expected Direct Pickup capture in Quote Draft.");
+assert(quoteDraftHtml.includes("Direct Delivery"), "Expected Direct Delivery capture in Quote Draft.");
+assert(quoteDraftHtml.includes("Elevator available"), "Expected elevatorAvailable capture in Quote Draft.");
+assert(!quoteDraftHtml.includes(">Narrow<"), "Expected broker-facing Narrow control to be hidden.");
+assert(!quoteDraftHtml.includes("Long carry, ft"), "Expected broker-facing Long Carry control to be hidden.");
+assert(!quoteDraftHtml.includes("Bubble Protection</option>"), "Expected Bubble Protection not to be hardcoded as broker-facing option.");
 
 console.log(JSON.stringify({
   draftId: savedDraft.localId,

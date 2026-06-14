@@ -15,8 +15,8 @@
       deliveryAddress: "",
     },
     access: {
-      pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
-      delivery: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
+      pickup: { addressType: "House", coi: false, stairs: false, elevatorAvailable: true, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
+      delivery: { addressType: "House", coi: false, stairs: false, elevatorAvailable: true, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
     },
     options: {
       exclusiveDelivery: false,
@@ -28,6 +28,10 @@
       extraLaborPeople: 0,
       extraLaborHours: 0,
       extraLaborRate: 50,
+      pickupDirect: false,
+      pickupDirectDate: "",
+      deliveryDirect: false,
+      deliveryDirectDate: "",
       notes: "",
     },
     items: [
@@ -37,6 +41,7 @@
         length: 0,
         width: 0,
         height: 0,
+        unitMode: "in",
         weight: 0,
         qty: 1,
         packaging: "None",
@@ -67,8 +72,8 @@
       deliveryAddress: "200 Demo Ave, Los Angeles, CA 90021",
     },
     access: {
-      pickup: { addressType: "House", coi: false, stairs: false, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
-      delivery: { addressType: "Old Apartment", coi: true, stairs: true, elevatorUnavailable: false, narrowAccess: true, floor: 4, longCarryFt: 50, crew: 0 },
+      pickup: { addressType: "House", coi: false, stairs: false, elevatorAvailable: true, elevatorUnavailable: false, narrowAccess: false, floor: 1, longCarryFt: 0, crew: 0 },
+      delivery: { addressType: "Apartments", coi: true, stairs: true, elevatorAvailable: true, elevatorUnavailable: false, narrowAccess: true, floor: 4, longCarryFt: 50, crew: 0 },
     },
     options: {
       exclusiveDelivery: false,
@@ -80,6 +85,10 @@
       extraLaborPeople: 0,
       extraLaborHours: 0,
       extraLaborRate: 50,
+      pickupDirect: false,
+      pickupDirectDate: "",
+      deliveryDirect: false,
+      deliveryDirectDate: "",
       notes: "",
     },
     items: [
@@ -89,6 +98,7 @@
         length: 140,
         width: 50,
         height: 20,
+        unitMode: "in",
         weight: 500,
         qty: 1,
         packaging: "Custom Crate",
@@ -106,6 +116,7 @@
         length: 40,
         width: 6,
         height: 60,
+        unitMode: "in",
         weight: 45,
         qty: 1,
         packaging: "Bubble Protection",

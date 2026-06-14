@@ -116,6 +116,59 @@
                   <input id="deliveryAddress" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2" />
                 </label>
               </div>
+
+              <details class="mt-4 rounded-lg border border-slate-200 bg-slate-50/60" open>
+                <summary class="cursor-pointer select-none px-4 py-3 font-bold text-slate-800">Access Conditions</summary>
+                <div class="grid grid-cols-2 gap-4 border-t border-slate-200 p-4 text-sm">
+                  <div class="rounded-lg border border-slate-200 bg-white p-4">
+                    <h4 class="font-semibold text-slate-800 mb-3">Pickup</h4>
+                    <div class="grid grid-cols-2 gap-3">
+                      <label class="col-span-2">
+                        <span class="text-xs text-slate-400">Address Type</span>
+                        <select id="pickupAddressType" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
+                          <option>House</option><option>Apartments</option><option>Business</option><option>Warehouse</option><option>Auction</option>
+                        </select>
+                      </label>
+                      <label><span class="text-xs text-slate-400">Floor</span><input id="pickupFloor" data-recalculate type="number" min="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupElevatorAvailable" data-recalculate type="checkbox" class="accent-teal-500" />Elevator available</label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupCoi" data-recalculate type="checkbox" class="accent-teal-500" />COI</label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupStairs" data-recalculate type="checkbox" class="accent-teal-500" />Stairs</label>
+                      <label class="col-span-2">
+                        <span class="text-xs text-slate-400">Pickup Crew</span>
+                        <select id="pickupCrew" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
+                          <option value="">Auto</option><option value="1">1 person</option><option value="2">2 people</option><option value="3">3 people</option>
+                        </select>
+                      </label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupDirect" data-recalculate type="checkbox" class="accent-teal-500" />Direct Pickup</label>
+                      <label><span class="text-xs text-slate-400">Direct Pickup Date</span><input id="pickupDirectDate" data-recalculate type="date" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+                    </div>
+                  </div>
+
+                  <div class="rounded-lg border border-slate-200 bg-white p-4">
+                    <h4 class="font-semibold text-slate-800 mb-3">Delivery</h4>
+                    <div class="grid grid-cols-2 gap-3">
+                      <label class="col-span-2">
+                        <span class="text-xs text-slate-400">Address Type</span>
+                        <select id="deliveryAddressType" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
+                          <option>House</option><option>Apartments</option><option>Business</option><option>Warehouse</option><option>Auction</option>
+                        </select>
+                      </label>
+                      <label><span class="text-xs text-slate-400">Floor</span><input id="deliveryFloor" data-recalculate type="number" min="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryElevatorAvailable" data-recalculate type="checkbox" class="accent-teal-500" />Elevator available</label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryCoi" data-recalculate type="checkbox" class="accent-teal-500" />COI</label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryStairs" data-recalculate type="checkbox" class="accent-teal-500" />Stairs</label>
+                      <label class="col-span-2">
+                        <span class="text-xs text-slate-400">Delivery Crew</span>
+                        <select id="deliveryCrew" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
+                          <option value="">Auto</option><option value="1">1 person</option><option value="2">2 people</option><option value="3">3 people</option>
+                        </select>
+                      </label>
+                      <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryDirect" data-recalculate type="checkbox" class="accent-teal-500" />Direct Delivery</label>
+                      <label><span class="text-xs text-slate-400">Direct Delivery Date</span><input id="deliveryDirectDate" data-recalculate type="date" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+                    </div>
+                  </div>
+                </div>
+              </details>
             </section>
 
             <section class="bg-white rounded-lg border border-slate-200 p-5">
@@ -132,63 +185,13 @@
             </section>
 
             <section class="bg-white rounded-lg border border-slate-200 p-5">
-              <h3 class="font-bold text-slate-800 mb-4">Access Conditions</h3>
-              <div class="grid grid-cols-2 gap-4 text-sm">
-                <div class="border border-slate-200 rounded-lg p-4">
-                  <h4 class="font-semibold text-slate-800 mb-3">Pickup</h4>
-                  <div class="grid grid-cols-2 gap-3">
-                    <label class="col-span-2">
-                      <span class="text-xs text-slate-400">Address Type</span>
-                      <select id="pickupAddressType" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
-                        <option>House</option><option>Warehouse</option><option>Modern Apartment</option><option>Old Apartment</option><option>Office</option><option>Storage</option><option>Retail</option>
-                      </select>
-                    </label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupCoi" data-recalculate type="checkbox" class="accent-teal-500" />COI</label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupStairs" data-recalculate type="checkbox" class="accent-teal-500" />Stairs</label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupElevatorUnavailable" data-recalculate type="checkbox" class="accent-teal-500" />No elevator</label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="pickupNarrowAccess" data-recalculate type="checkbox" class="accent-teal-500" />Narrow</label>
-                    <label><span class="text-xs text-slate-400">Floor</span><input id="pickupFloor" data-recalculate type="number" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
-                    <label><span class="text-xs text-slate-400">Long carry, ft</span><input id="pickupLongCarry" data-recalculate type="number" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
-                    <label class="col-span-2">
-                      <span class="text-xs text-slate-400">Pickup Crew</span>
-                      <select id="pickupCrew" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
-                        <option value="">Auto</option><option value="1">1 person</option><option value="2">2 people</option><option value="3">3 people</option>
-                      </select>
-                    </label>
-                  </div>
-                </div>
-
-                <div class="border border-slate-200 rounded-lg p-4">
-                  <h4 class="font-semibold text-slate-800 mb-3">Delivery</h4>
-                  <div class="grid grid-cols-2 gap-3">
-                    <label class="col-span-2">
-                      <span class="text-xs text-slate-400">Address Type</span>
-                      <select id="deliveryAddressType" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
-                        <option>House</option><option>Warehouse</option><option>Modern Apartment</option><option>Old Apartment</option><option>Office</option><option>Storage</option><option>Retail</option>
-                      </select>
-                    </label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryCoi" data-recalculate type="checkbox" class="accent-teal-500" />COI</label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryStairs" data-recalculate type="checkbox" class="accent-teal-500" />Stairs</label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryElevatorUnavailable" data-recalculate type="checkbox" class="accent-teal-500" />No elevator</label>
-                    <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="deliveryNarrowAccess" data-recalculate type="checkbox" class="accent-teal-500" />Narrow</label>
-                    <label><span class="text-xs text-slate-400">Floor</span><input id="deliveryFloor" data-recalculate type="number" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
-                    <label><span class="text-xs text-slate-400">Long carry, ft</span><input id="deliveryLongCarry" data-recalculate type="number" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
-                    <label class="col-span-2">
-                      <span class="text-xs text-slate-400">Delivery Crew</span>
-                      <select id="deliveryCrew" data-recalculate class="mt-1 w-full border rounded-lg px-3 py-2">
-                        <option value="">Auto</option><option value="1">1 person</option><option value="2">2 people</option><option value="3">3 people</option>
-                      </select>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="bg-white rounded-lg border border-slate-200 p-5">
               <h3 class="font-bold text-slate-800 mb-4">Quote Options</h3>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="exclusiveDelivery" data-recalculate type="checkbox" class="accent-teal-500" />Exclusive delivery</label>
-                <label class="flex items-center gap-2 bg-slate-50 rounded-lg p-3"><input id="priorityDate" data-recalculate type="checkbox" class="accent-teal-500" />Priority date</label>
+                <input id="exclusiveDelivery" type="checkbox" class="hidden" />
+                <input id="priorityDate" type="checkbox" class="hidden" />
+                <div id="directRecommendation" class="md:col-span-3 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                  250+ cu ft detected. Review whether Direct Pickup or Direct Delivery is needed. Direct is manual and is not applied automatically.
+                </div>
                 <div class="md:col-span-3 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2">
                   <div class="grid grid-cols-12 gap-3 items-end">
                     <div class="col-span-4">
