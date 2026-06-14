@@ -6,10 +6,17 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` / `HEAD` hash: `c0a7854360d7f7f51607ad05cef302506f648aa3`.
-- Commit: `Add labor-based adjustment and item unit economics`.
-- Stage 5 workflow QA and handoff stabilization completed.
-- After the pause handoff, a controlled business feedback sprint was completed.
+- `main` / `HEAD`: `6695bd7 Add storage backup MVP and demo cleanup`.
+- Working tree expected state: clean.
+- Stage 6 Storage Reliability and Backup UX MVP completed.
+- Ready for decomposition of the next large business feedback package.
+
+Checkpoint history:
+
+- `8252547 Sync project documentation after feedback sprint`.
+- `c0a7854 Add labor-based adjustment and item unit economics`.
+- `3065ff4 Document SmartQuote pause and business testing handoff`.
+- `058c6cf Stabilize broker workflow QA and estimate snapshots`.
 
 Implemented:
 
@@ -36,6 +43,11 @@ Implemented:
 - `Effective $/cu ft` is shown in broker and admin contexts.
 - Broker summary hides Margin and Operational Cost; internal details remain in Cost Breakdown.
 - Stage 6 Storage Reliability MVP adds local JSON backup/export-import for broker storage buckets.
+- Storage / Backup block is available on My Drafts and My Estimates.
+- Invalid backup import does not overwrite current data.
+- Valid backup import creates a pre-import backup snapshot first.
+- Corrupted storage warnings and delete confirmations were added.
+- Encoding cleanup was completed in Drafts, Estimates, and Estimate Document.
 
 ## Business Feedback Sprint
 
@@ -177,6 +189,8 @@ Stage 6 Storage Reliability MVP:
 - Invalid imports are rejected without overwriting current data.
 - Before a valid import, the current local storage payload is saved to `zaberman-storage-preimport-backup`.
 - Backup UI is available on `drafts.html` and `estimates.html`.
+- Corrupted storage warning is shown on Drafts / Estimates when known JSON buckets are unreadable.
+- Delete actions on Drafts / Estimates require user confirmation.
 - `docs/storage-reliability-audit.md` documents current keys, risks, and decisions.
 
 ## Intentional Limits
@@ -200,22 +214,29 @@ Stage 6 Storage Reliability MVP:
 - Backup/import is manual and browser-local; users still need to export backups regularly.
 - Pre-import backup is local only and can also be lost if browser storage is cleared.
 
-## Next Recommended Stage
+## Next Recommended Step
 
-Current stage: Stage 6 Storage Reliability and Backup UX MVP.
+Current stage: Stage 6 Storage Reliability and Backup UX MVP is complete.
 
 Business reason:
 
 - The calculator is now calculation-stable and workflow-smoke-stable.
 - The next risk is accidental local data loss, not pricing logic.
 
-Implemented scope:
+Completed scope:
 
 1. Export all drafts/estimates/pricing admin buckets to a JSON backup.
 2. Import backup with validation and clear user warnings.
 3. Add visible storage health/status on My Drafts and My Estimates.
 4. Keep pricing formulas unchanged.
 5. Do not enable Save Variables until preview/versioning governance is ready.
+
+Recommended next step before implementation:
+
+1. Decompose the new business feedback package into `P0 / P1 / P2 / P3`.
+2. Select only broker-flow changes with the highest business value for the next implementation slice.
+3. Keep pricing formulas unchanged unless a confirmed calculation bug is identified.
+4. Keep Save Variables and Preview Before Save disabled until governed variable preview/versioning is designed.
 
 ## Business Feedback Backlog
 
@@ -242,10 +263,9 @@ Admin quote management:
 
 Pause date: June 2, 2026.
 
-Current `main` / `HEAD` after post-pause controlled feedback sprint:
+Current `main` / `HEAD` after post-pause controlled feedback sprint and Stage 6:
 
-- `c0a7854360d7f7f51607ad05cef302506f648aa3`
-- Commit: `Add labor-based adjustment and item unit economics`.
+- `6695bd7 Add storage backup MVP and demo cleanup`.
 
 Reason for pause:
 
@@ -264,12 +284,13 @@ Ready now:
 - Estimate snapshot contains audit fields.
 - Stage 5 workflow smoke test has been added.
 - Controlled feedback sprint has added labor-based adjustment, item unit economics allocation, and effective cost per cubic foot.
+- Stage 6 has added local JSON backup/export-import MVP and demo encoding cleanup.
 
 Intentionally not enabled:
 
 - Save Variables.
 - Preview Before Save.
-- Full storage reliability / export-import.
+- Backend/shared storage reliability.
 - Security/config refactor.
 - Backend migration.
 
@@ -277,6 +298,7 @@ Known risks:
 
 - Browser visual QA was manual / limited.
 - localStorage remains the primary working storage.
+- Backup/export-import is MVP-level and manual.
 - `calculationMpg` temporarily preserves the UAT baseline.
 - Business feedback may change priorities.
 
@@ -286,4 +308,4 @@ How to resume work:
 2. Classify feedback as P0/P1/P2/P3.
 3. Fix broker flow blockers first.
 4. Do not enable new pricing features before feedback triage.
-5. Then move to Storage Reliability and Backup UX if feedback does not reveal more critical issues.
+5. Prioritize only broker-flow changes with the highest business value.
