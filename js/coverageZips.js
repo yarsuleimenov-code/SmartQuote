@@ -22,6 +22,19 @@
     },
   ];
   const statusClassNames = coverageStatuses.flatMap((status) => status.className.split(" "));
+  const zoneBadgeClasses = {
+    "Boston": "bg-cyan-100 text-cyan-800",
+    "CA (A)": "bg-blue-100 text-blue-800",
+    "CA (C)": "bg-indigo-100 text-indigo-800",
+    "CA (D)": "bg-violet-100 text-violet-800",
+    "CA (LA)": "bg-fuchsia-100 text-fuchsia-800",
+    "CA (SF)": "bg-rose-100 text-rose-800",
+    "NY (DC)": "bg-orange-100 text-orange-800",
+    "NY (LI)": "bg-amber-100 text-amber-800",
+    "NY (NORTH)": "bg-lime-100 text-lime-800",
+    "NY (SOUTH)": "bg-emerald-100 text-emerald-800",
+    "NYC": "bg-teal-100 text-teal-800",
+  };
 
   const fields = {
     search: document.getElementById("coverageZipSearch"),
@@ -99,6 +112,10 @@
     select.classList.add(...statusClassName(statusValue).split(" "));
   }
 
+  function zoneBadgeClassName(zone) {
+    return zoneBadgeClasses[zone] || "bg-slate-100 text-slate-700";
+  }
+
   function escapeHtml(value) {
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -131,7 +148,7 @@
         </td>
         <td class="px-5 py-3 text-slate-500">${escapeHtml(record.region)}</td>
         <td class="px-5 py-3">
-          <span class="inline-flex px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+          <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${zoneBadgeClassName(record.zone)}">
             ${escapeHtml(record.zone)}
           </span>
         </td>

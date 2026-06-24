@@ -52,6 +52,23 @@ assert(ui.includes("✅ Covered"), "Expected Covered status label.");
 assert(ui.includes("⛔ Excluded"), "Expected Excluded status label.");
 assert(ui.includes("⚠ Review"), "Expected Review status label.");
 assert(ui.includes("applyStatusStyle"), "Expected selected status visual styling.");
+assert(ui.includes("const zoneBadgeClasses"), "Expected stable zone badge color mapping.");
+[
+  "Boston",
+  "CA (A)",
+  "CA (C)",
+  "CA (D)",
+  "CA (LA)",
+  "CA (SF)",
+  "NY (DC)",
+  "NY (LI)",
+  "NY (NORTH)",
+  "NY (SOUTH)",
+  "NYC",
+].forEach((zone) => {
+  assert(ui.includes(`"${zone}"`), `Expected badge color mapping for ${zone}.`);
+});
+assert(ui.includes("zoneBadgeClassName(record.zone)"), "Expected Assigned Zone badges to use zone colors.");
 assert(ui.includes("const defaultPriceCoefficient = 1"), "Expected default ZIP coefficient 1.0.");
 assert(html.includes("ZIP Coefficient"), "Expected ZIP coefficient table column.");
 assert(html.includes("Coverage"), "Expected Coverage table column.");
