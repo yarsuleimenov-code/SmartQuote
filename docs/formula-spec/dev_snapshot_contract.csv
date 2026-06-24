@@ -1,0 +1,8 @@
+"Snapshot Section","Required Fields","Why Needed","Mutable After Estimate?","Notes"
+"formulaVersion","formulaVersionId, activeAt, approvedBy","Понять, какая версия формул считала цену.","No","Draft may recalc; estimate must freeze."
+"variablesSnapshot","variableId, value, unit, version/effectiveDate","Воспроизвести расчет после изменения variables.","No","Store used variables at minimum; full snapshot preferred for audit."
+"referencesSnapshot","referenceId, versionId, row keys used","Понять, какие vehicles/rates/ZIP/labor rows применялись.","No","Can store version IDs plus used row IDs."
+"inputSnapshot","normalized order + item + access inputs","Reproduce exact calculation inputs.","No","Separate from mutable draft."
+"resultSnapshot","subtotals, final price, margin, warnings","Render estimate and admin breakdown.","No","Should match estimate document."
+"traceSnapshot","trace rows for pricing-impact formulas","Explain every important price component.","No","Critical for audit/investigation."
+"approvalSnapshot","approval statuses, approver, timestamp, comments","Show why risky estimate was allowed.","No","Required for blocking warnings."

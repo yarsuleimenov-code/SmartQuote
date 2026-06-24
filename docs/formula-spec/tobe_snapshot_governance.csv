@@ -1,0 +1,7 @@
+"Правило","Описание","Почему важно","Решение CEO / Developer"
+"Draft recalculates","Draft всегда пересчитывается по текущим variables и references.","Брокер должен видеть актуальную цену при редактировании.","Утвердить."
+"Estimate is frozen","Generated estimate сохраняет result и не пересчитывается silently.","Старые customer prices должны быть воспроизводимы.","Утвердить как обязательное правило."
+"Store formulaVersion","Snapshot хранит версию формульной логики.","Можно объяснить цену после Formula Sprint изменений.","Утвердить naming/versioning."
+"Store variablesSnapshot","Snapshot хранит значения variables на момент estimate.","Изменение margin/fuel/rates не ломает старую цену.","Уже есть AS-IS pattern, сохранить."
+"Store reference versions","Snapshot должен знать версии ZIP/vehicles/labor/protection refs.","References будут меняться отдельно от formulas.","Добавить в TO-BE."
+"Store calculation trace","Snapshot хранит trace lines или ссылку на trace version.","CEO/admin может расследовать цену.","Утвердить объем trace."

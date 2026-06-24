@@ -1,0 +1,8 @@
+"Field","Value"
+"Workbook","TO-BE Development Master for SmartQuote Pricing Engine"
+"Purpose","Полный master-файл для разработки формульного ядра с нуля: data contracts, execution order, formulas, variables, references, trace, warnings, snapshot, UAT."
+"Audience","Developer / BA / Product / CEO / CFO / Operations"
+"How to use","Начать с Build_Phases, затем Execution_Order, Data_Model, Input/Output contracts, Formula_Master, Variables, References, Trace/Snapshot, UAT."
+"Key rule","Не менять js/calculator.js до approval формул, variables, references and UAT expectations."
+"AS-IS compatibility","AS-IS formulas included as baseline sheet; TO-BE should extend without breaking baseline unless approved."
+"Generated from","docs/formula-spec CSV master artifacts"
