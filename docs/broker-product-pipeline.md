@@ -190,14 +190,19 @@ Move from local testing toward reliable shared workflow.
 ## Near-Term Priority Order
 
 ```text
-1. Interactive Variables MVP with benchmark impact preview
-2. Export/import backup for drafts and estimates
-3. Full broker flow QA from Quick Quote to Estimate Document
-4. Validation and review-required states
-5. Estimate HTML/PDF final polish
-6. Sheets persistence stabilization
-7. Backend migration preparation
+1. CEO review of P0 Formula Sprint decisions
+2. Warning UI Contract and Quote Readiness states
+3. Vehicle Fit / Capacity output contract
+4. Presentation-only warning and readiness UX
+5. Capacity Analysis and Formula Trace after output approval
+6. Governed Variables / References with benchmark preview
+7. ZIP/service-area management after reference cleanup
+8. Backend/shared-storage preparation
 ```
+
+The detailed UI sequence and scope boundaries from the June 19 Calculator meeting are documented in:
+
+- `docs/calculator-meeting-ui-sprint-plan.md`.
 
 ## What Not To Prioritize Now
 

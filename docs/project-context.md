@@ -70,14 +70,23 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Broker-facing packaging hides Bubble Protection; TV box rates and Custom Crate pricing require approved References/rates before activation.
 - `My Drafts`, `My Estimates`, `Cost Breakdown`, and `Estimate Document` are linked to local snapshots.
 - `My Drafts` and `My Estimates` include compact Storage / Backup controls and local storage health warnings.
+- Quote Draft warning presentation is normalized through `js/warningPresentation.js`.
+- Quote readiness is presentation-only until blocking/approval governance is approved.
+- Vehicle Fit / Capacity TO-BE outputs are defined in `docs/vehicle-fit-capacity-output-contract.md`; the frontend must not infer missing density or dimensional-fit values.
 
 ## Next Business Handoff Priorities
 
-1. Interactive Variables MVP with a limited safe variable set.
-2. Variables impact preview against accepted benchmark cases before saving.
-3. Final broker flow QA from Quick Quote to Estimate Document.
-4. Google Sheets backup/audit stabilization.
-5. Plan backend/shared storage only after business testing confirms the broker flow.
+1. CEO approval of P0 TO-BE formula decisions.
+2. Warning UI Contract and Quote Readiness states.
+3. Vehicle Fit / Capacity output contract and broker summary.
+4. Capacity Analysis and Formula Trace in Cost Breakdown after output approval.
+5. Governed Variables/References with benchmark preview before activation.
+6. ZIP/service-area management only after reference cleanup and ownership approval.
+
+The implementation order from the June 19 Calculator meeting is documented in:
+
+- `docs/calculator-meeting-ui-sprint-plan.md`.
+- `docs/formula-spec/CEO_DECISION_REGISTER.xlsx`.
 
 ## Work Style
 

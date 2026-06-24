@@ -6,14 +6,17 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current stable checkpoint:
 
-- `main` / `HEAD`: `52de9f6 Use item catalog for quick quote transfer`.
+- `main` / `HEAD`: `1d44c85 Add CEO formula review documentation`.
 - Working tree expected state: clean.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
-- Ready for Quote Draft broker-flow compactness and default validation.
+- CEO Formula Review Pack completed.
+- UI Sprint Plan from the June 19 Calculator meeting documented.
 
 Checkpoint history:
 
+- `4b30b80 Improve quote transfer item UX`.
+- `52de9f6 Use item catalog for quick quote transfer`.
 - `df3e472 Stabilize drafts and estimates handoff UX`.
 - `d0fb741 Clean up customer estimate document wording`.
 - `9ad5414 Rename insurance flow to protection plans`.
@@ -96,6 +99,13 @@ Implemented:
   - Access defaults use floor `1`, elevator available, and Direct pickup/delivery off.
   - Direct service dates remain empty until entered manually.
   - Catalog transfer comments should stay compact for broker review.
+- Calculator Meeting UI Sprint:
+  - Warning UI Contract is documented in `docs/warning-ui-contract.md`.
+  - Quote Draft has a presentation-only readiness state: Ready, Review Required, or Blocked.
+  - Current route, item, protection, and bulky-order warnings render as actionable cards.
+  - Warning actions focus the related ZIP or item input.
+  - Blocking intent is visible, but Generate Estimate enforcement remains disabled until approval governance exists.
+  - Vehicle Fit / Capacity output contract is documented; missing TO-BE outputs are not inferred in the frontend.
 
 ## Business Feedback Sprint
 
@@ -300,27 +310,27 @@ Stage 6 Storage Reliability MVP:
 
 ## Next Recommended Step
 
-Current stage: Stage 6 Storage Reliability and Backup UX MVP is complete.
+Current stage: CEO Formula Review and UI Sprint planning.
 
 Business reason:
 
-- The calculator is now calculation-stable and workflow-smoke-stable.
-- The next risk is accidental local data loss, not pricing logic.
+- The calculator is calculation-stable and workflow-smoke-stable.
+- The CEO Formula Review Pack documents open TO-BE decisions.
+- The June 19 Calculator meeting identified warning visibility, vehicle fit, capacity explanation, and governed admin screens as the next UI priorities.
 
-Completed scope:
+Required order:
 
-1. Export all drafts/estimates/pricing admin buckets to a JSON backup.
-2. Import backup with validation and clear user warnings.
-3. Add visible storage health/status on My Drafts and My Estimates.
-4. Keep pricing formulas unchanged.
-5. Do not enable Save Variables until preview/versioning governance is ready.
+1. Approve Warning UI Contract and warning severity/approval policy.
+2. Approve Vehicle Fit / Capacity output contract.
+3. Implement presentation-only readiness and warning UX using reliable current outputs.
+4. Add Capacity Analysis and Formula Trace only after their TO-BE output contracts are approved.
+5. Keep Save Variables disabled until preview/versioning governance is designed.
+6. Do not change `js/calculator.js` before CEO Formula Review closes the P0 blockers.
 
-Recommended next step before implementation:
+Detailed plan:
 
-1. Decompose the new business feedback package into `P0 / P1 / P2 / P3`.
-2. Select only broker-flow changes with the highest business value for the next implementation slice.
-3. Keep pricing formulas unchanged unless a confirmed calculation bug is identified.
-4. Keep Save Variables and Preview Before Save disabled until governed variable preview/versioning is designed.
+- `docs/calculator-meeting-ui-sprint-plan.md`
+- `docs/formula-spec/CEO_DECISION_REGISTER.xlsx`
 
 ## Business Feedback Backlog
 

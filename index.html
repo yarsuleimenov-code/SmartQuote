@@ -294,8 +294,17 @@
                 </div>
 
                 <div class="pt-4 border-t border-slate-200">
-                  <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">Warnings</p>
-                  <ul id="warningList" class="list-disc ml-5 text-sm text-slate-600 space-y-1"></ul>
+                  <div class="flex items-center justify-between gap-3">
+                    <div>
+                      <p class="text-xs uppercase tracking-wide text-slate-400">Quote Readiness</p>
+                      <p class="mt-1 text-xs text-slate-500">Pricing remains AS-IS; this panel explains input and review risks.</p>
+                    </div>
+                    <span id="quoteReadiness" class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">Checking</span>
+                  </div>
+                  <div id="warningCenter" class="mt-3 space-y-2"></div>
+                  <p id="warningEnforcementNote" class="hidden mt-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-500">
+                    Blocking enforcement and manager approval are pending governance approval.
+                  </p>
                 </div>
               </div>
 
@@ -326,6 +335,7 @@
   <script src="js/storage.js"></script>
   <script src="js/config.js"></script>
   <script src="js/googleSheet.js"></script>
+  <script src="js/warningPresentation.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/app.js"></script>
 </body>

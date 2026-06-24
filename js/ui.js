@@ -206,6 +206,129 @@
       return "";
     }
 
+    function warningStyle(severity) {
+      if (severity === "blocking") {
+        return {
+          card: "border-red-200 bg-red-50",
+          badge: "bg-red-100 text-red-700",
+          label: "Blocking",
+        };
+      }
+      if (severity === "approval") {
+        return {
+          card: "border-amber-200 bg-amber-50",
+          badge: "bg-amber-100 text-amber-800",
+          label: "Approval Required",
+        };
+      }
+      if (severity === "info") {
+        return {
+          card: "border-blue-200 bg-blue-50",
+          badge: "bg-blue-100 text-blue-700",
+          label: "Info",
+        };
+      }
+      return {
+        card: "border-slate-200 bg-slate-50",
+        badge: "bg-slate-200 text-slate-700",
+        label: "Review",
+      };
+    }
+
+    function readinessStyle(readiness) {
+      if (readiness === "blocked") return "bg-red-100 text-red-700";
+      if (readiness === "review") return "bg-amber-100 text-amber-800";
+      return "bg-green-100 text-green-700";
+    }
+
+    function warningFocusTarget(target) {
+      if (target === "items") return byId("itemsBody")?.querySelector("input");
+      if (target === "quoteOptions") return byId("extraLaborPeople");
+      if (target?.startsWith("item:")) {
+        const [, itemId, field] = target.split(":");
+        const itemRows = byId("itemsBody")?.querySelectorAll(`[data-item-id="${itemId}"]`);
+        if (!itemRows?.length) return null;
+        if (field) {
+          for (const row of itemRows) {
+            const control = row.querySelector(`[data-field="${field}"]`);
+            if (control) return control;
+          }
+        }
+        return itemRows[0].querySelector("input");
+      }
+      return byId(target);
+    }
+
+    function clearWarningHighlights() {
+      ["pickupZip", "deliveryZip"].forEach((id) => {
+        byId(id)?.classList.remove("border-red-400", "bg-red-50", "ring-1", "ring-red-200");
+      });
+      byId("itemsBody")?.querySelectorAll("[data-warning-highlight]").forEach((element) => {
+        element.removeAttribute("data-warning-highlight");
+        element.classList.remove("ring-2", "ring-amber-200", "bg-amber-50/40");
+      });
+    }
+
+    function highlightWarningTarget(entry) {
+      const target = warningFocusTarget(entry.target);
+      if (!target) return;
+      if (entry.scope === "route") {
+        target.classList.add("border-red-400", "bg-red-50", "ring-1", "ring-red-200");
+        return;
+      }
+      const row = target.closest("[data-item-id]");
+      if (row) {
+        row.setAttribute("data-warning-highlight", "true");
+        row.classList.add("ring-2", "ring-amber-200", "bg-amber-50/40");
+      }
+    }
+
+    function renderWarningCenter() {
+      const presentation = window.WarningPresentation?.build({ quote, result }) || {
+        readiness: { id: result.routeSupported ? "ready" : "review", label: result.routeSupported ? "Ready" : "Review Required" },
+        warnings: [],
+        blocksEstimate: false,
+        enforcementEnabled: false,
+      };
+      const readiness = byId("quoteReadiness");
+      readiness.textContent = presentation.readiness.label;
+      readiness.className = `px-3 py-1 rounded-full text-xs font-semibold ${readinessStyle(presentation.readiness.id)}`;
+
+      clearWarningHighlights();
+      presentation.warnings.forEach(highlightWarningTarget);
+
+      byId("warningCenter").innerHTML = presentation.warnings.length
+        ? presentation.warnings.map((entry) => {
+          const style = warningStyle(entry.severity);
+          const approval = entry.approvalRole
+            ? `<span class="text-[11px] text-slate-500">Owner: ${escapeHtml(entry.approvalRole)}</span>`
+            : "";
+          return `
+            <article class="rounded-lg border p-3 ${style.card}">
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${style.badge}">${style.label}</span>
+                    <p class="font-semibold text-slate-800">${escapeHtml(entry.title)}</p>
+                  </div>
+                  <p class="mt-1 text-xs leading-5 text-slate-600">${escapeHtml(entry.message)}</p>
+                  ${approval}
+                </div>
+                <button type="button" data-warning-focus="${escapeHtml(entry.target)}" class="shrink-0 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline">${escapeHtml(entry.actionLabel)}</button>
+              </div>
+            </article>
+          `;
+        }).join("")
+        : `
+          <div class="rounded-lg border border-green-200 bg-green-50 px-3 py-3 text-sm text-green-800">
+            No current input or review warnings.
+          </div>
+        `;
+
+      const enforcementNote = byId("warningEnforcementNote");
+      enforcementNote.classList.toggle("hidden", !presentation.blocksEstimate || presentation.enforcementEnabled);
+    }
+
     function renderItems() {
       const tbody = byId("itemsBody");
       tbody.innerHTML = quote.items.map((item, index) => {
@@ -358,9 +481,7 @@
       byId("effectiveVolume").textContent = `${Math.ceil(result.totals.effectiveVolume || 0)} cu ft`;
       byId("totalVolume").textContent = `${result.totals.totalVolume.toFixed(1)} cu ft`;
       byId("totalWeight").textContent = `${result.totals.totalWeight.toFixed(0)} lb`;
-      byId("warningList").innerHTML = result.warnings.length
-        ? result.warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")
-        : "<li>No item warnings</li>";
+      renderWarningCenter();
       byId("payloadPreview").textContent = JSON.stringify(sheet.buildPayload(quote, result), null, 2);
       const directRecommendation = byId("directRecommendation");
       if (directRecommendation) {
@@ -502,6 +623,14 @@
           item.protectionLegacyType = item.insurance;
         }
         recalculate({ renderItems: true });
+      });
+      byId("warningCenter").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-warning-focus]");
+        if (!button) return;
+        const target = warningFocusTarget(button.dataset.warningFocus);
+        if (!target) return;
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        window.setTimeout(() => target.focus(), 250);
       });
       byId("addItem").addEventListener("click", addItem);
       byId("addItemBottom").addEventListener("click", addItem);
