@@ -14,6 +14,7 @@ Stage 6 scope: document the current browser storage model and add MVP backup/exp
 | `drafts` | `js/pricingConfig.js` | Pricing Admin placeholder bucket | PricingConfig baseline structure | active | Mostly unused by broker workflow today | backup/export |
 | `estimates` | `js/pricingConfig.js` | Pricing Admin placeholder bucket | PricingConfig baseline structure | active | Mostly unused by broker workflow today | backup/export |
 | `calculationLogs` | `js/pricingConfig.js`, `js/pricingAdminStorage.js` | Pricing Admin audit events | Pricing Admin adapter | active | Audit trail is local-only | backup/export |
+| `zaberman-zip-coverage-overrides` | `js/coverageZips.js` | Per-ZIP coverage status and future price coefficient overrides | ZIP Coverage | active | Local-only admin settings can be lost with browser storage | backup/export |
 | `zaberman-pricing-config` | `js/pricingConfig.js` | Future saved admin config overrides | PricingConfig apply/reset config | active | Could override runtime values if used | backup/export |
 | `zaberman-calculator-draft` | `js/storage.js` | Last/current draft snapshot | Quote Draft, legacy migration, current UX | legacy | Single-record legacy key can drift from draft list | backup/export |
 | `zaberman-calculator-drafts` | `js/storage.js` | Multiple saved quote drafts | My Drafts, Quote Draft load/select | active | Main broker draft data can be lost with browser storage | backup/export |

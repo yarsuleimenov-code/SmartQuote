@@ -1,7 +1,27 @@
 (function () {
   const pageSize = 100;
+  const storageKey = "zaberman-zip-coverage-overrides";
+  const defaultPriceCoefficient = 1;
   const source = window.CoverageZipData || {};
   const records = Array.isArray(source.records) ? source.records : [];
+  const coverageStatuses = [
+    {
+      value: "covered",
+      label: "✅ Covered",
+      className: "border-emerald-300 bg-emerald-50 text-emerald-800",
+    },
+    {
+      value: "disabled",
+      label: "⛔ Excluded",
+      className: "border-red-300 bg-red-50 text-red-800",
+    },
+    {
+      value: "approval_required",
+      label: "⚠ Review",
+      className: "border-amber-300 bg-amber-50 text-amber-800",
+    },
+  ];
+  const statusClassNames = coverageStatuses.flatMap((status) => status.className.split(" "));
 
   const fields = {
     search: document.getElementById("coverageZipSearch"),
@@ -29,6 +49,55 @@
   };
 
   let currentPage = 1;
+  let overrides = readOverrides();
+
+  function readOverrides() {
+    try {
+      const parsed = JSON.parse(window.localStorage?.getItem(storageKey) || "{}");
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function writeOverrides() {
+    try {
+      window.localStorage?.setItem(storageKey, JSON.stringify(overrides));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function recordSettings(record) {
+    const saved = overrides[record.zip] || {};
+    return {
+      coverageStatus: coverageStatuses.some((status) => status.value === saved.coverageStatus)
+        ? saved.coverageStatus
+        : "covered",
+      priceCoefficient: Number.isFinite(Number(saved.priceCoefficient))
+        ? Number(saved.priceCoefficient)
+        : defaultPriceCoefficient,
+    };
+  }
+
+  function statusOptions(selectedValue) {
+    return coverageStatuses.map((status) => `
+      <option value="${status.value}" ${status.value === selectedValue ? "selected" : ""}>
+        ${status.label}
+      </option>
+    `).join("");
+  }
+
+  function statusClassName(statusValue) {
+    return coverageStatuses.find((status) => status.value === statusValue)?.className
+      || coverageStatuses[0].className;
+  }
+
+  function applyStatusStyle(select, statusValue) {
+    select.classList.remove(...statusClassNames);
+    select.classList.add(...statusClassName(statusValue).split(" "));
+  }
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -53,7 +122,9 @@
   }
 
   function renderRows(rows) {
-    fields.rows.innerHTML = rows.map((record) => `
+    fields.rows.innerHTML = rows.map((record) => {
+      const settings = recordSettings(record);
+      return `
       <tr class="hover:bg-slate-50">
         <td class="px-5 py-3">
           <span class="font-mono font-semibold text-slate-800">${escapeHtml(record.zip)}</span>
@@ -65,13 +136,21 @@
           </span>
         </td>
         <td class="px-5 py-3 text-right">
-          <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
-            <i data-lucide="circle-check" class="w-4 h-4"></i>
-            Covered
-          </span>
+          <span class="font-mono font-semibold text-slate-700">${settings.priceCoefficient.toFixed(2)}x</span>
+        </td>
+        <td class="px-5 py-3 text-right">
+          <select
+            class="coverage-status-select min-w-[220px] border rounded-lg px-3 py-2 text-sm font-medium ${statusClassName(settings.coverageStatus)}"
+            data-zip="${escapeHtml(record.zip)}"
+            aria-label="Coverage status for ZIP ${escapeHtml(record.zip)}"
+            title="Set ZIP coverage status"
+          >
+            ${statusOptions(settings.coverageStatus)}
+          </select>
         </td>
       </tr>
-    `).join("");
+    `;
+    }).join("");
   }
 
   function setPaginationState(totalPages) {
@@ -164,6 +243,32 @@
       render();
       document.getElementById("coverageZipRows").closest("section").scrollIntoView({ behavior: "smooth" });
     });
+  });
+
+  fields.rows.addEventListener("change", (event) => {
+    const select = event.target.closest(".coverage-status-select");
+    if (!select) return;
+
+    const zip = select.dataset.zip;
+    const existing = recordSettings({ zip });
+    const coverageStatus = coverageStatuses.some((status) => status.value === select.value)
+      ? select.value
+      : "covered";
+    applyStatusStyle(select, coverageStatus);
+
+    if (coverageStatus === "covered" && existing.priceCoefficient === defaultPriceCoefficient) {
+      delete overrides[zip];
+    } else {
+      overrides[zip] = {
+        coverageStatus,
+        priceCoefficient: existing.priceCoefficient,
+      };
+    }
+
+    const saved = writeOverrides();
+    fields.status.textContent = saved
+      ? `ZIP ${zip} coverage status saved locally`
+      : `ZIP ${zip} coverage status could not be saved`;
   });
 
   initializeFilters();

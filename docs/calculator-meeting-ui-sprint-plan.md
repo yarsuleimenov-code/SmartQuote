@@ -233,7 +233,9 @@ Current read-only slice:
 
 - loads the approved `zone_zip_map` coverage dataset from `coverage_zip_route_zone_map.xlsx`;
 - supports ZIP prefix search and zone filtering;
-- shows region, assigned zone, and coverage status;
+- shows region, assigned zone, ZIP coefficient, and coverage status;
+- coverage status can be set to Covered, Excluded, or Review and is saved locally;
+- all ZIP coefficients default to `1.00`; coefficient editing and pricing impact remain deferred;
 - does not change the active calculator ZIP mapping or pricing formulas.
 
 ### UI-09: Benchmark Impact Preview

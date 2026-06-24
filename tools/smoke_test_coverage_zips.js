@@ -44,6 +44,18 @@ assert(records.some((record) => record.zip === "11694" && record.zone === "NYC")
 assert(ui.includes("record.zip.startsWith(search)"), "Expected ZIP prefix search.");
 assert(ui.includes("record.zone === zone"), "Expected zone filtering.");
 assert(ui.includes("const pageSize = 100"), "Expected paginated rendering.");
+assert(ui.includes('const storageKey = "zaberman-zip-coverage-overrides"'), "Expected local coverage override storage.");
+assert(ui.includes('value: "covered"'), "Expected Covered status.");
+assert(ui.includes('value: "disabled"'), "Expected Excluded compatibility status.");
+assert(ui.includes('value: "approval_required"'), "Expected Review compatibility status.");
+assert(ui.includes("✅ Covered"), "Expected Covered status label.");
+assert(ui.includes("⛔ Excluded"), "Expected Excluded status label.");
+assert(ui.includes("⚠ Review"), "Expected Review status label.");
+assert(ui.includes("applyStatusStyle"), "Expected selected status visual styling.");
+assert(ui.includes("const defaultPriceCoefficient = 1"), "Expected default ZIP coefficient 1.0.");
+assert(html.includes("ZIP Coefficient"), "Expected ZIP coefficient table column.");
+assert(html.includes("Coverage"), "Expected Coverage table column.");
+assert(html.includes('aria-live="polite"'), "Expected accessible save status announcements.");
 assert(sidebar.includes('href: "coverage-zips.html"'), "Expected ZIP Coverage navigation.");
 assert(middleware.includes('"/coverage-zips.html"'), "Expected admin middleware protection.");
 

@@ -73,7 +73,9 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Quote Draft warning presentation is normalized through `js/warningPresentation.js`.
 - Quote readiness is presentation-only until blocking/approval governance is approved.
 - Vehicle Fit / Capacity TO-BE outputs are defined in `docs/vehicle-fit-capacity-output-contract.md`; the frontend must not infer missing density or dimensional-fit values.
-- Admin ZIP Coverage is a read-only directory sourced from `coverage_zip_route_zone_map.xlsx`, with ZIP search and zone filtering.
+- Admin ZIP Coverage is sourced from `coverage_zip_route_zone_map.xlsx`, with ZIP search, zone filtering, and locally saved coverage statuses.
+- Coverage states are Covered, Excluded, and Review.
+- Every ZIP currently has a read-only default price coefficient of `1.00`; coefficient pricing is not active.
 - The ZIP Coverage screen is not connected to the active calculator ZIP mapping or pricing formulas.
 
 ## Next Business Handoff Priorities

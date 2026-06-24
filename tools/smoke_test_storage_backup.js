@@ -70,6 +70,9 @@ function buildSnapshot(context, quote, result) {
 const { context, localStorage } = loadContext({
   "zaberman-calculator-drafts": "not valid json",
   "zaberman-estimate-snapshots": "not valid json",
+  "zaberman-zip-coverage-overrides": JSON.stringify({
+    "90049": { coverageStatus: "approval_required", priceCoefficient: 1 },
+  }),
 });
 
 const blankQuote = clone(context.window.CalculatorBlankQuote);
@@ -91,6 +94,7 @@ const requiredKeys = [
   "vehicles",
   "fuelPrices",
   "calculationLogs",
+  "zaberman-zip-coverage-overrides",
   "zaberman-calculator-drafts",
   "zaberman-estimate-snapshots",
   "zaberman-current-draft-id",
