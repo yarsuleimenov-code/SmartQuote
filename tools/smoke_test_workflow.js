@@ -60,6 +60,7 @@ function verifyStaticNavigation() {
     "drafts.html",
     "estimates.html",
     "references.html",
+    "coverage-zips.html",
     "variables.html",
   ];
   const missingPages = pages.filter((page) => !fs.existsSync(page));

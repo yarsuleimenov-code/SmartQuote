@@ -7,6 +7,7 @@ const ADMIN_PAGES = new Set([
   "/orders.html",
   "/variables.html",
   "/references.html",
+  "/coverage-zips.html",
   "/formulas.html",
   "/lifecycle.html",
 ]);

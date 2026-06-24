@@ -216,6 +216,8 @@ Vehicle fields should eventually include interior dimensions, door opening, payl
 
 **Priority:** P2
 
+**Status:** Read-only ZIP coverage directory implemented. Editing, overrides, and audit workflow remain deferred.
+
 After ZIP data cleanup and ownership approval, add:
 
 - ZIP search;
@@ -226,6 +228,13 @@ After ZIP data cleanup and ownership approval, add:
 - audit note.
 
 Map editing and bulk geographic tooling remain separate from the broker calculator.
+
+Current read-only slice:
+
+- loads the approved `zone_zip_map` coverage dataset from `coverage_zip_route_zone_map.xlsx`;
+- supports ZIP prefix search and zone filtering;
+- shows region, assigned zone, and coverage status;
+- does not change the active calculator ZIP mapping or pricing formulas.
 
 ### UI-09: Benchmark Impact Preview
 

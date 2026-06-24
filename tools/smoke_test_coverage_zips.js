@@ -1,0 +1,56 @@
+const fs = require("fs");
+const vm = require("vm");
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+const context = { window: {} };
+vm.createContext(context);
+vm.runInContext(fs.readFileSync("js/coverageZipData.js", "utf8"), context, {
+  filename: "js/coverageZipData.js",
+});
+
+const source = context.window.CoverageZipData;
+const records = source?.records || [];
+const zones = new Set(records.map((record) => record.zone));
+const regions = new Set(records.map((record) => record.region));
+const zipCodes = records.map((record) => record.zip);
+const html = fs.readFileSync("coverage-zips.html", "utf8");
+const ui = fs.readFileSync("js/coverageZips.js", "utf8");
+const sidebar = fs.readFileSync("sidebar.js", "utf8");
+const middleware = fs.readFileSync("functions/_middleware.js", "utf8");
+
+assert(source.sourceFile === "coverage_zip_route_zone_map.xlsx", "Expected workbook source metadata.");
+assert(source.sourceSheet === "zone_zip_map", "Expected zone_zip_map source sheet.");
+assert(records.length === 2607, "Expected 2,607 ZIP coverage records.");
+assert(new Set(zipCodes).size === records.length, "Expected unique ZIP codes.");
+assert(zipCodes.every((zip) => /^\d{5}$/.test(zip)), "Expected five-digit ZIP strings.");
+assert(zones.size === 11, "Expected 11 coverage zones.");
+assert(regions.size === 2 && regions.has("CA") && regions.has("NY"), "Expected CA and NY regions.");
+assert(records.some((record) => record.zip === "90049" && record.zone === "CA (A)"), "Expected CA coverage sample.");
+assert(records.some((record) => record.zip === "11694" && record.zone === "NYC"), "Expected NY coverage sample.");
+
+[
+  "coverageZipSearch",
+  "coverageZoneFilter",
+  "coverageClearFilters",
+  "coverageZipRows",
+  "coverageEmptyState",
+].forEach((id) => {
+  assert(html.includes(`id="${id}"`), `Expected coverage UI element ${id}.`);
+});
+
+assert(ui.includes("record.zip.startsWith(search)"), "Expected ZIP prefix search.");
+assert(ui.includes("record.zone === zone"), "Expected zone filtering.");
+assert(ui.includes("const pageSize = 100"), "Expected paginated rendering.");
+assert(sidebar.includes('href: "coverage-zips.html"'), "Expected ZIP Coverage navigation.");
+assert(middleware.includes('"/coverage-zips.html"'), "Expected admin middleware protection.");
+
+console.log(JSON.stringify({
+  records: records.length,
+  zones: zones.size,
+  regions: Array.from(regions).sort(),
+  uniqueZipCodes: new Set(zipCodes).size,
+  pageSize: 100,
+}, null, 2));

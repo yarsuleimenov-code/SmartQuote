@@ -28,6 +28,7 @@ const operationItems = [
 const pricingItems = [
   { label: "Variables", href: "variables.html", icon: "sliders-horizontal" },
   { label: "References", href: "references.html", icon: "book-open" },
+  { label: "ZIP Coverage", href: "coverage-zips.html", icon: "map-pinned" },
   { label: "Formulas", href: "formulas.html", icon: "sigma" },
 ];
 
