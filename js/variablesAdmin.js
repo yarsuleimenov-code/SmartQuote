@@ -99,7 +99,7 @@
               <span class="px-3 py-1 text-xs rounded-full bg-amber-100 text-amber-700 font-semibold">Read-only MVP</span>
             </div>
             <p class="text-sm text-slate-500 mt-2 max-w-4xl">
-              Values below are loaded from the active runtime configuration. Save is disabled until preview and versioning are enabled.
+              Values below are the active runtime inputs used by the current calculation. Save remains disabled until controlled editing is approved.
             </p>
           </div>
           <div class="text-right text-sm text-slate-500">
@@ -126,7 +126,7 @@
       `<span class="text-slate-500">${safeText(note)}</span>`,
     ]));
 
-    return section("Pricing", "Safe commercial variables that directly affect new calculations.", table(["Variable", "Current Value", "Used In"], rows));
+    return section("Pricing", "Active commercial variables used directly by the current calculation.", table(["Variable", "Value", "Used In"], rows));
   }
 
   function renderAccessFees(settings) {
@@ -141,17 +141,17 @@
       `<span class="text-slate-500">${safeText(note)}</span>`,
     ]));
 
-    return section("Access Fees", "Access condition fees used by the quote calculation.", table(["Fee", "Current Value", "Used In"], rows));
+    return section("Access Fees", "Active access condition fees used by the quote calculation.", table(["Fee", "Value", "Used In"], rows));
   }
 
   function renderPackagingRates(rates) {
     const rows = Object.entries(rates || {}).map(([name, value]) => row([
       `<span class="font-medium text-slate-800">${safeText(name)}</span>`,
       runtimeInput(money(value, 0)),
-      `<span class="text-slate-500">Item-level packaging cost</span>`,
+      `<span class="text-slate-500">Item packaging cost tracked by the calculation</span>`,
     ]));
 
-    return section("Packaging Rates", "Packaging options available in quote item rows and used in item packaging cost.", table(["Packaging", "Current Value", "Used In"], rows));
+    return section("Packaging Rates", "Packaging values read by item calculation and internal handling totals.", table(["Packaging", "Value", "Used In"], rows));
   }
 
   function renderProtectionPlans(plans) {
@@ -162,7 +162,7 @@
       `<span class="text-slate-500">Declared value protection calculation</span>`,
     ]));
 
-    return section("Protection Plans", "Protection plans shown in quote item rows and used in insurance cost.", table(["Plan", "Rate", "Fixed Fee", "Used In"], rows));
+    return section("Protection Plans", "Protection values used by the current item protection calculation.", table(["Plan", "Rate", "Fixed Fee", "Used In"], rows));
   }
 
   function renderFuelPrices(fuelPrices) {
@@ -179,7 +179,7 @@
 
     return section(
       "Fuel Prices",
-      "Runtime fuel values used by calculation. Internal Fuel Price is calculated from Current Avg and Fuel Surcharge.",
+      "Active fuel values used by calculation. Internal Fuel Price is calculated from Current Avg and Fuel Surcharge.",
       table(["Fuel Type", "Current Avg", "Surcharge", "Internal Fuel Price", "Updated At"], rows),
     );
   }
@@ -197,8 +197,8 @@
     ];
 
     return section(
-      "Read-only Scope",
-      "These areas are intentionally hidden from Variables until separate governance and preview logic are ready.",
+      "Excluded From Variables",
+      "These internal constants and reference entities remain outside the Variables screen until a separate business decision.",
       `<div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
         ${hidden.map((item) => `<div class="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-slate-600">${safeText(item)}</div>`).join("")}
       </div>`,
@@ -213,7 +213,7 @@
       const button = document.getElementById(id);
       if (!button) return;
       button.disabled = true;
-      button.title = "Disabled until preview and versioning are implemented.";
+      button.title = "Disabled until controlled editing and version activation are approved.";
       button.classList.add("opacity-60", "cursor-not-allowed");
     });
   }

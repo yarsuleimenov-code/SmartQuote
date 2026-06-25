@@ -1,6 +1,6 @@
 ﻿# Logistics Pricing Calculator
 
-Hi-fi wireframe и visual technical specification для production-разработки Logistics Pricing Calculator.
+Working test-mode SmartQuote MVP and visual/technical specification for future production development.
 
 Проект описывает broker-first workflow для interstate-перевозок мебели, fragile cargo, full service delivery, estimate generation, invoice/order lifecycle и будущего eBOL/POD workflow.
 
@@ -39,17 +39,14 @@ Current implemented baseline:
 
 В текущем коде используются:
 
-- mock data;
-- hardcoded values;
-- статичные суммы;
-- статичные customers;
-- статичные routes;
-- статичные items;
-- статичные dates;
-- статичные statuses;
-- визуальные placeholders для будущих production-функций.
+- accepted local JavaScript pricing logic;
+- runtime pricing variables and vehicle references;
+- localStorage drafts and frozen estimate snapshots;
+- generated ZIP coverage reference data;
+- mock/demo data on future operational screens;
+- visual placeholders for invoice, order, eBOL, and other future production functions.
 
-Статичные значения в HTML-файлах не должны использоваться как production logic.
+Static values on future/reference screens must not be treated as production logic. Current executable pricing behavior is implemented in JavaScript and remains a test-mode UAT baseline rather than a production backend engine.
 
 Production implementation должна строиться отдельно и включать:
 
@@ -71,7 +68,7 @@ Production implementation должна строиться отдельно и в
 # Статус проекта
 
 ```text
-Hi-Fi Wireframe / Visual Technical Specification / Workflow Prototype
+Working Test-Mode MVP / Visual Technical Specification
 ```
 
 Текущий репозиторий используется для:
@@ -86,12 +83,12 @@ Hi-Fi Wireframe / Visual Technical Specification / Workflow Prototype
 
 Важно:
 
-- текущие HTML-экраны являются wireframe/spec;
-- данные в экранах являются mock data;
-- расчеты и значения являются hardcoded examples;
+- Quick Quote, Full Quote, Drafts, Estimates, Cost Breakdown, Estimate Document, References Vehicles, Variables display, Storage Backup, and ZIP Coverage are functional MVP screens;
+- invoice, order, eBOL, analytics, and automation remain future/reference screens;
+- current calculations run locally in `js/calculator.js`;
 - production pricing engine должен быть реализован отдельно;
-- frontend не должен хранить production formulas или business calculations;
-- historical estimates должны строиться через immutable snapshots.
+- production formulas should move to a governed backend/service layer;
+- generated estimates use frozen snapshots and must not recalculate automatically.
 
 ---
 
@@ -826,25 +823,26 @@ Pricing response should include:
 Текущий prototype:
 
 - HTML;
+- modular JavaScript;
 - TailwindCSS CDN;
 - Lucide Icons CDN;
-- static frontend-only pages;
-- mock data;
-- hardcoded values.
+- localStorage workflow persistence;
+- Cloudflare Pages Functions for admin session and Google Sheets proxy;
+- Google Apps Script integration for test-mode persistence/audit;
+- Node-based smoke tests.
 
 Текущий prototype не имеет:
 
-- backend;
-- database;
-- production pricing engine;
-- authentication;
-- role-based permissions;
-- API integrations;
+- production backend/database;
+- shared multi-user quote storage;
+- production pricing service;
+- production-grade authentication and authorization;
+- CRM integration;
 - PDF artifact generation;
 - payment integration;
-- real-time calculations;
 - production eBOL;
-- test suite.
+- production file storage;
+- governed variable activation workflow.
 
 Production implementation:
 
@@ -864,18 +862,15 @@ Production implementation:
 Backend
 Database
 Production-ready pricing engine
-Authentication
-Authorization
-API integrations
+Production-grade authentication and authorization
+Shared multi-user storage
 CRM integration
 PDF artifact generation
 Payments
 Production eBOL
-Real-time calculations
-State management
-Local storage / backend autosave
-Validation
-Audit trail
+Backend autosave
+Server-side validation
+Production audit trail
 Security hardening
 Mobile production UX
 ```

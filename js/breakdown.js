@@ -47,6 +47,44 @@
     return date ? `Direct - ${date}` : "Direct - date needed";
   }
 
+  function statusClass(status) {
+    if (status === "Blocked") return "bg-red-100 text-red-700";
+    if (status === "Review Required") return "bg-amber-100 text-amber-800";
+    if (status === "Ready") return "bg-green-100 text-green-700";
+    return "bg-slate-100 text-slate-600";
+  }
+
+  function severityClass(severity) {
+    if (severity === "blocking") return "bg-red-100 text-red-700";
+    if (severity === "approval") return "bg-amber-100 text-amber-800";
+    if (severity === "warning") return "bg-yellow-50 text-yellow-700";
+    return "bg-blue-50 text-blue-700";
+  }
+
+  function fitLabel(value) {
+    if (value === true) return "Pass";
+    if (value === false) return "Fail";
+    return window.CostBreakdownAnalysis?.notAvailable || "Not available";
+  }
+
+  function traceStatusClass(status) {
+    if (String(status).startsWith("Blocked")) return "bg-red-50 text-red-700";
+    if (String(status).includes("Review")) return "bg-amber-50 text-amber-700";
+    return "bg-slate-100 text-slate-700";
+  }
+
+  function traceSourceClass(source) {
+    const value = String(source || "").toLowerCase();
+    if (value.includes("variables") || value.includes("settings")) return "bg-blue-50 text-blue-700";
+    if (value.includes("reference") || value.includes("vehicle body")) return "bg-green-50 text-green-700";
+    return "bg-slate-100 text-slate-600";
+  }
+
+  function traceResult(row) {
+    if (row.result === null || row.result === undefined) return "Not available";
+    return row.unit === "USD" ? currency(row.result) : `${row.result}${row.unit ? ` ${row.unit}` : ""}`;
+  }
+
   function buildSnapshot(quote, result) {
     const createdAt = new Date();
     const validUntil = new Date(createdAt.getTime() + 14 * 24 * 60 * 60 * 1000);
@@ -133,6 +171,11 @@
           quote: draft,
           result: window.PricingCalculator.calculateQuote(draft),
           estimateId: draft.estimateId,
+          snapshotMeta: {
+            formulaVersion: window.CalculatorVariables?.formulaVersion,
+            variablesVersion: window.CalculatorVariables?.variablesVersion,
+            rounding: window.CalculatorVariables?.settings?.rounding,
+          },
         };
       }
     }
@@ -147,6 +190,12 @@
         quote: snapshot.quote,
         result: snapshot.result,
         estimateId: snapshot.estimateId || snapshot.quote.estimateId,
+        snapshotMeta: {
+          formulaVersion: snapshot.formulaVersion,
+          variablesVersion: snapshot.variablesVersion || snapshot.variablesSnapshot?.variablesVersion,
+          rounding: snapshot.variablesSnapshot?.settings?.rounding,
+          calculationTimestamp: snapshot.calculationTimestamp || snapshot.createdAt,
+        },
       };
     }
 
@@ -158,6 +207,11 @@
       quote: draft,
       result: window.PricingCalculator.calculateQuote(draft),
       estimateId: draft.estimateId,
+      snapshotMeta: {
+        formulaVersion: window.CalculatorVariables?.formulaVersion,
+        variablesVersion: window.CalculatorVariables?.variablesVersion,
+        rounding: window.CalculatorVariables?.settings?.rounding,
+      },
     };
   }
 
@@ -245,7 +299,7 @@
         <div class="flex items-start justify-between gap-4">
           <div>
             <h4 class="font-bold text-slate-800">${escapeHtml(row.stage)} Stage</h4>
-            <p class="mt-1 text-xs text-slate-500">${escapeHtml(row.route)} · ${Math.round(row.miles || 0)} mi · ${escapeHtml(row.vehicle)} · ${escapeHtml(row.crew)} · ${escapeHtml(row.mode)}</p>
+            <p class="mt-1 text-xs text-slate-500">${escapeHtml(row.route)} | ${Math.round(row.miles || 0)} mi | ${escapeHtml(row.vehicle)} | ${escapeHtml(row.crew)} | ${escapeHtml(row.mode)}</p>
           </div>
           <p class="text-2xl font-bold text-slate-800">${currency(row.total)}</p>
         </div>
@@ -260,13 +314,68 @@
       </article>
     `).join("");
 
-    setText(
-      "bdRouteStageNote",
-      `Stage totals are existing calculator outputs. Pickup + Interstate + Delivery = ${currency(result.totals?.routeCost)} route cost. Pricing formulas were not changed.`
-    );
+    const reconciliation = window.CostBreakdownAnalysis.stageReconciliation(result);
+    const reconciliationLabel = reconciliation.reconciled
+      ? `Reconciled: stages ${currency(reconciliation.stageTotal)} = route cost ${currency(reconciliation.routeCost)}; route cost + non-route ${currency(reconciliation.nonRouteOperationalCost)} = operational cost ${currency(reconciliation.operationalCost)}.`
+      : `Review mismatch: route delta ${currency(reconciliation.routeDelta)}, operational delta ${currency(reconciliation.operationalDelta)}.`;
+    setText("bdRouteStageNote", `Stage totals are existing calculator outputs. ${reconciliationLabel} Pricing formulas were not changed.`);
   }
 
-  function renderBreakdown({ source, sourceType, recordId, quote, result, estimateId }) {
+  function renderCapacityAnalysis(result, presentation) {
+    const capacity = window.CostBreakdownAnalysis.capacityAnalysis(result, presentation);
+    setText("bdCapacityStatus", capacity.warningStatus);
+    byId("bdCapacityStatus").className = `text-xs px-3 py-1 rounded-full font-semibold ${statusClass(capacity.warningStatus)}`;
+    setText("bdShipmentDensity", capacity.shipmentDensity);
+    setText("bdVehicleDensityThreshold", capacity.vehicleDensityThreshold);
+    setText("bdVolumeUtilization", capacity.volumeUtilization);
+    setText("bdPayloadUtilization", capacity.payloadUtilization);
+    setText("bdLimitingFactor", capacity.limitingFactor);
+    setText("bdSelectedCostBasis", capacity.selectedCostBasis);
+    setText("bdCapacityVehicle", capacity.selectedVehicle);
+    setText("bdRecommendedVehicle", capacity.recommendedVehicle);
+  }
+
+  function renderWarningDetails(presentation) {
+    setText("bdReadiness", presentation.readiness.label);
+    byId("bdReadiness").className = `text-xs px-3 py-1 rounded-full font-semibold ${statusClass(presentation.readiness.label)}`;
+    byId("bdWarningDetails").innerHTML = presentation.warnings.length
+      ? presentation.warnings.map((entry) => `
+          <tr>
+            <td class="px-4 py-3"><span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold ${severityClass(entry.severity)}">${escapeHtml(entry.severity)}</span></td>
+            <td class="px-4 py-3 text-slate-600">${escapeHtml(entry.scope)}${entry.target ? `<p class="mt-1 text-xs text-slate-400">${escapeHtml(entry.target)}</p>` : ""}</td>
+            <td class="px-4 py-3"><p class="font-medium text-slate-800">${escapeHtml(entry.title)}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(entry.message)}</p></td>
+            <td class="px-4 py-3 text-slate-600">${escapeHtml(entry.actionLabel || "-")}</td>
+            <td class="px-4 py-3 text-slate-600">${escapeHtml(entry.approvalRole || "Not assigned")}</td>
+          </tr>
+        `).join("")
+      : `<tr><td colspan="5" class="px-4 py-6 text-center text-slate-400">No readiness warnings.</td></tr>`;
+  }
+
+  function renderVehicleFit(result) {
+    const fit = window.CostBreakdownAnalysis.vehicleFit(result);
+    setText("bdVehicleFitStatus", fit.status);
+    setText("bdFitSelectedVehicle", fit.selectedVehicle);
+    setText("bdFitRecommendedVehicle", fit.recommendedVehicle);
+    setText("bdDimensionalFit", fitLabel(fit.dimensionalFit));
+    setText("bdDoorOpeningFit", fitLabel(fit.doorOpeningFit));
+    setText("bdVolumeFit", fitLabel(fit.volumeFit));
+    setText("bdPayloadFit", fitLabel(fit.payloadFit));
+    setText("bdEquipmentFit", fitLabel(fit.equipmentFit));
+  }
+
+  function renderFormulaTrace(result, snapshotMeta) {
+    const rows = window.CostBreakdownAnalysis.formulaTrace(result, snapshotMeta);
+    byId("bdFormulaTrace").innerHTML = rows.map((row) => `
+      <tr>
+        <td class="px-3 py-3 align-top"><p class="font-mono font-semibold text-slate-700">${escapeHtml(row.formulaId)}</p><p class="mt-1 font-medium text-slate-800">${escapeHtml(row.block)}</p></td>
+        <td class="px-3 py-3 align-top"><p class="text-slate-700">${escapeHtml(row.input)}</p><span class="mt-2 inline-flex rounded px-2 py-1 ${traceSourceClass(row.source)}">${escapeHtml(row.source)}</span></td>
+        <td class="px-3 py-3 align-top"><p class="font-mono text-slate-600">${escapeHtml(row.formula)}</p><p class="mt-2 rounded bg-slate-100 px-2 py-1 font-semibold text-slate-800">${escapeHtml(traceResult(row))}</p></td>
+        <td class="px-3 py-3 align-top"><p class="text-slate-600">${escapeHtml(row.goesTo)}</p><span class="mt-2 inline-flex rounded px-2 py-1 font-semibold ${traceStatusClass(row.status)}">${escapeHtml(row.status)}</span></td>
+      </tr>
+    `).join("");
+  }
+
+  function renderBreakdown({ source, sourceType, recordId, quote, result, estimateId, snapshotMeta }) {
     const totals = result.totals;
     const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
     const displayedAdditionalCharges = Number(totals.additionalCharges || 0) + Number(totals.manualAdjustment || 0) + Number(totals.extraLaborCost || 0);
@@ -311,6 +420,11 @@
     renderRouteStages(quote, result);
     renderItems(result.items || []);
     renderWarnings(result.warnings || []);
+    const presentation = window.CostBreakdownAnalysis.warningPresentation(quote, result, sourceType === "estimate");
+    renderCapacityAnalysis(result, presentation);
+    renderWarningDetails(presentation);
+    renderVehicleFit(result);
+    renderFormulaTrace(result, snapshotMeta || {});
     byId("bdPayload").textContent = JSON.stringify(window.GoogleSheetIntegration.buildPayload(quote, result), null, 2);
 
     byId("breakdownEstimateLink").onclick = () => {

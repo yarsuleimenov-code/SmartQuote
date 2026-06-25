@@ -2,7 +2,9 @@
 
 ## Current Project Shape
 
-The repository is currently a static HTML/Tailwind wireframe. The first working MVP should use `index.html` as the primary full quote calculator because it already contains:
+The repository is a working static-frontend SmartQuote MVP with local JavaScript calculation, localStorage workflow persistence, frozen estimate snapshots, and test-mode Cloudflare/Google Sheets integrations.
+
+`index.html` is the primary Full Quote calculator and contains:
 
 - route ZIP inputs;
 - customer/contact fields;
@@ -11,13 +13,14 @@ The repository is currently a static HTML/Tailwind wireframe. The first working 
 - estimate summary;
 - broker notes section.
 
-`quick-quote.html` is the fast entry point and now feeds saved drafts/estimate snapshots. `breakdown.html`, `estimate-document.html`, `drafts.html`, and `estimates.html` consume local saved records. `variables.html`, `formulas.html`, `references.html`, and lifecycle/history pages remain admin/reference screens until governed editing is implemented.
+`quick-quote.html` is the fast entry point and feeds saved drafts/estimate snapshots. `breakdown.html`, `estimate-document.html`, `drafts.html`, and `estimates.html` consume local saved records. `variables.html`, `formulas.html`, `references.html`, and lifecycle/history pages are admin/reference screens.
 
 Current implementation notes:
 
 - Runtime defaults live in `js/variables.js`.
 - `js/pricingConfig.js` applies saved admin overrides on top of defaults and provides `variablesSnapshot`.
-- `variables.html` and `references.html` are read-only to prevent uncontrolled pricing changes.
+- `variables.html` is read-only to prevent uncontrolled pricing changes.
+- `references.html` supports local vehicle administration; broader reference governance remains deferred.
 - Generated estimate snapshots include `formulaVersion` and `variablesSnapshot`.
 - `js/calculator.js` is treated as UAT-approved baseline.
 
@@ -68,7 +71,9 @@ Vehicle reference rows include:
 - `Enterprise 26 ft`, capacity `1650 cu ft`, payload `8800 lb`.
 - `Penske 26 ft`, capacity `1650 cu ft`, payload `8800 lb`.
 
-Zone distance matrix includes `CA North`, `CA South`, `DC Area`, `NY Area`, `Boston`, and `TX`. The external `zone_zip_map.csv` has 3,172 ZIP rows with columns `Region`, `ZoneName`, `ZIP`. First MVP should use it only for ZIP validation and zone lookup; addresses outside the map should be rejected or marked unsupported.
+Zone distance matrix includes `CA North`, `CA South`, `DC Area`, `NY Area`, `Boston`, and `TX`.
+
+The active test coverage source is the generated 2,607-ZIP dataset in `js/coverageZipData.js`, derived from `coverage_zip_route_zone_map.xlsx`. ZIP Coverage supports search, zone/status filters, local coverage status, and local coefficient capture. Excluded and Review ZIPs produce non-blocking warnings. ZIP coefficients do not affect pricing.
 
 ## Implementation Phases
 

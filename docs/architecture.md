@@ -484,7 +484,8 @@ saved admin overrides
 CalculatorVariables runtime
 ```
 
-- `variables.html` and `references.html` are read-only until the interactive admin flow is implemented.
+- `variables.html` remains read-only until preview/versioning governance is implemented.
+- `references.html` supports local vehicle administration; broader reference activation and audit governance remain incomplete.
 - The first editable version should expose only a limited safe set of variables and must include benchmark impact preview before save.
 
 Примеры variables:

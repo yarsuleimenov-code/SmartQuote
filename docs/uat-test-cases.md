@@ -1,10 +1,12 @@
 # UAT Calculation Test Cases
 
-Source workbook: `Zaberman_Calculator_UAT.xlsx`.
+Original source workbook: `Zaberman_Calculator_UAT.xlsx` (temporary file, intentionally removed).
 
 ## Purpose
 
 Use this file as the compact UAT checklist for validating SmartQuote calculations against confirmed Spreadsheet/Zion baselines.
+
+The table below is the retained acceptance record. The removed workbook is not required to run the current smoke tests.
 
 Status: the primary calculation flow is business-accepted. Manual UAT passed 8 / 8 when SmartQuote uses the same assumptions as Spreadsheet/Zion. Do not change `js/calculator.js` for screen-linking or operational workflow work.
 

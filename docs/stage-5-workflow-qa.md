@@ -46,7 +46,7 @@ Quick Quote -> New Calculation -> Generate Estimate -> Estimate Document -> Cost
 
 | Severity | Item | Status | Notes |
 |---|---|---|---|
-| P2 | Browser visual QA was not completed in Codex because the in-app browser runtime failed to initialize in the environment | Open | Source/static/smoke checks passed; visual pass should be done manually or after browser runtime is available |
+| P2 | Stage 5 browser visual QA was initially limited | Closed for current broker flow | Subsequent manual/in-app visual reviews covered Quote Draft, Quick Quote, Drafts, Estimates, Estimate Document, Cost Breakdown, References, and ZIP Coverage |
 | P2 | Drafts/Estimates notes still contain Russian text | Open | Not mojibake and not blocker; do not change without UX copy decision |
 | P2 | Existing localStorage key model has both Pricing Admin buckets and legacy Zaberman draft/estimate keys | Open | Current migrations/fallbacks work; key consolidation can wait until storage reliability stage |
 

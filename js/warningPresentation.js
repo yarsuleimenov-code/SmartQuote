@@ -12,7 +12,7 @@
     };
   }
 
-  function build({ quote, result }) {
+  function build({ quote, result, useStoredCoverage = false }) {
     const warnings = [];
     const pickupZip = String(quote?.route?.pickupZip || "").trim();
     const deliveryZip = String(quote?.route?.deliveryZip || "").trim();
@@ -43,11 +43,14 @@
     }
 
     [
-      { label: "Pickup", zip: pickupZip, target: "pickupZip" },
-      { label: "Delivery", zip: deliveryZip, target: "deliveryZip" },
+      { label: "Pickup", zip: pickupZip, target: "pickupZip", storedCoverage: quote?.route?.pickupCoverage },
+      { label: "Delivery", zip: deliveryZip, target: "deliveryZip", storedCoverage: quote?.route?.deliveryCoverage },
     ].forEach((point) => {
-      if (!point.zip || !window.ZipCoverage) return;
-      const coverage = window.ZipCoverage.get(point.zip);
+      if (!point.zip) return;
+      const coverage = useStoredCoverage && point.storedCoverage
+        ? point.storedCoverage
+        : window.ZipCoverage?.get(point.zip);
+      if (!coverage) return;
       if (!coverage.inCoverageDataset) return;
 
       if (coverage.coverageStatus === "disabled") {

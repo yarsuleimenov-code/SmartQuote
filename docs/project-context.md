@@ -20,8 +20,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 
 - `CA South -> CA North` with `85 x 63 x 47`, `qty 1`, volume-dominant weight such as `80-150 lb`, crew `2/1/2` is expected around `$850`.
 - Long interstate route examples such as `NY Area -> CA North` may be around `$1360` for the same item.
-- `Zaberman_Calculator_UAT.xlsx` is the current UAT workbook for calculation acceptance checks.
-- Compact UAT index is documented in `docs/uat-test-cases.md`.
+- The temporary `Zaberman_Calculator_UAT.xlsx` workbook was intentionally removed after manual baseline validation.
+- The retained UAT baseline is documented in `docs/uat-test-cases.md` and executable smoke tests.
 - Primary calculation flow is accepted by manual UAT: 8 / 8 cases pass when SmartQuote uses the same assumptions as Spreadsheet/Zion.
 - Treat `js/calculator.js` as fixed for now; do not change pricing logic while building screen links or operational workflow screens.
 - `Eff. volume` is rounded up to a whole cubic foot in the calculation model.
@@ -41,7 +41,9 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Local/browser storage is used for multiple drafts and generated estimate snapshots; Google Sheets integration exists through Apps Script endpoint.
 - Stage 6 adds a local JSON backup/export-import MVP for drafts, estimates, runtime pricing buckets, and current selection keys.
 - Generated estimate snapshots include `formulaVersion` and `variablesSnapshot`.
-- `variables.html` and `references.html` are intentionally read-only until interactive Pricing Engine governance is finished.
+- Active runtime values in `variables.html` remain read-only until interactive Pricing Engine governance is finished.
+- Variables intentionally uses a single active-value model. Current / Proposed comparison is excluded from this operational screen; future analytics should be separate. Save Variables remains disabled.
+- `references.html` allows local vehicle administration while broader reference governance and activation workflows remain incomplete.
 - `formulas.html` is documentation only, not an executable pricing engine.
 
 ## Current Implementation Status
@@ -65,6 +67,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - `250+ cu ft` may trigger a Direct review recommendation only; it must not auto-enable Direct.
 - Quote Draft must remain compact for broker input; pickup / interstate / delivery stage visibility belongs in Cost Breakdown.
 - Cost Breakdown stage visibility exposes existing pickup / interstate / delivery costs and component buckets from the calculator result; it must not introduce new pricing formulas.
+- Cost Breakdown includes read-only Capacity Analysis, normalized warning details, Vehicle Fit placeholders, stage reconciliation, and an AS-IS Formula Trace. Missing Formula Sprint outputs remain `Not available` or blocked.
 - Floor and elevator availability are captured for future labor/access pricing, but no floor/elevator pricing formula is active yet.
 - Future floor fee formula under discussion: `6.5 x max(floor - 3, 0) x people x item_count`.
 - Broker-facing packaging hides Bubble Protection; TV box rates and Custom Crate pricing require approved References/rates before activation.
@@ -73,11 +76,11 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Quote Draft warning presentation is normalized through `js/warningPresentation.js`.
 - Quote readiness is presentation-only until blocking/approval governance is approved.
 - Vehicle Fit / Capacity TO-BE outputs are defined in `docs/vehicle-fit-capacity-output-contract.md`; the frontend must not infer missing density or dimensional-fit values.
-- Admin ZIP Coverage is sourced from `coverage_zip_route_zone_map.xlsx`, with ZIP search, zone filtering, and locally saved coverage statuses.
+- Admin ZIP Coverage uses generated runtime data derived from the external `coverage_zip_route_zone_map.xlsx` source, with ZIP search, zone filtering, and locally saved coverage statuses.
 - Coverage states are Covered, Excluded, and Review.
 - Every ZIP currently has a read-only default price coefficient of `1.00`; coefficient pricing is not active.
 - ZIP coefficients can be captured locally within `0.50-2.00`; they remain inactive in pricing.
-- The 2,607 ZIPs from `coverage_zip_route_zone_map.xlsx` are the active test coverage dataset.
+- The generated 2,607-ZIP dataset in `js/coverageZipData.js` is the active test coverage source committed with the application.
 - Excluded and Review ZIPs surface warnings in Quote Draft but do not block estimate generation.
 - ZIP coverage status does not change pricing formulas.
 

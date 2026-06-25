@@ -6,8 +6,8 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current implementation baseline:
 
-- Previous committed checkpoint: `4fc1e05 Color code ZIP coverage zones`.
-- Working tree contains active ZIP coverage integration pending review.
+- Current committed checkpoint: `e816356 Integrate active ZIP coverage warnings`.
+- Working tree contains documentation-only synchronization and Cost Breakdown planning changes.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
 - CEO Formula Review Pack completed.
@@ -15,6 +15,10 @@ Current implementation baseline:
 
 Checkpoint history:
 
+- `e816356 Integrate active ZIP coverage warnings`.
+- `4fc1e05 Color code ZIP coverage zones`.
+- `0318d9b Add ZIP coverage status controls`.
+- `8891570 Add searchable ZIP coverage directory`.
 - `a84c5cb Add quote readiness warning presentation`.
 - `1d44c85 Add CEO formula review documentation`.
 - `4b30b80 Improve quote transfer item UX`.
@@ -72,6 +76,19 @@ Implemented:
   - Cost Breakdown shows pickup / interstate / delivery structure for admin analysis.
   - Stage visibility exposes existing pickup / interstate / delivery costs and components already calculated by the current engine.
   - Stage visibility does not add new pricing formulas.
+- Cost Breakdown CB-01 through CB-05 presentation slice:
+  - available and missing result fields are documented in `docs/cost-breakdown-output-audit.md`;
+  - pickup, interstate, and delivery stage totals are reconciled against route cost, then route plus non-route components are reconciled against Operational Cost;
+  - Capacity Analysis shows the selected AS-IS vehicle and explicit `Not available` states for missing Formula Sprint outputs;
+  - Warning and Readiness Details use the normalized warning contract;
+  - Vehicle Fit details remain read-only and do not infer dimensional, door, payload, volume, or equipment fit;
+  - Formula Trace shows existing AS-IS stage/final outputs and marks unapproved capacity/fit rows as blocked.
+- Variables screen:
+  - shows one active runtime value for each displayed calculation variable;
+  - does not duplicate Current / Proposed values;
+  - excludes constants and reference entities that are not part of its approved calculation-variable scope;
+  - Save Variables and Export Config remain disabled;
+  - any future price/variable analytics should be implemented separately and must not become a second source of truth.
 - Broker-facing Insurance language was renamed to Protection Plan:
   - `RV / Released Value` maps to current `Basic Liability` behavior.
   - `FVP / Full Value Protection` maps to current `Full Coverage` behavior.
@@ -113,7 +130,7 @@ Implemented:
   - Supports ZIP prefix search, zone filtering, clear filters, and pagination.
   - Displays 2,607 unique ZIP codes across 11 zones and CA/NY regions.
   - Coverage status is locally configurable as Covered, Excluded, or Review.
-  - ZIP coefficient is displayed as `1.00` for all records; editing and pricing impact are intentionally deferred.
+  - ZIP coefficient defaults to `1.00` and can be captured locally between `0.50` and `2.00`; pricing impact remains intentionally deferred.
   - Coefficient can be captured locally between `0.50` and `2.00`, but does not affect quote pricing.
   - The 2,607-ZIP workbook dataset is now the only active calculator ZIP coverage map.
   - Excluded and Review statuses create non-blocking Quote Readiness warnings.
@@ -223,7 +240,7 @@ window.CalculatorVariables
 PricingCalculator.calculateQuote()
 ```
 
-`variables.html` is runtime-driven but Save Variables is disabled intentionally.
+`variables.html` is runtime-driven and shows the active calculation inputs. Save Variables is disabled intentionally.
 
 Fuel Prices affect calculation, but editing governance is not enabled yet.
 
@@ -323,22 +340,24 @@ Stage 6 Storage Reliability MVP:
 
 ## Next Recommended Step
 
-Current stage: CEO Formula Review and UI Sprint planning.
+Current stage: Cost Breakdown admin explanation and validation.
 
 Business reason:
 
 - The calculator is calculation-stable and workflow-smoke-stable.
-- The CEO Formula Review Pack documents open TO-BE decisions.
-- The June 19 Calculator meeting identified warning visibility, vehicle fit, capacity explanation, and governed admin screens as the next UI priorities.
+- Quote Draft and Quick Quote must remain compact broker input screens.
+- Cost Breakdown is the correct location for route-stage, capacity, warning, vehicle-fit, and future formula-trace analysis.
+- The June 19 Calculator meeting identified these explanations as the next admin-facing UI priority.
 
 Required order:
 
-1. Approve Warning UI Contract and warning severity/approval policy.
-2. Approve Vehicle Fit / Capacity output contract.
-3. Implement presentation-only readiness and warning UX using reliable current outputs.
-4. Add Capacity Analysis and Formula Trace only after their TO-BE output contracts are approved.
-5. Keep Save Variables disabled until preview/versioning governance is designed.
-6. Do not change `js/calculator.js` before CEO Formula Review closes the P0 blockers.
+1. Audit the Cost Breakdown fields already available in drafts, estimate snapshots, and calculator results.
+2. Verify pickup, interstate, and delivery stage totals against Operational Cost.
+3. Add the Capacity Analysis shell using reliable existing outputs and `Not available` states.
+4. Add normalized warning/readiness details from the existing warning contract.
+5. Add Vehicle Fit details only after vehicle body and fit outputs are approved.
+6. Add Formula Trace only after the Formula ID registry and trace output are approved.
+7. Keep Save Variables disabled and do not change `js/calculator.js` or pricing formulas.
 
 Detailed plan:
 
@@ -366,11 +385,13 @@ Admin quote management:
 - Admin should eventually edit employee calculations.
 - Requires shared storage, ownership, audit log, and permissions.
 
-## Project Pause / Business Testing Handoff
+## Historical Project Pause / Business Testing Handoff
+
+This section records the June 2026 pause checkpoint and is not the current project status.
 
 Pause date: June 2, 2026.
 
-Current `main` / `HEAD` after post-pause controlled feedback sprint and Stage 6:
+Historical `main` / `HEAD` at the end of the pause handoff:
 
 - `6695bd7 Add storage backup MVP and demo cleanup`.
 

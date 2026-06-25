@@ -170,9 +170,154 @@ Visual roles:
 
 **Dependency:** Formula ID registry and trace output.
 
+## Nearest Implementation Plan: Cost Breakdown
+
+### Goal
+
+Turn Cost Breakdown into a read-only admin explanation and validation screen while keeping Quote Draft compact and preserving the UAT-approved pricing baseline.
+
+### Scope
+
+#### CB-01: Existing Output Audit
+
+**Priority:** P0
+
+**Status:** Completed. See `docs/cost-breakdown-output-audit.md`.
+
+- inventory the fields already available in saved drafts, estimate snapshots, and calculator results;
+- verify that pickup, interstate, and delivery stage totals reconcile with Route Cost, then reconcile Route Cost plus non-route operational components with Operational Cost;
+- identify unavailable capacity, vehicle-fit, warning, and formula-trace fields;
+- do not derive missing TO-BE values in the frontend.
+
+**Definition of done:**
+
+- available and missing fields are documented;
+- existing stage totals are checked against current output;
+- no pricing formula is changed.
+
+#### CB-02: Capacity Analysis Shell
+
+**Priority:** P1
+
+**Status:** Implemented with the selected AS-IS vehicle and explicit `Not available` states for missing Formula Sprint outputs.
+
+Add an admin-facing block for:
+
+- shipment density;
+- vehicle density threshold;
+- volume utilization;
+- payload utilization;
+- limiting factor;
+- selected cost basis;
+- selected and recommended vehicle;
+- vehicle-fit and warning status.
+
+Use reliable existing outputs where available. Display `Not available` for values that require Formula Sprint outputs.
+
+**Definition of done:**
+
+- the block is read-only;
+- unavailable data is explicit;
+- no manual Weight / Volume selector exists;
+- the block does not affect quote totals.
+
+#### CB-03: Warning and Readiness Details
+
+**Priority:** P1
+
+**Status:** Implemented using the shared Warning Presentation contract. Approval and blocking enforcement remain disabled.
+
+Show normalized admin warning details:
+
+- severity;
+- affected item, address, or route stage;
+- actual value;
+- threshold or allowed value;
+- recommended action;
+- approval owner and status when available.
+
+**Definition of done:**
+
+- warnings reuse the shared warning contract;
+- no unsupported blocking or approval workflow is introduced;
+- warning details remain separate from customer-facing estimate content.
+
+#### CB-04: Vehicle Fit Details
+
+**Priority:** P1
+
+**Status:** Read-only shell implemented. Detailed fit values remain `Not available` until vehicle body references and approved outputs exist.
+
+Show:
+
+- cargo interior fit;
+- door opening fit;
+- volume fit;
+- payload fit;
+- equipment fit.
+
+**Definition of done:**
+
+- the UI consumes approved output fields only;
+- missing body/reference data displays `Not available`;
+- the frontend does not infer dimensional fit.
+
+#### CB-05: Formula Trace
+
+**Priority:** P1, blocked until Formula Sprint trace output is approved.
+
+**Status:** Existing AS-IS stage/final outputs are traced read-only. Capacity and fit trace rows remain visibly blocked rather than inferred.
+
+Display:
+
+- Formula ID;
+- calculation block;
+- input and source;
+- variable or reference;
+- readable formula;
+- result;
+- next destination;
+- approval/readiness status.
+
+Use the defined visual roles for inputs, variables, references, outputs, approvals, and blockers.
+
+**Definition of done:**
+
+- trace is read-only;
+- every displayed result has an explicit source;
+- Formula Trace is not implemented from guessed or duplicated frontend formulas.
+
+### Implementation Order
+
+1. Complete CB-01 and document available output fields.
+2. Implement CB-02 with existing values and explicit `Not available` states.
+3. Connect CB-03 to the current warning presentation contract.
+4. Implement CB-04 after vehicle body and fit outputs are approved.
+5. Implement CB-05 only after the Formula ID registry and trace contract are available.
+6. Run stage-total reconciliation, snapshot recovery, and visual admin QA.
+
+### Out of Scope
+
+- changes to `js/calculator.js` or pricing formulas;
+- manual selection of Weight / Volume pricing basis;
+- formula editing;
+- manager approval backend or permissions;
+- ZIP coefficient pricing;
+- Save Variables or direct reference activation;
+- customer-facing exposure of margin, operational cost, or formula internals.
+
+### Risks and Safeguards
+
+- Capacity and fit values may be unavailable before Formula Sprint; show `Not available`.
+- Stage components must not be presented as independent pricing formulas if they are only explanatory allocations.
+- Frozen estimates must use snapshot values and must not recalculate against current variables.
+- Each implementation slice must pass current calculator/workflow smoke tests and `git diff --check`.
+
 ### UI-06: Governed Variables
 
 **Priority:** P1
+
+**Status:** Runtime-driven single-value screen retained. Proposed-value comparison was rejected as unnecessary complexity.
 
 Keep the current Variables screen read-only until governance exists.
 
@@ -195,6 +340,14 @@ Show:
 - approval status.
 
 Do not enable direct Save Variables.
+
+Current MVP rule:
+
+- show one active runtime value for each variable used by calculation;
+- do not duplicate Current / Proposed values on the operational Variables screen;
+- keep non-calculation constants and reference entities outside this screen;
+- keep Save Variables disabled until controlled editing/version activation is approved;
+- if price analytics is needed later, implement it as a separate analytical screen rather than making it a second source of truth.
 
 ### UI-07: Governed References
 

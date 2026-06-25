@@ -190,15 +190,21 @@ Move from local testing toward reliable shared workflow.
 ## Near-Term Priority Order
 
 ```text
-1. CEO review of P0 Formula Sprint decisions
-2. Warning UI Contract and Quote Readiness states
-3. Vehicle Fit / Capacity output contract
-4. Presentation-only warning and readiness UX
-5. Capacity Analysis and Formula Trace after output approval
+1. Cost Breakdown existing-output audit and stage-total reconciliation
+2. Capacity Analysis shell with explicit Not available states
+3. Warning/readiness details in Cost Breakdown
+4. Vehicle Fit details after approved output/reference data
+5. Formula Trace after Formula ID registry and trace approval
 6. Governed Variables / References with benchmark preview
-7. ZIP/service-area management after reference cleanup
-8. Backend/shared-storage preparation
+7. Backend/shared-storage preparation
 ```
+
+Already completed:
+
+- Warning UI Contract and presentation-only Quote Readiness.
+- Vehicle Fit / Capacity output contract documentation.
+- Active 2,607-ZIP Coverage directory with local statuses and coefficient capture.
+- Non-blocking Excluded / Review ZIP warnings.
 
 The detailed UI sequence and scope boundaries from the June 19 Calculator meeting are documented in:
 

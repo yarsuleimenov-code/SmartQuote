@@ -1,0 +1,129 @@
+const fs = require("fs");
+const vm = require("vm");
+
+function createLocalStorage(seed = {}) {
+  const store = new Map(Object.entries(seed).map(([key, value]) => [key, String(value)]));
+  return {
+    getItem(key) {
+      return store.has(key) ? store.get(key) : null;
+    },
+    setItem(key, value) {
+      store.set(key, String(value));
+    },
+    removeItem(key) {
+      store.delete(key);
+    },
+  };
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+const localStorage = createLocalStorage();
+const context = {
+  window: { localStorage },
+  localStorage,
+  console,
+};
+context.window.window = context.window;
+vm.createContext(context);
+
+[
+  "js/zoneZipMap.js",
+  "js/coverageZipData.js",
+  "js/zipCoverage.js",
+  "js/variables.js",
+  "js/pricingConfig.js",
+  "js/mockData.js",
+  "js/calculator.js",
+  "js/warningPresentation.js",
+  "js/costBreakdownAnalysis.js",
+].forEach((file) => {
+  vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: file });
+});
+
+const quote = clone(context.window.CalculatorMockData);
+quote.route.pickupCoverage = {
+  zip: quote.route.pickupZip,
+  inCoverageDataset: true,
+  coverageStatus: "disabled",
+  priceCoefficient: 1,
+};
+quote.route.deliveryCoverage = {
+  zip: quote.route.deliveryZip,
+  inCoverageDataset: true,
+  coverageStatus: "covered",
+  priceCoefficient: 1,
+};
+
+const result = context.window.PricingCalculator.calculateQuote(quote);
+const analysis = context.window.CostBreakdownAnalysis;
+const reconciliation = analysis.stageReconciliation(result);
+const presentation = analysis.warningPresentation(quote, result, true);
+const capacity = analysis.capacityAnalysis(result, presentation);
+const fit = analysis.vehicleFit(result);
+const trace = analysis.formulaTrace(result, {
+  rounding: context.window.CalculatorVariables.settings.rounding,
+});
+
+assert(reconciliation.reconciled, "Expected stage totals to reconcile with route cost.");
+assert(Math.abs(reconciliation.stageTotal - result.totals.routeCost) <= 1, "Expected stage total within $1 of route cost.");
+assert(reconciliation.operationalReconciled, "Expected route and non-route totals to reconcile with operational cost.");
+assert(
+  Math.abs(reconciliation.operationalStageTotal - result.totals.operationalCost) <= 1,
+  "Expected operational stage total within $1 of operational cost.",
+);
+assert(capacity.shipmentDensity === "Not available", "Expected shipment density not to be inferred.");
+assert(capacity.volumeUtilization === "Not available", "Expected volume utilization not to be inferred.");
+assert(capacity.selectedVehicle === result.vehicle.name, "Expected selected AS-IS vehicle to remain visible.");
+assert(fit.dimensionalFit === null && fit.doorOpeningFit === null, "Expected dimensional fit fields to remain unavailable.");
+assert(
+  presentation.warnings.some((warning) => warning.id.includes("ZIP-EXCLUDED")),
+  "Expected frozen stored ZIP coverage metadata to drive estimate warning review.",
+);
+assert(trace.some((row) => row.formulaId === "PICK-007" && row.result > 0), "Expected pickup AS-IS trace row.");
+assert(trace.some((row) => row.formulaId === "FINAL-014" && row.result === result.totals.finalPrice), "Expected final price trace row.");
+assert(
+  trace.some((row) => row.formulaId === "INT-CAP-*" && row.status.startsWith("Blocked")),
+  "Expected unapproved capacity trace to remain blocked.",
+);
+
+const html = fs.readFileSync("breakdown.html", "utf8");
+const breakdownJs = fs.readFileSync("js/breakdown.js", "utf8");
+[
+  "Capacity Analysis",
+  "Warning and Readiness Details",
+  "Vehicle Fit Details",
+  "Formula Trace",
+  "bdRouteStageNote",
+].forEach((label) => assert(html.includes(label), `Expected Cost Breakdown UI to include ${label}.`));
+assert(html.includes("js/costBreakdownAnalysis.js"), "Expected Cost Breakdown analysis adapter.");
+assert(breakdownJs.includes("stageReconciliation"), "Expected stage reconciliation rendering.");
+assert(breakdownJs.includes("renderFormulaTrace"), "Expected Formula Trace rendering.");
+
+console.log(JSON.stringify({
+  status: "passed",
+  stageTotal: reconciliation.stageTotal,
+  routeCost: reconciliation.routeCost,
+  routeDelta: reconciliation.routeDelta,
+  nonRouteOperationalCost: reconciliation.nonRouteOperationalCost,
+  operationalStageTotal: reconciliation.operationalStageTotal,
+  operationalCost: reconciliation.operationalCost,
+  operationalDelta: reconciliation.operationalDelta,
+  readiness: presentation.readiness.label,
+  capacitySelectedVehicle: capacity.selectedVehicle,
+  unavailableCapacityFields: [
+    capacity.shipmentDensity,
+    capacity.vehicleDensityThreshold,
+    capacity.volumeUtilization,
+    capacity.payloadUtilization,
+    capacity.limitingFactor,
+    capacity.selectedCostBasis,
+  ].filter((value) => value === "Not available").length,
+  traceRows: trace.length,
+}, null, 2));

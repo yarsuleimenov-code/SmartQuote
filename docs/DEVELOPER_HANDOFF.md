@@ -1,5 +1,7 @@
 # Developer Handoff для Logistics Pricing Calculator
 
+> Legacy target-architecture document. Some current-state descriptions below predate the working SmartQuote MVP. Use `README.md`, `docs/project-context.md`, and `docs/current-handoff.md` for implemented state. Use this document only for production target architecture and historical design intent.
+
 ## 1. Статус репозитория
 
 Этот репозиторий является hi-fi wireframe и visual technical specification для будущей production-системы Logistics Pricing Calculator.
