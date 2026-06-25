@@ -35,6 +35,7 @@ function loadContext(seed) {
     "js/pricingConfig.js",
     "js/mockData.js",
     "js/calculator.js",
+    "js/calculationContract.js",
     "js/storage.js",
   ].forEach((file) => {
     vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: file });
@@ -97,9 +98,10 @@ function verifyStaticNavigation() {
 function buildEstimateSnapshot(context, quote, result) {
   const createdAt = new Date().toISOString();
   return {
-    snapshotVersion: 1,
+    snapshotVersion: 2,
     formulaVersion: context.window.CalculatorVariables.formulaVersion,
     variablesSnapshot: context.window.PricingConfig.snapshot(),
+    calculationContract: result.calculationContract,
     createdAt,
     validUntil: new Date(Date.parse(createdAt) + 14 * 24 * 60 * 60 * 1000).toISOString(),
     estimateId: quote.estimateId,
@@ -163,6 +165,7 @@ assert(savedDraft.items[0].protectionPlan === "FVP", "Expected protectionPlan to
 
 const result = context.window.PricingCalculator.calculateQuote(savedDraft);
 assert(result.totals.finalPrice > 0, "Expected workflow quote to calculate a positive total.");
+assert(result.calculationContract?.contractVersion === "smartquote-calculation-v1", "Expected calculation contract.");
 assert(savedDraft.options.deliveryDirect !== true, "Expected Direct to remain manual and not auto-enable.");
 assert(result.items[0].protectionPlan === "FVP", "Expected calculated item to expose FVP protection plan.");
 assert(result.items[0].protectionLegacyType === "Full Coverage", "Expected FVP to preserve Full Coverage compatibility.");
@@ -185,6 +188,8 @@ assert(savedEstimate?.snapshotId, "Expected generated estimate snapshotId.");
 assert(savedEstimate.formulaVersion === "excel-derived-v0.1", "Expected estimate formulaVersion.");
 assert(savedEstimate.variablesVersion === "baseline-2026-06-02", "Expected estimate variablesVersion.");
 assert(savedEstimate.variablesSnapshot?.variablesVersion === "baseline-2026-06-02", "Expected variablesSnapshot.");
+assert(savedEstimate.calculationContract?.traceVersion === "normalized-formula-trace-v1", "Expected trace metadata.");
+assert(savedEstimate.calculationContract?.trace?.some((row) => row.formulaId === "FINAL-014"), "Expected frozen formula trace.");
 assert(savedEstimate.calculationTimestamp, "Expected calculationTimestamp.");
 assert(savedEstimate.sourceDraftId === savedDraft.localId, "Expected sourceDraftId to point to saved draft.");
 assert(Array.isArray(savedEstimate.fuelPricesUsed) && savedEstimate.fuelPricesUsed.length >= 2, "Expected fuelPricesUsed.");

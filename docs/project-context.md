@@ -45,6 +45,8 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Variables intentionally uses a single active-value model. Current / Proposed comparison is excluded from this operational screen; future analytics should be separate. Save Variables remains disabled.
 - `references.html` allows local vehicle administration while broader reference governance and activation workflows remain incomplete.
 - `formulas.html` is a generated read-only catalog of the unified 225-formula architecture from AS-IS and TO-BE masterdata, not an executable pricing engine.
+- Normalized Formula Sprint registries are stored under `docs/formula-spec/normalized/`; the review workbook is `outputs/masterdata-normalization/SmartQuote_Masterdata_Normalization.xlsx`.
+- `js/calculationContract.js` provides the versioned Formula Sprint input/output boundary and normalized Formula ID trace while preserving the UAT-approved calculation outputs.
 
 ## Current Implementation Status
 

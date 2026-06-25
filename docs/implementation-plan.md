@@ -1,5 +1,18 @@
 # Logistics Pricing Calculator Implementation Plan
 
+## Formula Sprint Readiness Update
+
+Masterdata normalization is complete:
+
+- 225 Formula IDs retained;
+- 116 canonical variables;
+- 40 canonical references;
+- formula dependency map and explicit test assumptions generated.
+
+Formula Sprint Foundation is implemented: input normalization, version metadata, and Formula ID trace are added without changing current quote prices.
+
+The next recommended slice is the first approved TO-BE calculation block behind the contract, starting with normalized order inputs and route classification outputs.
+
 ## Current Project Shape
 
 The repository is a working static-frontend SmartQuote MVP with local JavaScript calculation, localStorage workflow persistence, frozen estimate snapshots, and test-mode Cloudflare/Google Sheets integrations.

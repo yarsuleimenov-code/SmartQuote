@@ -127,6 +127,7 @@
         formulaVersion: snapshot.formulaVersion || window.CalculatorVariables?.formulaVersion || "unknown",
         variablesVersion: snapshot.variablesVersion || variablesSnapshot?.variablesVersion || "unknown",
         variablesSnapshot,
+        calculationContract: snapshot.calculationContract || snapshot.result?.calculationContract || null,
         calculationTimestamp,
         sourceDraftId: snapshot.sourceDraftId || snapshot.quote?.localId || localStorage.getItem(currentDraftKey) || null,
         fuelPricesUsed: snapshot.fuelPricesUsed || variablesSnapshot?.fuelPrices || null,

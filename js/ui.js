@@ -496,9 +496,10 @@
       const createdAt = new Date();
       const validUntil = new Date(createdAt.getTime() + 14 * 24 * 60 * 60 * 1000);
       return {
-        snapshotVersion: 1,
+        snapshotVersion: 2,
         formulaVersion: window.CalculatorVariables?.formulaVersion || "unknown",
         variablesSnapshot: window.PricingConfig?.snapshot?.() || null,
+        calculationContract: result.calculationContract || null,
         createdAt: createdAt.toISOString(),
         validUntil: validUntil.toISOString(),
         estimateId: quote.estimateId || "EST-291",

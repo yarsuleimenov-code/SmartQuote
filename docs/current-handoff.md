@@ -12,6 +12,8 @@ Current implementation baseline:
 - Quick Quote -> Full Quote catalog transfer slice completed.
 - CEO Formula Review Pack completed.
 - UI Sprint Plan from the June 19 Calculator meeting documented.
+- Masterdata normalization completed for Formula Sprint planning.
+- Formula Sprint Foundation adds a versioned calculation contract and normalized Formula ID trace without changing quote prices.
 
 Checkpoint history:
 
@@ -252,6 +254,24 @@ Fuel Prices affect calculation, but editing governance is not enabled yet.
 - Formula ID, expression, description, source, output, and usage are searchable;
 - formula text uses black for input/calculated terms, blue for TO-BE variables, and green for TO-BE reference data;
 - the page is documentation and does not change `js/calculator.js` or active pricing.
+
+Masterdata normalization:
+
+- preserves all 225 Formula IDs;
+- defines 116 canonical variables and 40 canonical references;
+- provides 545 formula dependency links;
+- keeps duplicate AS-IS IDs as aliases when a TO-BE canonical entity exists;
+- marks missing production data as explicit test assumptions;
+- is documented in `docs/masterdata-normalization.md`.
+
+Formula Sprint Foundation:
+
+- wraps the UAT-approved calculator through `js/calculationContract.js`;
+- preserves the original function as `PricingCalculator.calculateQuoteBaseline`;
+- adds contract, formula, variable, and reference version metadata;
+- stores normalized inputs and Formula ID trace in new estimate snapshots;
+- uses snapshot version 2 while keeping old snapshots compatible;
+- is documented in `docs/formula-sprint-foundation.md`.
 
 ## Vehicle Compatibility
 
