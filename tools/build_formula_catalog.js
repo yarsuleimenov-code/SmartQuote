@@ -43,15 +43,28 @@ function parseCsv(text) {
 }
 
 const root = path.resolve(__dirname, "..");
-const sourcePath = path.join(root, "docs", "formula-spec", "tobe_formula_master.csv");
+const asIsPath = path.join(root, "docs", "formula-spec", "as_is_formula_master.csv");
+const toBePath = path.join(root, "docs", "formula-spec", "tobe_formula_master.csv");
 const variablesPath = path.join(root, "docs", "formula-spec", "tobe_variables_governance.csv");
 const referencesPath = path.join(root, "docs", "formula-spec", "tobe_reference_sources.csv");
 const outputPath = path.join(root, "js", "formulaMasterData.js");
-const source = parseCsv(fs.readFileSync(sourcePath, "utf8"));
+const asIsSource = parseCsv(fs.readFileSync(asIsPath, "utf8"));
+const toBeSource = parseCsv(fs.readFileSync(toBePath, "utf8"));
 const variables = parseCsv(fs.readFileSync(variablesPath, "utf8"));
 const references = parseCsv(fs.readFileSync(referencesPath, "utf8"));
 
-const records = source.rows.map((record) => ({
+const asIsRecords = asIsSource.rows.map((record) => ({
+  id: record[0],
+  block: record[1],
+  name: record[2],
+  formula: record[3],
+  description: record[4],
+  level: record[5] || "Formula Architecture",
+  source: record[6],
+  output: record[7],
+  usedIn: record[8],
+}));
+const toBeRecords = toBeSource.rows.map((record) => ({
   id: record[0],
   block: record[1],
   name: record[2],
@@ -59,16 +72,23 @@ const records = source.rows.map((record) => ({
   description: record[4],
   source: record[5],
   output: record[6],
-  level: "Target Architecture",
+  level: "Formula Architecture",
   usedIn: record[6],
 }));
+const records = [...asIsRecords, ...toBeRecords];
 const variableTerms = variables.rows.map((record) => record[1]).filter(Boolean);
 const referenceTerms = references.rows.map((record) => record[1]).filter(Boolean);
 
-const output = `// Generated from docs/formula-spec/tobe_formula_master.csv.\n` +
+const output = `// Generated from AS-IS and TO-BE formula masterdata.\n` +
   `// Run: node tools/build_formula_catalog.js\n` +
   `window.FormulaMasterData = ${JSON.stringify(records, null, 2)};\n` +
   `window.FormulaCatalogMetadata = ${JSON.stringify({ variableTerms, referenceTerms }, null, 2)};\n`;
 
 fs.writeFileSync(outputPath, output, "utf8");
-console.log(JSON.stringify({ source: sourcePath, output: outputPath, formulas: records.length }, null, 2));
+console.log(JSON.stringify({
+  sources: [asIsPath, toBePath],
+  output: outputPath,
+  asIsFormulas: asIsRecords.length,
+  toBeFormulas: toBeRecords.length,
+  formulas: records.length,
+}, null, 2));

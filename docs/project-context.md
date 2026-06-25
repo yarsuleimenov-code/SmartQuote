@@ -44,7 +44,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Active runtime values in `variables.html` remain read-only until interactive Pricing Engine governance is finished.
 - Variables intentionally uses a single active-value model. Current / Proposed comparison is excluded from this operational screen; future analytics should be separate. Save Variables remains disabled.
 - `references.html` allows local vehicle administration while broader reference governance and activation workflows remain incomplete.
-- `formulas.html` is a generated read-only catalog of the unified target formula architecture from TO-BE masterdata, not an executable pricing engine.
+- `formulas.html` is a generated read-only catalog of the unified 225-formula architecture from AS-IS and TO-BE masterdata, not an executable pricing engine.
 
 ## Current Implementation Status
 

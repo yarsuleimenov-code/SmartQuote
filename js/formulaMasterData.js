@@ -1,6 +1,875 @@
-// Generated from docs/formula-spec/tobe_formula_master.csv.
+// Generated from AS-IS and TO-BE formula masterdata.
 // Run: node tools/build_formula_catalog.js
 window.FormulaMasterData = [
+  {
+    "id": "SYS-001",
+    "block": "System Helpers",
+    "name": "Numeric value fallback",
+    "formula": "Number(value), if not finite -> 0",
+    "description": "Любое числовое поле сначала приводится к числу. Если брокер оставил поле пустым или значение не число, калькулятор использует 0, чтобы расчет не ломался. Берется из input field или runtime variable; дальше используется во всех формулах.",
+    "level": "System",
+    "source": "User input values, runtime variables, calculator helper functions",
+    "output": "Normalized values used by all formula blocks",
+    "usedIn": "All calculations"
+  },
+  {
+    "id": "SYS-002",
+    "block": "System Helpers",
+    "name": "Money rounding",
+    "formula": "ROUND(value, 2 decimals)",
+    "description": "Промежуточные денежные и расчетные значения округляются до 2 знаков после запятой для внутреннего результата. Берется расчетное значение; дальше идет в totals, item result и breakdown.",
+    "level": "System",
+    "source": "User input values, runtime variables, calculator helper functions",
+    "output": "Normalized values used by all formula blocks",
+    "usedIn": "Items, totals, breakdown"
+  },
+  {
+    "id": "SYS-003",
+    "block": "System Helpers",
+    "name": "Final price rounding",
+    "formula": "CEILING(Raw Price, Rounding Increment)",
+    "description": "Итоговая цена для клиента округляется вверх до ближайшего шага округления. Сейчас шаг округления = $10 из settings.rounding. Берется raw price; результат идет в Estimate Document и Cost Breakdown.",
+    "level": "Order",
+    "source": "User input values, runtime variables, calculator helper functions",
+    "output": "Normalized values used by all formula blocks",
+    "usedIn": "Final Customer Price"
+  },
+  {
+    "id": "RTE-001",
+    "block": "Route / Distance",
+    "name": "Pickup Zone",
+    "formula": "NormalizeZoneName(Zip Dictionary[Pickup ZIP])",
+    "description": "Pickup ZIP из Quote Draft ищется в ZIP dictionary, затем приводится к canonical zone: например NYC -> NY Area. Результат используется для route distance, pickup local distance и route label.",
+    "level": "Route",
+    "source": "Quote Draft pickup/delivery ZIP, ZIP dictionary, distance matrix",
+    "output": "Pickup zone, delivery zone, route support, pickup/delivery/interstate distances",
+    "usedIn": "Distance, pickup stage"
+  },
+  {
+    "id": "RTE-002",
+    "block": "Route / Distance",
+    "name": "Delivery Zone",
+    "formula": "NormalizeZoneName(Zip Dictionary[Delivery ZIP])",
+    "description": "Delivery ZIP из Quote Draft ищется в ZIP dictionary, затем приводится к canonical zone: например CA (LA) -> CA South. Результат используется для route distance, delivery local distance и route label.",
+    "level": "Route",
+    "source": "Quote Draft pickup/delivery ZIP, ZIP dictionary, distance matrix",
+    "output": "Pickup zone, delivery zone, route support, pickup/delivery/interstate distances",
+    "usedIn": "Distance, delivery stage"
+  },
+  {
+    "id": "RTE-003",
+    "block": "Route / Distance",
+    "name": "Interstate Distance",
+    "formula": "Distance Matrix[Pickup Zone][Delivery Zone]",
+    "description": "Калькулятор берет canonical pickup zone и delivery zone, затем ищет расстояние в distance matrix. Если расстояние найдено, routeSupported = TRUE. Результат идет в interstate fuel, vehicle cost, driver cost и final route cost.",
+    "level": "Route",
+    "source": "Quote Draft pickup/delivery ZIP, ZIP dictionary, distance matrix",
+    "output": "Pickup zone, delivery zone, route support, pickup/delivery/interstate distances",
+    "usedIn": "Interstate stage, route support"
+  },
+  {
+    "id": "RTE-004",
+    "block": "Route / Distance",
+    "name": "Pickup Local Distance",
+    "formula": "Distance Matrix[Pickup Zone][Pickup Zone]",
+    "description": "Для pickup stage используется среднее локальное расстояние внутри pickup zone. Берется из distance matrix по pickup zone -> pickup zone. Результат идет в pickup mileage и pickup labor mileage.",
+    "level": "Pickup",
+    "source": "Quote Draft pickup/delivery ZIP, ZIP dictionary, distance matrix",
+    "output": "Pickup zone, delivery zone, route support, pickup/delivery/interstate distances",
+    "usedIn": "Pickup cost"
+  },
+  {
+    "id": "RTE-005",
+    "block": "Route / Distance",
+    "name": "Delivery Local Distance",
+    "formula": "Distance Matrix[Delivery Zone][Delivery Zone]",
+    "description": "Для delivery stage используется среднее локальное расстояние внутри delivery zone. Берется из distance matrix по delivery zone -> delivery zone. Результат идет в delivery mileage и delivery labor mileage.",
+    "level": "Delivery",
+    "source": "Quote Draft pickup/delivery ZIP, ZIP dictionary, distance matrix",
+    "output": "Pickup zone, delivery zone, route support, pickup/delivery/interstate distances",
+    "usedIn": "Delivery cost"
+  },
+  {
+    "id": "ITM-001",
+    "block": "Item Calculations",
+    "name": "Billable Item",
+    "formula": "Item Name exists AND Quantity > 0 AND (Physical Volume > 0 OR Total Weight > 0)",
+    "description": "Строка item попадает в расчет только если есть название и есть физический объем или вес. Пустые строки и name-only строки не создают цену. Результат идет в список calculatedItems.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Item calculations, final zero guard"
+  },
+  {
+    "id": "ITM-002",
+    "block": "Item Calculations",
+    "name": "Physical Volume",
+    "formula": "Length(in) x Width(in) x Height(in) / 1728 x Quantity",
+    "description": "Физический объем item считается из размеров в inches. Размеры берутся из Quote Draft item row или Quick Quote catalog transfer. Результат идет в item volume, total shipment volume, effective volume и vehicle fit.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Total shipment volume, effective volume, vehicle fit"
+  },
+  {
+    "id": "ITM-003",
+    "block": "Item Calculations",
+    "name": "Total Shipment Volume",
+    "formula": "SUM(All Item Physical Volumes)",
+    "description": "Общий физический объем заказа равен сумме physical volume всех billable items. Результат показывается в summary и используется для Effective $/cu ft.",
+    "level": "Order",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Summary, effective cost per cu ft"
+  },
+  {
+    "id": "ITM-004",
+    "block": "Item Calculations",
+    "name": "Effective Volume Multiplier",
+    "formula": "1 + Fragile*0.10 + NonStackable*0.25 + Crated*0.15",
+    "description": "Калькулятор увеличивает operational volume, если item fragile, non-stackable или crated. Флаги берутся из item row. Результат multiplier идет в effective volume.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Effective volume"
+  },
+  {
+    "id": "ITM-005",
+    "block": "Item Calculations",
+    "name": "Effective Volume",
+    "formula": "CEILING(Physical Volume x Effective Volume Multiplier)",
+    "description": "Effective volume показывает, сколько operational space занимает item с учетом handling complexity. Берется physical volume и flags multiplier. Результат идет в total effective volume, vehicle fit и volume-based stage model.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Vehicle fit, volume model, operational cost"
+  },
+  {
+    "id": "ITM-006",
+    "block": "Item Calculations",
+    "name": "Total Effective Volume",
+    "formula": "SUM(All Item Effective Volumes)",
+    "description": "Общий effective volume заказа равен сумме effective volume всех billable items. Результат идет в vehicle fit, pickup/interstate/delivery volume model и bulky/direct review recommendation.",
+    "level": "Order",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Vehicle fit, stage calculations"
+  },
+  {
+    "id": "ITM-007",
+    "block": "Item Calculations",
+    "name": "Item Total Weight",
+    "formula": "Item Weight x Quantity",
+    "description": "Вес item line считается как вес одного предмета, умноженный на количество. Вес берется из Quote Draft item row или catalog default. Результат идет в total shipment weight, warning/crew logic, vehicle fit и weight model.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Total weight, crew logic, weight model"
+  },
+  {
+    "id": "ITM-008",
+    "block": "Item Calculations",
+    "name": "Total Shipment Weight",
+    "formula": "SUM(All Item Total Weights)",
+    "description": "Общий вес заказа равен сумме total weight всех billable items. Результат идет в vehicle fit и weight-based stage model.",
+    "level": "Order",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Vehicle fit, weight model"
+  },
+  {
+    "id": "ITM-009",
+    "block": "Item Calculations",
+    "name": "Missing Weight Warning",
+    "formula": "IF(Physical Volume > 0 AND Total Weight = 0, 'Fill up the weight')",
+    "description": "Если у item есть объем, но вес не заполнен, калькулятор показывает warning. Это не добавляет цену напрямую, но сигнализирует риск неверной себестоимости.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Warnings, broker review"
+  },
+  {
+    "id": "ITM-010",
+    "block": "Item Calculations",
+    "name": "Heavy Item Warning",
+    "formula": "IF(Item Weight >= 200, 'Extremely heavy')",
+    "description": "Если вес одного item >= 200 lb, система помечает item как extremely heavy. Результат идет в warnings и crewNeed = 2.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Warnings, crew logic"
+  },
+  {
+    "id": "ITM-011",
+    "block": "Item Calculations",
+    "name": "Two-Person Weight Warning",
+    "formula": "IF(Item Weight >= 100, 'Heavy. 2 people needed')",
+    "description": "Если вес item >= 100 lb, система считает, что требуется 2 человека. Результат идет в crewNeed и затем в pickup/delivery labor.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Crew logic, pickup/delivery labor"
+  },
+  {
+    "id": "ITM-012",
+    "block": "Item Calculations",
+    "name": "Bulky Dimension Warning",
+    "formula": "IF((Length + Width + Height) / 12 >= 11, 'Bulky. 2 people needed')",
+    "description": "Если сумма габаритов item в feet >= 11, система считает item bulky и требует 2 человека. Результат идет в crewNeed и labor.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Crew logic, pickup/delivery labor"
+  },
+  {
+    "id": "ITM-013",
+    "block": "Item Calculations",
+    "name": "Item Crew Need",
+    "formula": "IF(Warning contains heavy or 2 people, 2, else 1)",
+    "description": "Crew need определяется из warning logic. Если item тяжелый или bulky, item crew need = 2, иначе 1. Результат идет в required crew, pickup team и delivery team.",
+    "level": "Item",
+    "source": "Quote Draft item row, Quick Quote catalog transfer, Item Catalog defaults",
+    "output": "Billable items, physical volume, effective volume, total weight, warning, crew need",
+    "usedIn": "Crew, labor"
+  },
+  {
+    "id": "VEH-001",
+    "block": "Vehicle Fit",
+    "name": "Vehicle Fit",
+    "formula": "First Active Vehicle where Total Effective Volume <= Vehicle Volume AND Total Weight <= Vehicle Payload",
+    "description": "Калькулятор выбирает первый active vehicle из References Vehicles, который вмещает заказ по volume и payload. Результат идет в pickup/delivery vehicle cost и vehicle display.",
+    "level": "Order",
+    "source": "Total effective volume, total weight, References Vehicles",
+    "output": "Selected vehicle and interstate vehicle used by stage costs",
+    "usedIn": "Vehicle, pickup/delivery mileage"
+  },
+  {
+    "id": "VEH-002",
+    "block": "Vehicle Fit",
+    "name": "Interstate Vehicle",
+    "formula": "Vehicle by settings.interstateVehicleName, fallback selected vehicle",
+    "description": "Для interstate stage используется vehicle из settings.interstateVehicleName. Сейчас baseline = Penske 26 ft. Если vehicle не найден, используется vehicle fit result. Результат идет в interstate fuel, maintenance и driver formulas.",
+    "level": "Interstate",
+    "source": "Total effective volume, total weight, References Vehicles",
+    "output": "Selected vehicle and interstate vehicle used by stage costs",
+    "usedIn": "Interstate cost"
+  },
+  {
+    "id": "PKG-001",
+    "block": "Packaging",
+    "name": "Packaging Cost Per Item",
+    "formula": "Packaging Rate x Quantity",
+    "description": "Packaging rate берется из packagingRates по выбранному item packaging. Результат идет в item.packagingCost и totals.packaging. Важно: AS-IS per-item packaging не добавляется напрямую в additionalCharges.",
+    "level": "Item",
+    "source": "Item packaging dropdown, Item Catalog default, packagingRates",
+    "output": "Item packaging cost and packaging display total",
+    "usedIn": "Packaging display, cost breakdown"
+  },
+  {
+    "id": "PKG-002",
+    "block": "Packaging",
+    "name": "Packaging Total Display",
+    "formula": "SUM(Item Packaging Costs) + Packaging Per Shipment",
+    "description": "Totals.packaging показывает сумму item packaging plus packagingPerShipment, если есть billable items. Это internal/display metric. В final price AS-IS влияет только packagingPerShipment внутри pickup handling.",
+    "level": "Order",
+    "source": "Item packaging dropdown, Item Catalog default, packagingRates",
+    "output": "Item packaging cost and packaging display total",
+    "usedIn": "Breakdown packaging display"
+  },
+  {
+    "id": "PROT-001",
+    "block": "Protection Plan",
+    "name": "Protection Legacy Type",
+    "formula": "IF Protection Plan = FVP then Full Coverage else Basic Liability",
+    "description": "Broker-facing protectionPlan приводится к legacy insurance type для текущего калькулятора. RV и DV считаются как Basic Liability, FVP как Full Coverage. Результат идет в protectionPlans lookup.",
+    "level": "Item",
+    "source": "Item protectionPlan field, declaredValue input, protectionPlans",
+    "output": "Insurance/protection cost and customer-facing protection status",
+    "usedIn": "Protection cost"
+  },
+  {
+    "id": "PROT-002",
+    "block": "Protection Plan",
+    "name": "RV Protection Cost",
+    "formula": "0",
+    "description": "RV / Released Value использует Basic Liability с rate 0 и fixed fee 0. Результат идет в insuranceCost = 0 и не увеличивает final price.",
+    "level": "Item",
+    "source": "Item protectionPlan field, declaredValue input, protectionPlans",
+    "output": "Insurance/protection cost and customer-facing protection status",
+    "usedIn": "Protection, final total"
+  },
+  {
+    "id": "PROT-003",
+    "block": "Protection Plan",
+    "name": "FVP Protection Cost",
+    "formula": "Declared Value x 0.025 + 15",
+    "description": "Если выбран FVP / Full Coverage, калькулятор берет declaredValue из item row, умножает на 2.5% и добавляет fixed fee $15. Результат идет в item.insuranceCost, totals.insurance и serviceCost.",
+    "level": "Item",
+    "source": "Item protectionPlan field, declaredValue input, protectionPlans",
+    "output": "Insurance/protection cost and customer-facing protection status",
+    "usedIn": "Protection, service cost, final total"
+  },
+  {
+    "id": "PROT-004",
+    "block": "Protection Plan",
+    "name": "DV Price Impact",
+    "formula": "0 AS-IS because DV maps to Basic Liability pricing",
+    "description": "DV сейчас является capture/confirmation behavior и в pricing считается как Basic Liability. Результат не увеличивает final price; wording идет в Estimate Document как confirmation required.",
+    "level": "Item",
+    "source": "Item protectionPlan field, declaredValue input, protectionPlans",
+    "output": "Insurance/protection cost and customer-facing protection status",
+    "usedIn": "Protection wording"
+  },
+  {
+    "id": "STO-001",
+    "block": "Storage",
+    "name": "Storage Cost",
+    "formula": "Effective Volume x Storage Days x Storage Per Cu Ft Per Day",
+    "description": "Storage считается по каждому item: effective volume умножается на storage days и storage rate из settings. Результат идет в totals.storage и additionalCharges.",
+    "level": "Item",
+    "source": "Item storageDays input, effective volume, storage rate variable",
+    "output": "Storage cost included in additional charges",
+    "usedIn": "Storage, additional charges"
+  },
+  {
+    "id": "FUEL-001",
+    "block": "Fuel",
+    "name": "Internal Fuel Price",
+    "formula": "Fuel Current Avg x (1 + Fuel Surcharge % / 100)",
+    "description": "Fuel price берется из Fuel Prices reference/runtime storage. Калькулятор добавляет surcharge percent. Результат идет в fuel cost per mile.",
+    "level": "Vehicle/Fuel",
+    "source": "Fuel Prices reference/runtime variables and Vehicles reference MPG",
+    "output": "Fuel cost per mile and per unit mile",
+    "usedIn": "Fuel cost per mile"
+  },
+  {
+    "id": "FUEL-002",
+    "block": "Fuel",
+    "name": "Fuel Cost Per Mile",
+    "formula": "Internal Fuel Price / (Vehicle Calculation MPG or Vehicle MPG)",
+    "description": "Fuel cost per mile считается из internal fuel price и vehicle MPG. MPG берется из References Vehicles. Если internal fuel или MPG недоступны, используется vehicle.fuelPerMile fallback.",
+    "level": "Vehicle/Fuel",
+    "source": "Fuel Prices reference/runtime variables and Vehicles reference MPG",
+    "output": "Fuel cost per mile and per unit mile",
+    "usedIn": "Pickup, delivery, interstate fuel"
+  },
+  {
+    "id": "FUEL-003",
+    "block": "Fuel",
+    "name": "Fuel Cost Per Unit Mile",
+    "formula": "Fuel Cost Per Mile / Vehicle Denominator",
+    "description": "Для interstate allocation fuel cost per mile делится на vehicle volume, если модель volume, или на vehicle payload, если модель weight. Результат идет в interstate fuel component.",
+    "level": "Interstate",
+    "source": "Fuel Prices reference/runtime variables and Vehicles reference MPG",
+    "output": "Fuel cost per mile and per unit mile",
+    "usedIn": "Interstate fuel"
+  },
+  {
+    "id": "PICK-001",
+    "block": "Pickup Stage",
+    "name": "Pickup Loading Minutes - Volume",
+    "formula": "IF Volume < 80 then 205.57 x Volume / (144.87 + Volume), else 73.13 + 0.5 x (Volume - 80)",
+    "description": "Pickup loading time по volume model берется из total effective volume и loading coefficients из settings. Результат идет в pickup labor.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Pickup labor"
+  },
+  {
+    "id": "PICK-002",
+    "block": "Pickup Stage",
+    "name": "Pickup Loading Minutes - Weight",
+    "formula": "Total Weight x 0.2",
+    "description": "Pickup loading time по weight model берется из total shipment weight и per-lb minute coefficient. Результат идет в pickup labor.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Pickup labor"
+  },
+  {
+    "id": "DEL-001",
+    "block": "Delivery Stage",
+    "name": "Delivery Unloading Minutes - Volume",
+    "formula": "Total Effective Volume x 0.5",
+    "description": "Delivery unloading time по volume model берется из total effective volume и unloadingPerCuFtMinute. Результат идет в delivery labor.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Delivery labor"
+  },
+  {
+    "id": "DEL-002",
+    "block": "Delivery Stage",
+    "name": "Delivery Unloading Minutes - Weight",
+    "formula": "Total Weight x 0.2",
+    "description": "Delivery unloading time по weight model берется из total shipment weight и per-lb minute coefficient. Результат идет в delivery labor.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Delivery labor"
+  },
+  {
+    "id": "PICK-003",
+    "block": "Pickup Stage",
+    "name": "Pickup Labor Cost",
+    "formula": "MAX(Pickup Load Minutes, 40) x Wage Per Minute x Pickup Team + Pickup Wage Per Mile x Pickup Distance x Pickup Team",
+    "description": "Pickup labor берет load minutes, minimum loading minutes, wagePerMinute, pickupDistance и pickupTeam. Результат идет в pickupCost и stageBreakdown.pickup.labor.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Pickup subtotal, route cost"
+  },
+  {
+    "id": "DEL-003",
+    "block": "Delivery Stage",
+    "name": "Delivery Labor Cost",
+    "formula": "MAX(Delivery Unload Minutes, 30) x Wage Per Minute x Delivery Team + Pickup Wage Per Mile x Delivery Distance x Delivery Team",
+    "description": "Delivery labor берет unload minutes, minimum delivery minutes = minLoadingMinutes - 10, wagePerMinute, deliveryDistance и deliveryTeam. Результат идет в deliveryCost и stageBreakdown.delivery.labor.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Delivery subtotal, route cost"
+  },
+  {
+    "id": "PICK-004",
+    "block": "Pickup Stage",
+    "name": "Pickup Mileage Cost",
+    "formula": "Pickup Distance x Vehicle Maintenance Per Mile + Pickup Distance x Fuel Cost Per Mile",
+    "description": "Pickup mileage cost берет pickupDistance, selected local vehicle maintenancePerMile и fuelCostPerMile. Результат идет в pickupCost.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Pickup subtotal, route cost"
+  },
+  {
+    "id": "DEL-004",
+    "block": "Delivery Stage",
+    "name": "Delivery Mileage Cost",
+    "formula": "Delivery Distance x Vehicle Maintenance Per Mile + Delivery Distance x Fuel Cost Per Mile",
+    "description": "Delivery mileage cost берет deliveryDistance, selected local vehicle maintenancePerMile и fuelCostPerMile. Результат идет в deliveryCost.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Delivery subtotal, route cost"
+  },
+  {
+    "id": "PICK-005",
+    "block": "Pickup Stage",
+    "name": "Pickup Handling Cost",
+    "formula": "Amount x Warehouse Handling Rate + Amount x Truck Loading Rate + Packaging Per Shipment",
+    "description": "Pickup handling зависит от selected model amount: effective volume или total weight. Rates берутся из settings. Результат идет в pickupCost. PackagingPerShipment включается здесь.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Pickup subtotal, route cost"
+  },
+  {
+    "id": "DEL-005",
+    "block": "Delivery Stage",
+    "name": "Delivery Handling Cost",
+    "formula": "Amount x Warehouse Handling Rate + Amount x Truck Loading Rate / 2",
+    "description": "Delivery handling зависит от selected model amount. Truck loading rate делится на 2. Результат идет в deliveryCost.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Delivery subtotal, route cost"
+  },
+  {
+    "id": "PICK-006",
+    "block": "Pickup Stage",
+    "name": "Pickup Management / Dispatch",
+    "formula": "Management Fee + Dispatch Fee",
+    "description": "К pickup stage добавляются fixed managementFee и dispatchFee из settings. Результат идет в pickupCost.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Pickup subtotal, route cost"
+  },
+  {
+    "id": "DEL-006",
+    "block": "Delivery Stage",
+    "name": "Delivery Management / Dispatch",
+    "formula": "Management Fee + Dispatch Fee",
+    "description": "К delivery stage добавляются fixed managementFee и dispatchFee из settings. Результат идет в deliveryCost.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Delivery subtotal, route cost"
+  },
+  {
+    "id": "PICK-007",
+    "block": "Pickup Stage",
+    "name": "Pickup Cost",
+    "formula": "Pickup Mileage + Pickup Labor + Pickup Handling + Management Fee + Dispatch Fee",
+    "description": "Pickup subtotal складывает mileage, labor, handling и fixed admin fees. Результат идет в routeCost и stageBreakdown.pickup.total.",
+    "level": "Pickup",
+    "source": "Pickup distance, selected vehicle, selected model amount, pickup team, settings",
+    "output": "Pickup labor, mileage, handling, management/dispatch, pickup subtotal",
+    "usedIn": "Route cost, service cost"
+  },
+  {
+    "id": "DEL-007",
+    "block": "Delivery Stage",
+    "name": "Delivery Cost",
+    "formula": "Delivery Mileage + Delivery Labor + Delivery Handling + Management Fee + Dispatch Fee",
+    "description": "Delivery subtotal складывает mileage, labor, handling и fixed admin fees. Результат идет в routeCost и stageBreakdown.delivery.total.",
+    "level": "Delivery",
+    "source": "Delivery distance, selected vehicle, selected model amount, delivery team, settings",
+    "output": "Delivery labor, mileage, handling, management/dispatch, delivery subtotal",
+    "usedIn": "Route cost, service cost"
+  },
+  {
+    "id": "INT-001",
+    "block": "Interstate Stage",
+    "name": "Interstate Maintenance",
+    "formula": "Amount x Interstate Distance x Vehicle Maintenance Per Unit Mile",
+    "description": "Interstate vehicle cost берет selected model amount, interstate distance и maintenance per unit mile у interstate vehicle. Результат идет в interstateCost.",
+    "level": "Interstate",
+    "source": "Interstate distance, interstate vehicle, selected model amount, fuel/vehicle settings",
+    "output": "Interstate fuel, maintenance, driver, interstate subtotal",
+    "usedIn": "Interstate subtotal, route cost"
+  },
+  {
+    "id": "INT-002",
+    "block": "Interstate Stage",
+    "name": "Interstate Fuel",
+    "formula": "Amount x Interstate Distance x Fuel Cost Per Unit Mile",
+    "description": "Interstate fuel берет selected model amount, interstate distance и fuel cost per unit mile. Результат идет в interstateCost.",
+    "level": "Interstate",
+    "source": "Interstate distance, interstate vehicle, selected model amount, fuel/vehicle settings",
+    "output": "Interstate fuel, maintenance, driver, interstate subtotal",
+    "usedIn": "Interstate subtotal, route cost"
+  },
+  {
+    "id": "INT-003",
+    "block": "Interstate Stage",
+    "name": "Interstate Driver",
+    "formula": "Interstate Driver Cost Per Mile / Vehicle Denominator x Interstate Distance x Amount x Interstate Team",
+    "description": "Driver cost распределяется по vehicle denominator, distance и selected amount. Interstate team сейчас = 1. Результат идет в interstateCost.",
+    "level": "Interstate",
+    "source": "Interstate distance, interstate vehicle, selected model amount, fuel/vehicle settings",
+    "output": "Interstate fuel, maintenance, driver, interstate subtotal",
+    "usedIn": "Interstate subtotal, route cost"
+  },
+  {
+    "id": "INT-004",
+    "block": "Interstate Stage",
+    "name": "Interstate Cost",
+    "formula": "Interstate Maintenance + Interstate Fuel + Interstate Driver",
+    "description": "Interstate subtotal складывает vehicle cost, fuel и driver. Результат идет в routeCost и stageBreakdown.interstate.total.",
+    "level": "Interstate",
+    "source": "Interstate distance, interstate vehicle, selected model amount, fuel/vehicle settings",
+    "output": "Interstate fuel, maintenance, driver, interstate subtotal",
+    "usedIn": "Route cost, service cost"
+  },
+  {
+    "id": "FINAL-001",
+    "block": "Final Total",
+    "name": "Damage Surcharge",
+    "formula": "Amount x Repair Cost Per Unit",
+    "description": "Damage surcharge зависит от selected model: repairCostPerCuFt для volume или repairCostPerLb для weight. Результат идет в serviceCost.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Service cost, final total"
+  },
+  {
+    "id": "FINAL-002",
+    "block": "Final Total",
+    "name": "Service Cost",
+    "formula": "Pickup Cost + Delivery Cost + Interstate Cost + Damage Surcharge + Insurance Cost",
+    "description": "Service cost складывает три stage costs, damage surcharge и protection/insurance cost. Результат идет в priceExcludingBrokerFee и operationalCost.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Operational cost, margin, final total"
+  },
+  {
+    "id": "FINAL-003",
+    "block": "Final Total",
+    "name": "Stage Margin",
+    "formula": "(Pickup Cost + Delivery Cost + Interstate Cost) x Margin Rate",
+    "description": "Margin считается от route stage costs, без storage/access/adjustments. MarginRate берется из settings. Результат идет в priceExcludingBrokerFee.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Price excluding broker fee"
+  },
+  {
+    "id": "FINAL-004",
+    "block": "Final Total",
+    "name": "Price Excluding Broker Fee",
+    "formula": "Service Cost + Stage Margin",
+    "description": "Цена до broker fee складывает service cost и stage margin. Результат идет в brokeredPrice.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Brokered price"
+  },
+  {
+    "id": "FINAL-005",
+    "block": "Final Total",
+    "name": "Brokered Price",
+    "formula": "Price Excluding Broker Fee / (1 - Broker Fee Rate)",
+    "description": "Broker fee gross-up делит price excluding broker fee на 1 - brokerFeeRate. Сейчас brokerFeeRate = 4%. Результат идет в rawPrice.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Raw price, final total"
+  },
+  {
+    "id": "FINAL-006",
+    "block": "Final Total",
+    "name": "Volume Model Price",
+    "formula": "calculateExcelStageCosts(measure = volume, amount = Total Effective Volume)",
+    "description": "Калькулятор считает pickup/interstate/delivery модель по effective volume. Результат сравнивается с weight model.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Model selection"
+  },
+  {
+    "id": "FINAL-007",
+    "block": "Final Total",
+    "name": "Weight Model Price",
+    "formula": "calculateExcelStageCosts(measure = weight, amount = Total Weight)",
+    "description": "Калькулятор считает pickup/interstate/delivery модель по total weight. Результат сравнивается с volume model.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Model selection"
+  },
+  {
+    "id": "FINAL-008",
+    "block": "Final Total",
+    "name": "Selected Pricing Model",
+    "formula": "MAX(Volume Model Price, Weight Model Price)",
+    "description": "AS-IS калькулятор выбирает более дорогую модель по priceExcludingBrokerFee. Результат selectedCosts используется для routeCost, serviceCost, rawPrice и finalPrice.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Final pricing model"
+  },
+  {
+    "id": "FINAL-009",
+    "block": "Final Total",
+    "name": "Route Cost",
+    "formula": "Selected Pickup Cost + Selected Delivery Cost + Selected Interstate Cost",
+    "description": "Route cost складывает pickup, delivery и interstate costs из выбранной volume/weight модели. Результат идет в totals.routeCost и Cost Breakdown.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Operational cost, breakdown"
+  },
+  {
+    "id": "ACC-001",
+    "block": "Access Conditions",
+    "name": "Access COI Fee",
+    "formula": "COI Fee x Count(COI pickup/delivery points)",
+    "description": "Если COI включен на pickup или delivery, добавляется coiFee за каждую точку. Результат идет в accessFees.",
+    "level": "Access",
+    "source": "Pickup/delivery access fields and access fee variables",
+    "output": "Access fees included in additional charges",
+    "usedIn": "Additional charges"
+  },
+  {
+    "id": "ACC-002",
+    "block": "Access Conditions",
+    "name": "Access Stairs Fee",
+    "formula": "Stairs Fee Per Floor x MAX(Floor, 1) when Stairs = TRUE",
+    "description": "Если legacy stairs flag включен, калькулятор умножает ставку за этаж на floor. Результат идет в accessFees.",
+    "level": "Access",
+    "source": "Pickup/delivery access fields and access fee variables",
+    "output": "Access fees included in additional charges",
+    "usedIn": "Additional charges"
+  },
+  {
+    "id": "ACC-003",
+    "block": "Access Conditions",
+    "name": "Access Narrow / Elevator Unavailable Fee",
+    "formula": "Narrow Access Fee when NarrowAccess = TRUE OR ElevatorUnavailable = TRUE",
+    "description": "Если narrowAccess или elevatorUnavailable true, добавляется narrowAccessFee. Результат идет в accessFees.",
+    "level": "Access",
+    "source": "Pickup/delivery access fields and access fee variables",
+    "output": "Access fees included in additional charges",
+    "usedIn": "Additional charges"
+  },
+  {
+    "id": "ACC-004",
+    "block": "Access Conditions",
+    "name": "Access Long Carry Fee",
+    "formula": "CEILING(Long Carry Ft / 50) x Long Carry Fee Per 50 Ft",
+    "description": "Long carry считается блоками по 50 ft с округлением вверх. Результат идет в accessFees.",
+    "level": "Access",
+    "source": "Pickup/delivery access fields and access fee variables",
+    "output": "Access fees included in additional charges",
+    "usedIn": "Additional charges"
+  },
+  {
+    "id": "ACC-005",
+    "block": "Access Conditions",
+    "name": "Access Fees Total",
+    "formula": "Pickup Access Fees + Delivery Access Fees",
+    "description": "Access fees суммируют COI, stairs, narrow/elevatorUnavailable и long carry по pickup и delivery. Результат идет в additionalCharges.",
+    "level": "Access",
+    "source": "Pickup/delivery access fields and access fee variables",
+    "output": "Access fees included in additional charges",
+    "usedIn": "Additional charges, final total"
+  },
+  {
+    "id": "OPT-001",
+    "block": "Order Options",
+    "name": "Priority Date Fee",
+    "formula": "IF Priority Date = TRUE, Priority Date Fee, 0",
+    "description": "В коде есть optionFees для priorityDate, но текущий UI принудительно сохраняет priorityDate = false. Если true, результат идет в additionalCharges.",
+    "level": "Order Option",
+    "source": "Quote options and runtime option variables",
+    "output": "Option fee or operational-cost display impact",
+    "usedIn": "Additional charges"
+  },
+  {
+    "id": "OPT-002",
+    "block": "Order Options",
+    "name": "Exclusive Delivery Operational Cost",
+    "formula": "IF Exclusive Delivery = TRUE, Service Cost x Exclusive Delivery Multiplier, else Service Cost",
+    "description": "В коде operationalCost может умножаться на exclusiveDeliveryMultiplier. Текущий UI принудительно сохраняет exclusiveDelivery = false. Результат используется как internal operationalCost display.",
+    "level": "Order Option",
+    "source": "Quote options and runtime option variables",
+    "output": "Option fee or operational-cost display impact",
+    "usedIn": "Operational cost display"
+  },
+  {
+    "id": "ADJ-001",
+    "block": "Adjustments",
+    "name": "Special Labor Cost",
+    "formula": "IF Extra Labor People > 0 AND Extra Labor Hours > 0, People x Hours x Rate, else 0",
+    "description": "Special labor берет people, hours и hidden/internal rate из quote.options. Default rate = $50/hour. Результат идет в quoteAdjustment и final price, только если есть billable items.",
+    "level": "Order Option",
+    "source": "Special labor fields and legacy manual adjustment",
+    "output": "Quote adjustment added to raw price",
+    "usedIn": "Quote adjustment, final total"
+  },
+  {
+    "id": "ADJ-002",
+    "block": "Adjustments",
+    "name": "Legacy Manual Adjustment",
+    "formula": "MAX(Manual Adjustment, 0)",
+    "description": "Legacy manualAdjustment сохраняется для старых drafts/snapshots. Новые broker adjustments должны использовать Special Labor. Результат идет в quoteAdjustment.",
+    "level": "Order Option",
+    "source": "Special labor fields and legacy manual adjustment",
+    "output": "Quote adjustment added to raw price",
+    "usedIn": "Quote adjustment, final total"
+  },
+  {
+    "id": "FINAL-010",
+    "block": "Final Total",
+    "name": "Additional Charges",
+    "formula": "Storage + Access Fees + Option Fees",
+    "description": "Additional charges складывают storage, accessFees и optionFees. Результат добавляется к brokeredPrice в rawPrice.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Raw price, final total"
+  },
+  {
+    "id": "FINAL-011",
+    "block": "Final Total",
+    "name": "Quote Adjustment",
+    "formula": "Special Labor Cost + Legacy Manual Adjustment",
+    "description": "Quote adjustment складывает special labor и legacy manual adjustment. Результат добавляется к rawPrice.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Raw price, final total"
+  },
+  {
+    "id": "FINAL-012",
+    "block": "Final Total",
+    "name": "Raw Price",
+    "formula": "Brokered Price + Additional Charges + Quote Adjustment",
+    "description": "Raw price — цена до финального округления. Берется brokeredPrice, additionalCharges и quoteAdjustment. Результат идет в final price rounding.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Final price"
+  },
+  {
+    "id": "FINAL-013",
+    "block": "Final Total",
+    "name": "Margin Display",
+    "formula": "MAX(0, Raw Price - Operational Cost - Additional Charges - Quote Adjustment)",
+    "description": "Internal margin display считается как остаток после operationalCost, additionalCharges и adjustments. Результат показывается в Cost Breakdown, но не в customer Estimate Document.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Cost Breakdown"
+  },
+  {
+    "id": "FINAL-014",
+    "block": "Final Total",
+    "name": "Final Customer Price",
+    "formula": "IF Billable Items exist, CEILING(Raw Price, 10), else 0",
+    "description": "Final customer price равен raw price, округленному вверх до $10, если есть billable items. Если billable items нет, итог = $0. Результат идет в Estimate Document, My Estimates и Cost Breakdown.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Estimate Document, final total"
+  },
+  {
+    "id": "FINAL-015",
+    "block": "Final Total",
+    "name": "Rounding Delta",
+    "formula": "Final Customer Price - Raw Price",
+    "description": "Rounding delta показывает, сколько добавило округление. Результат идет в totals.roundingDelta для audit.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Cost Breakdown"
+  },
+  {
+    "id": "FINAL-016",
+    "block": "Final Total",
+    "name": "Effective Cost Per Cu Ft",
+    "formula": "IF Total Shipment Volume > 0, Final Customer Price / Total Shipment Volume, else 0",
+    "description": "Effective $/cu ft — internal metric для broker/admin review. Берется finalPrice и totalVolume. Не влияет на цену.",
+    "level": "Order",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Summary, Cost Breakdown"
+  },
+  {
+    "id": "FINAL-017",
+    "block": "Final Total",
+    "name": "Item Reference Allocation Method",
+    "formula": "IF Total Weight > 0 then Weight else IF Total Effective Volume > 0 then Effective Volume else None",
+    "description": "Калькулятор выбирает метод распределения final price по items: сначала weight share, иначе effective volume share. Это internal allocation metric.",
+    "level": "Order/Item",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Item reference price"
+  },
+  {
+    "id": "FINAL-018",
+    "block": "Final Total",
+    "name": "Item Reference Price",
+    "formula": "IF Weight method, Final Price x Item Weight / Total Weight; else Final Price x Item Effective Volume / Total Effective Volume",
+    "description": "Item Ref. Price распределяет итоговую цену по items для internal unit economics. Не влияет на final price и не должен использоваться как declared value.",
+    "level": "Item",
+    "source": "Selected stage costs, service cost, additional charges, broker fee, rounding",
+    "output": "Raw price, margin display, final customer price, item allocation",
+    "usedIn": "Cost Breakdown, item economics"
+  },
+  {
+    "id": "SNAP-001",
+    "block": "Snapshot / Audit",
+    "name": "Estimate Snapshot Formula Version",
+    "formula": "formulaVersion + variablesSnapshot + quote + result",
+    "description": "При Generate Estimate система сохраняет frozen snapshot: formulaVersion, variablesSnapshot, quote и result. Результат нужен, чтобы старые estimates не пересчитывались после изменения variables.",
+    "level": "Snapshot",
+    "source": "Generated estimate snapshot: formulaVersion, variablesSnapshot, quote, result",
+    "output": "Frozen estimate audit trail",
+    "usedIn": "Estimate Document, audit"
+  },
   {
     "id": "TBE-FLOW-001",
     "block": "Formula Trace",
@@ -9,7 +878,7 @@ window.FormulaMasterData = [
     "description": "Для каждой важной строки расчета нужно хранить проверяемую цепочку: что взяли, откуда, на что умножили, какой результат получили и куда он пошел дальше.",
     "source": "Все calculation blocks, variables, references.",
     "output": "Admin Cost Breakdown, audit snapshot.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Admin Cost Breakdown, audit snapshot."
   },
   {
@@ -20,7 +889,7 @@ window.FormulaMasterData = [
     "description": "Фиксирует порядок, в котором строится цена. Это главный контроль margin и воспроизводимости.",
     "source": "Pricing engine architecture.",
     "output": "Developer Formula Sprint implementation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Developer Formula Sprint implementation."
   },
   {
@@ -31,7 +900,7 @@ window.FormulaMasterData = [
     "description": "Заявка должна получить тип маршрута до расчета цены, потому что direct/specific-date/corridor/remote имеют другую экономику.",
     "source": "Pickup ZIP, delivery ZIP, service flags, ZIP dictionary.",
     "output": "Route, pickup, interstate, delivery pricing.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Route, pickup, interstate, delivery pricing."
   },
   {
@@ -42,7 +911,7 @@ window.FormulaMasterData = [
     "description": "ZIP dictionary должен быть отдельным справочником, а не частью формулы. Service area задает branch, warehouse point и zone class.",
     "source": "ZIP dictionary, service areas reference.",
     "output": "Distance, route support, zone fees.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Distance, route support, zone fees."
   },
   {
@@ -53,7 +922,7 @@ window.FormulaMasterData = [
     "description": "Для обычного consolidated route можно использовать approved average distance по зоне/филиалу; для direct/specific date нужно пересчитывать mileage.",
     "source": "Warehouse point, distance source, historical metrics.",
     "output": "Pickup/delivery mileage, direct fee, interstate cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery mileage, direct fee, interstate cost."
   },
   {
@@ -64,7 +933,7 @@ window.FormulaMasterData = [
     "description": "Удаленные зоны должны иметь отдельное правило доплаты, чтобы road cost не съедал margin.",
     "source": "ZIP/service area density analysis.",
     "output": "Route subtotal or service fee.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Route subtotal or service fee."
   },
   {
@@ -75,7 +944,7 @@ window.FormulaMasterData = [
     "description": "Считает физический объем item в cubic feet с учетом количества.",
     "source": "Item row / Quick Quote catalog transfer / item catalog defaults.",
     "output": "Effective volume, vehicle fit, total volume.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Effective volume, vehicle fit, total volume."
   },
   {
@@ -86,7 +955,7 @@ window.FormulaMasterData = [
     "description": "Считает operational volume, который отражает не только физический размер, но и сложность перевозки.",
     "source": "Item row flags, catalog defaults, variables.",
     "output": "Vehicle fit, crew logic, labor model.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle fit, crew logic, labor model."
   },
   {
@@ -97,7 +966,7 @@ window.FormulaMasterData = [
     "description": "Если предмет non-stackable, он занимает высоту 8 ft / 96 in для effective volume.",
     "source": "Item row non-stack checkbox, item height.",
     "output": "Effective volume.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Effective volume."
   },
   {
@@ -108,7 +977,7 @@ window.FormulaMasterData = [
     "description": "Большие moving-like заказы должны получать premium или обязательный review, чтобы быть выгодными.",
     "source": "Total volume, item count, route type.",
     "output": "Vehicle/crew/direct review/final price.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle/crew/direct review/final price."
   },
   {
@@ -119,7 +988,7 @@ window.FormulaMasterData = [
     "description": "Vehicle выбирается по справочнику capacity, а не вручную и не hardcoded.",
     "source": "Effective volume, total weight, vehicle reference.",
     "output": "Interstate cost, local operations.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate cost, local operations."
   },
   {
@@ -130,7 +999,7 @@ window.FormulaMasterData = [
     "description": "Pickup crew и delivery crew считаются отдельно, потому что pickup и delivery имеют разную трудоемкость.",
     "source": "Item totals, access conditions, labor reference.",
     "output": "Pickup labor, delivery labor.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup labor, delivery labor."
   },
   {
@@ -141,7 +1010,7 @@ window.FormulaMasterData = [
     "description": "Pickup time считается отдельно и может быть существенно выше delivery.",
     "source": "Item totals, pickup access fields, time metrics.",
     "output": "Pickup labor subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup labor subtotal."
   },
   {
@@ -152,7 +1021,7 @@ window.FormulaMasterData = [
     "description": "Delivery time должен иметь собственные коэффициенты, не копировать pickup.",
     "source": "Item totals, delivery access fields, time metrics.",
     "output": "Delivery labor subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Delivery labor subtotal."
   },
   {
@@ -163,7 +1032,7 @@ window.FormulaMasterData = [
     "description": "Direct или specific-date service добавляет fixed fee и mileage fee; distance может пересчитываться отдельно.",
     "source": "Direct flag, specific date, distance source.",
     "output": "Pickup/direct/delivery subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/direct/delivery subtotal."
   },
   {
@@ -174,7 +1043,7 @@ window.FormulaMasterData = [
     "description": "Interstate stage должен учитывать route type, distance, vehicle, fuel, driver and route premium.",
     "source": "Distance matrix, vehicle reference, fuel reference.",
     "output": "Interstate subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate subtotal."
   },
   {
@@ -185,7 +1054,7 @@ window.FormulaMasterData = [
     "description": "Crate считается от площади внешних размеров, материала, waste/cuts, labor и margin.",
     "source": "Item dimensions, material reference, labor reference.",
     "output": "Packaging/crate subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Packaging/crate subtotal."
   },
   {
@@ -196,7 +1065,7 @@ window.FormulaMasterData = [
     "description": "Protection pricing должен использовать declared value, а не item reference price. FVP fixed fee применяется один раз на order.",
     "source": "Protection plan field, declared value input, protection reference.",
     "output": "Protection cost, customer wording.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Protection cost, customer wording."
   },
   {
@@ -207,7 +1076,7 @@ window.FormulaMasterData = [
     "description": "Storage остается отдельным cost component и должен сохранять совместимость со старыми estimate snapshots.",
     "source": "Item storage fields, volume, storage variables.",
     "output": "Service fees subtotal, snapshot.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Service fees subtotal, snapshot."
   },
   {
@@ -218,7 +1087,7 @@ window.FormulaMasterData = [
     "description": "Access условия могут быть fee или time impact, но не должны дублироваться в labor.",
     "source": "Floor, elevator, COI, stairs, long carry.",
     "output": "Pickup/delivery/service subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery/service subtotal."
   },
   {
@@ -229,7 +1098,7 @@ window.FormulaMasterData = [
     "description": "Margin применяется к утвержденной cost base в утвержденном порядке.",
     "source": "Stage subtotals, service fees, margin variable.",
     "output": "Raw customer price.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Raw customer price."
   },
   {
@@ -240,7 +1109,7 @@ window.FormulaMasterData = [
     "description": "Discount должен быть auditable и не должен ломать минимальную прибыльность.",
     "source": "Discount input, approval reason, margin floor.",
     "output": "Final raw price, audit.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Final raw price, audit."
   },
   {
@@ -251,7 +1120,7 @@ window.FormulaMasterData = [
     "description": "Клиент видит округленную цену без лишних cents; raw price и rounding delta сохраняются внутри.",
     "source": "Raw customer price, rounding variable.",
     "output": "Estimate Document, snapshot.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Estimate Document, snapshot."
   },
   {
@@ -262,7 +1131,7 @@ window.FormulaMasterData = [
     "description": "Estimate должен быть frozen snapshot. Draft может пересчитываться, estimate не должен silently recalc.",
     "source": "Pricing result, quote payload, variables, references.",
     "output": "My Estimates, Cost Breakdown, audit.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "My Estimates, Cost Breakdown, audit."
   },
   {
@@ -273,7 +1142,7 @@ window.FormulaMasterData = [
     "description": "Переменную можно редактировать в admin только если у нее есть владелец, правило approval и preview влияния на benchmark cases.",
     "source": "Variable governance reference.",
     "output": "Admin settings, release control.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Admin settings, release control."
   },
   {
@@ -284,7 +1153,7 @@ window.FormulaMasterData = [
     "description": "Переводит расчетное pickup time в человеко-часы: если 2 человека работают 45 минут, это 1.5 человеко-часа.",
     "source": "Pickup time model, pickup crew.",
     "output": "Pickup payroll cost, stage labor cost, productivity metrics.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup payroll cost, stage labor cost, productivity metrics."
   },
   {
@@ -295,7 +1164,7 @@ window.FormulaMasterData = [
     "description": "Переводит delivery time в человеко-часы отдельно от pickup, чтобы видеть реальную трудоемкость delivery stage.",
     "source": "Delivery time model, delivery crew.",
     "output": "Delivery payroll cost, stage labor cost, productivity metrics.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Delivery payroll cost, stage labor cost, productivity metrics."
   },
   {
@@ -306,7 +1175,7 @@ window.FormulaMasterData = [
     "description": "Считает человеко-часы дополнительных helpers с учетом минимального оплачиваемого времени.",
     "source": "Heavy/bulky/access flags, helper count, min helper time.",
     "output": "Helper payroll, access/labor surcharge.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Helper payroll, access/labor surcharge."
   },
   {
@@ -317,7 +1186,7 @@ window.FormulaMasterData = [
     "description": "Разделяет customer-billable labor и payroll-paid labor, чтобы видеть маржу на labor и не путать цену с выплатами.",
     "source": "Billable minutes, actual/paid minutes, crew records.",
     "output": "Labor margin, payroll audit, productivity analysis.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Labor margin, payroll audit, productivity analysis."
   },
   {
@@ -328,7 +1197,7 @@ window.FormulaMasterData = [
     "description": "Показывает, сколько cu ft обрабатывается за человеко-час. Нужно для калибровки pickup/delivery time model.",
     "source": "Effective volume, labor hours.",
     "output": "Operations metrics, coefficient calibration.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Operations metrics, coefficient calibration."
   },
   {
@@ -339,7 +1208,7 @@ window.FormulaMasterData = [
     "description": "Считает базовую зарплату crew по фактически оплачиваемым человеко-часам и ставке.",
     "source": "Paid labor hours, wage reference.",
     "output": "Payroll cost, fully loaded cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Payroll cost, fully loaded cost."
   },
   {
@@ -350,7 +1219,7 @@ window.FormulaMasterData = [
     "description": "Считает overtime отдельно, чтобы большие/сложные заказы не занижали payroll cost.",
     "source": "Paid hours, overtime threshold, wage reference.",
     "output": "Payroll cost, profitability guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Payroll cost, profitability guardrail."
   },
   {
@@ -361,7 +1230,7 @@ window.FormulaMasterData = [
     "description": "Добавляет payroll taxes/insurance/benefits burden к зарплате, чтобы margin считался по fully loaded labor cost.",
     "source": "Crew gross pay, payroll burden rate.",
     "output": "Fully loaded labor cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Fully loaded labor cost."
   },
   {
@@ -372,7 +1241,7 @@ window.FormulaMasterData = [
     "description": "Собирает полную cost of labor по заказу или stage.",
     "source": "Crew pay components, helper pay.",
     "output": "Operational cost base, contribution margin.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Operational cost base, contribution margin."
   },
   {
@@ -383,7 +1252,7 @@ window.FormulaMasterData = [
     "description": "Распределяет fully loaded labor cost по pickup/interstate/delivery, чтобы маржинальность была видна по stage.",
     "source": "Labor hours by stage, fully loaded hourly rate.",
     "output": "Stage subtotal, stage margin analysis.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stage subtotal, stage margin analysis."
   },
   {
@@ -394,7 +1263,7 @@ window.FormulaMasterData = [
     "description": "Определяет базу, от которой считается выплата broker. Некоторые fees могут исключаться.",
     "source": "Final price, service fees, excluded fee list.",
     "output": "Broker commission.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker commission."
   },
   {
@@ -405,7 +1274,7 @@ window.FormulaMasterData = [
     "description": "Считает выплату broker как процент от утвержденной базы.",
     "source": "Commission base, broker commission rate.",
     "output": "Broker payout, net margin.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker payout, net margin."
   },
   {
@@ -416,7 +1285,7 @@ window.FormulaMasterData = [
     "description": "Ограничивает broker payout минимумом/максимумом, чтобы выплаты были предсказуемы.",
     "source": "Calculated commission, payout min/max.",
     "output": "Broker payout, final profitability.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker payout, final profitability."
   },
   {
@@ -427,7 +1296,7 @@ window.FormulaMasterData = [
     "description": "Проверяет, когда broker payout должен начисляться: после estimate, invoice, payment, pickup или delivery.",
     "source": "Order status, payment status, payout policy.",
     "output": "Broker payout accrual.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker payout accrual."
   },
   {
@@ -438,7 +1307,7 @@ window.FormulaMasterData = [
     "description": "Определяет базу для выплаты dispatcher: per order, процент от revenue или гибрид.",
     "source": "Orders handled, revenue base, dispatcher plan.",
     "output": "Dispatcher payout.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Dispatcher payout."
   },
   {
@@ -449,7 +1318,7 @@ window.FormulaMasterData = [
     "description": "Считает итоговую выплату dispatcher с бонусами/штрафами, если они применяются.",
     "source": "Dispatcher base, bonus rules, penalty rules.",
     "output": "Payroll/admin payout, profitability.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Payroll/admin payout, profitability."
   },
   {
@@ -460,7 +1329,7 @@ window.FormulaMasterData = [
     "description": "Распределяет dispatcher payout по pickup/interstate/delivery, чтобы stage margin был честным.",
     "source": "Dispatcher payout, stage share rule.",
     "output": "Stage cost and margin.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stage cost and margin."
   },
   {
@@ -471,7 +1340,7 @@ window.FormulaMasterData = [
     "description": "Собирает прямую себестоимость заказа до overhead, payouts, margin и discounts.",
     "source": "Stage subtotals, service fees.",
     "output": "Fully loaded cost, margin calculation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Fully loaded cost, margin calculation."
   },
   {
@@ -482,7 +1351,7 @@ window.FormulaMasterData = [
     "description": "Считает полную себестоимость заказа для правильной маржинальности.",
     "source": "Direct cost, payroll, payouts, overhead.",
     "output": "Gross/contribution margin, price floor.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Gross/contribution margin, price floor."
   },
   {
@@ -493,7 +1362,7 @@ window.FormulaMasterData = [
     "description": "Распределяет cost по item для audit/ref price, не как declared value.",
     "source": "Item effective volume, total effective volume, allocatable cost.",
     "output": "Item-level audit, internal allocation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Item-level audit, internal allocation."
   },
   {
@@ -504,7 +1373,7 @@ window.FormulaMasterData = [
     "description": "Показывает, какая доля себестоимости пришлась на pickup/interstate/delivery.",
     "source": "Stage costs, total cost.",
     "output": "Stage margin dashboard, CEO audit.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stage margin dashboard, CEO audit."
   },
   {
@@ -515,7 +1384,7 @@ window.FormulaMasterData = [
     "description": "Считает gross margin в долларах до fully loaded payouts/overhead.",
     "source": "Customer revenue, direct cost.",
     "output": "CEO profitability view.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "CEO profitability view."
   },
   {
@@ -526,7 +1395,7 @@ window.FormulaMasterData = [
     "description": "Показывает gross margin в процентах от customer revenue.",
     "source": "Gross margin, customer revenue.",
     "output": "Margin guardrails, reporting.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Margin guardrails, reporting."
   },
   {
@@ -537,7 +1406,7 @@ window.FormulaMasterData = [
     "description": "Считает contribution margin после payroll burden, broker/dispatcher payouts и approved overhead.",
     "source": "Customer revenue, fully loaded cost.",
     "output": "Profitability guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Profitability guardrail."
   },
   {
@@ -548,7 +1417,7 @@ window.FormulaMasterData = [
     "description": "Показывает реальную маржинальность заказа после всех ключевых выплат и cost components.",
     "source": "Contribution margin, customer revenue.",
     "output": "CEO/CFO margin dashboard.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "CEO/CFO margin dashboard."
   },
   {
@@ -559,7 +1428,7 @@ window.FormulaMasterData = [
     "description": "Блокирует или помечает quote, если цена ниже минимальной маржинальности.",
     "source": "Contribution margin pct, minimum margin pct.",
     "output": "Warning/blocker, discount approval.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Warning/blocker, discount approval."
   },
   {
@@ -570,7 +1439,7 @@ window.FormulaMasterData = [
     "description": "Считает минимальную customer price, ниже которой заказ не должен продаваться.",
     "source": "Fully loaded cost, minimum margin pct.",
     "output": "Discount guardrail, final quote check.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Discount guardrail, final quote check."
   },
   {
@@ -581,7 +1450,7 @@ window.FormulaMasterData = [
     "description": "Считает максимальную скидку, которую можно дать без нарушения margin floor.",
     "source": "Raw customer price, price floor.",
     "output": "Discount approval, warning/blocker.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Discount approval, warning/blocker."
   },
   {
@@ -592,7 +1461,7 @@ window.FormulaMasterData = [
     "description": "Пересчитывает margin после скидки, чтобы discount не разрушал прибыльность.",
     "source": "Discounted price, fully loaded cost.",
     "output": "Final approval, audit.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Final approval, audit."
   },
   {
@@ -603,7 +1472,7 @@ window.FormulaMasterData = [
     "description": "Показывает, насколько выбранная машина заполнена по operational volume.",
     "source": "Effective volume, selected vehicle capacity.",
     "output": "Vehicle fit, capacity warning, pricing premium.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle fit, capacity warning, pricing premium."
   },
   {
@@ -614,7 +1483,7 @@ window.FormulaMasterData = [
     "description": "Показывает загрузку vehicle по весу, отдельно от объема.",
     "source": "Total weight, selected vehicle payload.",
     "output": "Vehicle fit, safety/ops warning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle fit, safety/ops warning."
   },
   {
@@ -625,7 +1494,7 @@ window.FormulaMasterData = [
     "description": "Оценивает стоимость занятой capacity на route, особенно для bulky/moving orders.",
     "source": "Reserved capacity, route capacity rate.",
     "output": "Bulky premium, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Bulky premium, margin guardrail."
   },
   {
@@ -636,7 +1505,7 @@ window.FormulaMasterData = [
     "description": "Добавляет premium, когда заказ занимает слишком много capacity и мешает consolidated economics.",
     "source": "Capacity opportunity cost, bulky multiplier.",
     "output": "Service fee or route premium.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Service fee or route premium."
   },
   {
@@ -647,7 +1516,7 @@ window.FormulaMasterData = [
     "description": "Определяет revenue base для margin, commissions and reporting.",
     "source": "Final price, pass-through fees.",
     "output": "Margin, broker payout, reporting.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Margin, broker payout, reporting."
   },
   {
@@ -658,7 +1527,7 @@ window.FormulaMasterData = [
     "description": "Распределяет revenue по pickup/interstate/delivery пропорционально cost, чтобы видеть stage margin.",
     "source": "Customer revenue, stage cost shares.",
     "output": "Stage margin dashboard.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stage margin dashboard."
   },
   {
@@ -669,7 +1538,7 @@ window.FormulaMasterData = [
     "description": "Любой manual override должен иметь reason, owner и audit trail, чтобы не скрывать margin leakage.",
     "source": "Approved override, reason, owner.",
     "output": "Final price, margin audit, change log.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Final price, margin audit, change log."
   },
   {
@@ -680,7 +1549,7 @@ window.FormulaMasterData = [
     "description": "Тип точки из UI должен нормализоваться в единый справочник. Это нужно, чтобы House, Apartments, Business, Warehouse и Auction одинаково использовались в pickup и delivery расчетах.",
     "source": "Pickup/delivery addressType from Quote Draft access section; Location / Address Types reference.",
     "output": "Pickup/delivery time model, access effort, crew planning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery time model, access effort, crew planning."
   },
   {
@@ -691,7 +1560,7 @@ window.FormulaMasterData = [
     "description": "Тип точки должен увеличивать или уменьшать расчетное время stage. Например, apartment может добавить время доступа, warehouse может снизить handling time, auction может добавить waiting/release time.",
     "source": "Normalized address type; Location / Address Types reference; historical time metrics.",
     "output": "Pickup minutes, delivery minutes, labor hours, fully loaded labor cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup minutes, delivery minutes, labor hours, fully loaded labor cost."
   },
   {
@@ -702,7 +1571,7 @@ window.FormulaMasterData = [
     "description": "Тип точки должен влиять на рекомендуемый crew, если локация требует больше людей или создает ограничения доступа. Это planning input, не скрытая ручная наценка.",
     "source": "Location / Address Types reference; Access Conditions; crew rules.",
     "output": "Vehicle/crew split, labor cost, capacity planning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle/crew split, labor cost, capacity planning."
   },
   {
@@ -713,7 +1582,7 @@ window.FormulaMasterData = [
     "description": "Для точки нужно учитывать не только этаж/лифт, но и парковку, loading dock, building access и ожидание. Эти минуты идут в stage time и стоимость труда.",
     "source": "Location / Address Types reference; Access Conditions; historical time metrics.",
     "output": "Pickup/delivery labor minutes and access risk.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery labor minutes and access risk."
   },
   {
@@ -724,7 +1593,7 @@ window.FormulaMasterData = [
     "description": "Warehouse/business точка может быть быстрее, если есть dock/loading process. Коэффициент должен быть в справочнике, чтобы не hardcode в формуле.",
     "source": "Location / Address Types reference; loading dock/default access fields.",
     "output": "Pickup/delivery handling time, labor cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery handling time, labor cost."
   },
   {
@@ -735,7 +1604,7 @@ window.FormulaMasterData = [
     "description": "Auction требует отдельного handling allowance: ожидание, release, документы, ограниченные окна. Без этого калькулятор может недооценивать labor cost.",
     "source": "Location / Address Types reference; payroll/wage rates; historical time metrics.",
     "output": "Pickup/delivery labor cost, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery labor cost, margin guardrail."
   },
   {
@@ -746,7 +1615,7 @@ window.FormulaMasterData = [
     "description": "Сводный effort score показывает операционную сложность точки. Он не заменяет деньги напрямую, а помогает объяснить, почему выросли time, crew или risk reserve.",
     "source": "Location / Address Types reference; Access Conditions; historical time metrics.",
     "output": "Time model, crew planning, margin guardrail, audit trace.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Time model, crew planning, margin guardrail, audit trace."
   },
   {
@@ -757,7 +1626,7 @@ window.FormulaMasterData = [
     "description": "Если тип точки исторически дает высокий риск ожидания/переработки, модель должна показывать отдельный reserve, чтобы CEO видел источник защиты маржи.",
     "source": "Location effort score; time confidence score; margin variables.",
     "output": "Internal cost base or management fee decision, depending on approval.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Internal cost base or management fee decision, depending on approval."
   },
   {
@@ -768,7 +1637,7 @@ window.FormulaMasterData = [
     "description": "Для решения one-person vs two-person смотрим вес самой тяжелой отдельной единицы, а не item weight x quantity. Quantity считается отдельно через totalPieces и totalWeight.",
     "source": "Quote Draft item rows / Quick Quote catalog transfer; unit item weight per piece.",
     "output": "One-person eligibility, min crew by item, pickup/delivery labor model.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "One-person eligibility, min crew by item, pickup/delivery labor model."
   },
   {
@@ -779,7 +1648,7 @@ window.FormulaMasterData = [
     "description": "Самый тяжелый предмет переводится в weight class: light, standard, heavy, two-person required. Это предотвращает underpricing маленьких по объему, но тяжелых предметов.",
     "source": "Max single item weight; Item Handling / Crew Feasibility Rules reference.",
     "output": "Crew requirement, helper logic, handling score.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Crew requirement, helper logic, handling score."
   },
   {
@@ -790,7 +1659,7 @@ window.FormulaMasterData = [
     "description": "Заказ может быть кандидатом на delivery в одного человека, если самый тяжелый предмет не превышает approved threshold и нет ограничений access/oversized/awkward.",
     "source": "Max item weight, access constraints, item flags, Location / Address Types reference.",
     "output": "Delivery crew split, pickup crew split, labor cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Delivery crew split, pickup crew split, labor cost."
   },
   {
@@ -801,7 +1670,7 @@ window.FormulaMasterData = [
     "description": "Каждый item может требовать minimum crew. Итоговый crew не может быть ниже максимального требования по любому предмету в заказе.",
     "source": "Item catalog, item handling rules, custom item overrides.",
     "output": "Recommended crew, labor hours, payroll cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Recommended crew, labor hours, payroll cost."
   },
   {
@@ -812,7 +1681,7 @@ window.FormulaMasterData = [
     "description": "Большой общий объем сам по себе не должен автоматически означать 2+ crew, если заказ состоит из легких предметов вроде стульев/кресел и каждый предмет доступен для одного человека.",
     "source": "Total effective volume, max single item weight, item handling score, item catalog.",
     "output": "Crew split, labor time model, CEO approval trace.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Crew split, labor time model, CEO approval trace."
   },
   {
@@ -823,7 +1692,7 @@ window.FormulaMasterData = [
     "description": "Score объясняет, почему предмет требует больше времени/людей: вес, габарит, неудобная форма, хрупкость, упаковка и взаимодействие с access условиями.",
     "source": "Item rows, item catalog flags, packaging, protection, access/location references.",
     "output": "Minimum handling minutes, crew requirement, risk reserve.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Minimum handling minutes, crew requirement, risk reserve."
   },
   {
@@ -834,7 +1703,7 @@ window.FormulaMasterData = [
     "description": "Crew от items считается отдельно от route/location/access. Это защищает от ситуации, когда volume маленький, но предмет требует 2 человек.",
     "source": "One-person eligibility, item min crew, handling score.",
     "output": "Final pickup crew, final delivery crew, labor hours.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Final pickup crew, final delivery crew, labor hours."
   },
   {
@@ -845,7 +1714,7 @@ window.FormulaMasterData = [
     "description": "Итоговый crew для pickup/delivery берется как максимум из item, access, location и manual override. Так ни один риск не затирается другим блоком.",
     "source": "Item handling rules, access conditions, location type, broker/manual override.",
     "output": "Pickup labor hours, delivery labor hours, payroll cost, final price.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup labor hours, delivery labor hours, payroll cost, final price."
   },
   {
@@ -856,7 +1725,7 @@ window.FormulaMasterData = [
     "description": "Даже если volume небольшой, каждый предмет имеет minimum handling time. Это защищает расчет от занижения labor для тяжелых или неудобных единичных предметов.",
     "source": "Item Handling Rules, item quantity, handling class.",
     "output": "Pickup/delivery time floor, labor cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery time floor, labor cost."
   },
   {
@@ -867,7 +1736,7 @@ window.FormulaMasterData = [
     "description": "Финальное время stage не может быть ниже суммы item-level minimum handling time. Order-level volume model и item-level floor работают вместе.",
     "source": "Order time model, item minimum handling floor.",
     "output": "Pickup/delivery labor cost, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery labor cost, margin guardrail."
   },
   {
@@ -878,7 +1747,7 @@ window.FormulaMasterData = [
     "description": "Фиксирует вес одной физической единицы. Это защищает от ошибки, когда 10 легких предметов по 20 lb превращаются в один фиктивный heavy item 200 lb.",
     "source": "Quote Draft item row / catalog default / broker override.",
     "output": "Max single item weight, heavy piece count, one-person eligibility.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Max single item weight, heavy piece count, one-person eligibility."
   },
   {
@@ -889,7 +1758,7 @@ window.FormulaMasterData = [
     "description": "Считает количество мест/единиц в заказе. Piece count влияет на время обработки, но не должен сам создавать heavy item.",
     "source": "Quote Draft item quantities / Quick Quote transfer.",
     "output": "Piece handling minutes, trip/load complexity, UAT trace.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Piece handling minutes, trip/load complexity, UAT trace."
   },
   {
@@ -900,7 +1769,7 @@ window.FormulaMasterData = [
     "description": "Считает, сколько физических единиц являются тяжелыми. Один тяжелый предмет задает crew floor, а несколько тяжелых предметов увеличивают helper active time.",
     "source": "Unit item weight, quantity, Item Handling Rules.",
     "output": "Crew requirement, helper active minutes, stage time floor.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Crew requirement, helper active minutes, stage time floor."
   },
   {
@@ -911,7 +1780,7 @@ window.FormulaMasterData = [
     "description": "Каждое место требует минимального времени обработки. Это закрывает кейс 35 легких мест, где общий вес небольшой, но физически много операций.",
     "source": "Item Handling Rules, handling class, item quantity.",
     "output": "Stage item time floor, pickup/delivery labor minutes.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stage item time floor, pickup/delivery labor minutes."
   },
   {
@@ -922,7 +1791,7 @@ window.FormulaMasterData = [
     "description": "Считает время, когда второй человек действительно нужен для тяжелых/сложных предметов. Это позволяет не умножать весь stage на 2, если helper нужен только на часть работ.",
     "source": "Heavy piece count, item handling minutes, access constraints.",
     "output": "Partial helper labor, payroll cost, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Partial helper labor, payroll cost, margin guardrail."
   },
   {
@@ -933,7 +1802,7 @@ window.FormulaMasterData = [
     "description": "Разделяет базовое время одного исполнителя и активное время helper. Используется, если бизнес не хочет считать 2 человека на весь stage.",
     "source": "Stage minutes, helper active minutes, helper billing policy.",
     "output": "Stage labor cost, fully loaded labor, price floor.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stage labor cost, fully loaded labor, price floor."
   },
   {
@@ -944,7 +1813,7 @@ window.FormulaMasterData = [
     "description": "Если тяжелый предмет сочетается со stairs/no elevator/long carry/narrow access, система должна поднимать min crew или отправлять заказ на manual review.",
     "source": "Heavy item flags, Access Conditions, Location / Address Types, Physical Access Feasibility Rules.",
     "output": "Final stage crew, access risk, labor cost, approval workflow.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Final stage crew, access risk, labor cost, approval workflow."
   },
   {
@@ -955,7 +1824,7 @@ window.FormulaMasterData = [
     "description": "Проверяет, входит ли самый крупный item в реальные внутренние габариты кузова. Это отдельная проверка от общего volume/payload.",
     "source": "Item dimensions; Vehicle Dimensions / Cargo Body Specs reference.",
     "output": "Vehicle selection, manual review, box truck recommendation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle selection, manual review, box truck recommendation."
   },
   {
@@ -966,7 +1835,7 @@ window.FormulaMasterData = [
     "description": "Даже если item помещается внутри кузова, он может не пройти через задний/боковой проем. Это должно давать warning/manual review.",
     "source": "Item dimensions; vehicle door opening dimensions.",
     "output": "Physical feasibility, manual review, vehicle upgrade.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Physical feasibility, manual review, vehicle upgrade."
   },
   {
@@ -977,7 +1846,7 @@ window.FormulaMasterData = [
     "description": "Проверяет не абстрактный threshold, а фактическую высоту кузова выбранной в заявке машины. Если item выше кузова выбранной машины, нужен review и подбор vehicle с более высоким кузовом.",
     "source": "Item height from Quote Draft item row / catalog; selected vehicle cargoInteriorHeightIn from Vehicle Dimensions / Cargo Body Specs.",
     "output": "Vehicle revision, side transport review, box truck recommendation, snapshot warning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle revision, side transport review, box truck recommendation, snapshot warning."
   },
   {
@@ -988,7 +1857,7 @@ window.FormulaMasterData = [
     "description": "Если item не входит по высоте в выбранную машину, нельзя автоматически считать, что его повезут на боку. Если side transport не подтвержден, заказ требует review.",
     "source": "Selected vehicle height check, item handling rules, packaging/protection, broker/ops approval.",
     "output": "Manual review, protection/packaging risk, vehicle requirement.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Manual review, protection/packaging risk, vehicle requirement."
   },
   {
@@ -999,7 +1868,7 @@ window.FormulaMasterData = [
     "description": "Если item выше кузова выбранной машины и перевозка на боку не подтверждена, система должна предложить пересмотреть выбранный truck на машину с более высоким кузовом, включая Box Truck если он подходит.",
     "source": "Selected vehicle height check, side transport approval, Vehicle Dimensions reference.",
     "output": "Vehicle selection, quote warning, route cost, final price.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle selection, quote warning, route cost, final price."
   },
   {
@@ -1010,7 +1879,7 @@ window.FormulaMasterData = [
     "description": "Для некоторых oversized/tall/heavy items нужен ramp, liftgate или tie-down. Vehicle fit должен проверять не только размеры, но и оборудование.",
     "source": "Item handling rules; vehicle equipment fields.",
     "output": "Vehicle eligibility, labor time, manual review.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle eligibility, labor time, manual review."
   },
   {
@@ -1021,7 +1890,7 @@ window.FormulaMasterData = [
     "description": "Финальная пригодность машины должна учитывать volume, weight, реальные габариты кузова, дверной проем и оборудование.",
     "source": "Vehicle fit formulas, item dimensions, vehicle dimensions/equipment reference.",
     "output": "Selected vehicle, manual review, cost base.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Selected vehicle, manual review, cost base."
   },
   {
@@ -1032,7 +1901,7 @@ window.FormulaMasterData = [
     "description": "Показывает, насколько заказ тяжелый относительно занимаемого объема. Нужен, чтобы отличать легкий объемный заказ от тяжелого компактного заказа.",
     "source": "Total weight из item rows; total effective volume из item calculation.",
     "output": "Capacity constraint, vehicle fit, interstate pricing.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Capacity constraint, vehicle fit, interstate pricing."
   },
   {
@@ -1043,7 +1912,7 @@ window.FormulaMasterData = [
     "description": "Показывает среднюю плотность груза, которую выбранный транспорт может безопасно везти при полной загрузке по объему и весу.",
     "source": "Vehicle body specs reference: payload, cargo volume.",
     "output": "Density comparison, limiting factor selection.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Density comparison, limiting factor selection."
   },
   {
@@ -1054,7 +1923,7 @@ window.FormulaMasterData = [
     "description": "Определяет, что именно ограничивает заказ: вес или объем. Для подушек обычно volume-limited, для мрамора weight-limited.",
     "source": "Payload utilization and volume utilization.",
     "output": "Pricing explanation, warning rules, route capacity pricing.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pricing explanation, warning rules, route capacity pricing."
   },
   {
@@ -1065,7 +1934,7 @@ window.FormulaMasterData = [
     "description": "Для pricing берется больший процент загрузки: если объем занят на 30%, а вес на 70%, стоимость capacity должна считаться от 70%.",
     "source": "Vehicle utilization and payload utilization.",
     "output": "Interstate capacity cost, bulky premium, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate capacity cost, bulky premium, margin guardrail."
   },
   {
@@ -1076,7 +1945,7 @@ window.FormulaMasterData = [
     "description": "Считает долю стоимости interstate truck/route, которую занимает заказ, с учетом и объема, и веса.",
     "source": "Route cost reference, selected interstate vehicle, limiting capacity factor.",
     "output": "Interstate subtotal, final cost base.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate subtotal, final cost base."
   },
   {
@@ -1087,7 +1956,7 @@ window.FormulaMasterData = [
     "description": "Альтернативный guardrail из старой логики: считаем цену по объему и по весу, затем берем большее значение, чтобы не недооценить тяжелые компактные заказы.",
     "source": "Cost per cubic foot and cost per pound variables/reference.",
     "output": "Interstate subtotal or margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate subtotal or margin guardrail."
   },
   {
@@ -1098,7 +1967,7 @@ window.FormulaMasterData = [
     "description": "Ставит красный флаг, если заказ не помещается в выбранный транспорт по объему или payload.",
     "source": "Vehicle utilization, payload utilization.",
     "output": "Warnings, vehicle recommendation, quote approval.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Warnings, vehicle recommendation, quote approval."
   },
   {
@@ -1109,7 +1978,7 @@ window.FormulaMasterData = [
     "description": "Коэффициенты времени должны опираться на реальные замеры заказов, а не на догадку. В транскрибе обсуждалась база около 100 заказов.",
     "source": "Historical Time Metrics reference.",
     "output": "Pickup/delivery/loading/unloading time model.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery/loading/unloading time model."
   },
   {
@@ -1120,7 +1989,7 @@ window.FormulaMasterData = [
     "description": "Считает время погрузки на pickup с учетом объема, веса и условий доступа.",
     "source": "Item volume/weight, loading variables, access conditions.",
     "output": "Pickup labor cost, crew paid minutes.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup labor cost, crew paid minutes."
   },
   {
@@ -1131,7 +2000,7 @@ window.FormulaMasterData = [
     "description": "Delivery обычно быстрее pickup, поэтому unloading coefficient должен быть отдельной переменной, а не скрытой константой.",
     "source": "Pickup loading minutes; unloading coefficient variable.",
     "output": "Delivery labor cost, delivery subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Delivery labor cost, delivery subtotal."
   },
   {
@@ -1142,7 +2011,7 @@ window.FormulaMasterData = [
     "description": "Если нужен helper, оплачиваемое время не должно быть меньше минимального порога, даже если активная работа заняла меньше.",
     "source": "Helper active minutes, helper minimum billable minutes.",
     "output": "Payroll, margin, final price.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Payroll, margin, final price."
   },
   {
@@ -1153,7 +2022,7 @@ window.FormulaMasterData = [
     "description": "Считает реальную себестоимость труда, включая ставку, налоги/overhead/прочие нагрузки, а не только выплату человеку.",
     "source": "Payroll roles/wage rates reference.",
     "output": "Direct cost base, margin calculation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Direct cost base, margin calculation."
   },
   {
@@ -1164,7 +2033,7 @@ window.FormulaMasterData = [
     "description": "Считает только платные этажи. Если первые этажи бесплатны, fee начинается после утвержденного free floor threshold.",
     "source": "Address access conditions; free floor count variable.",
     "output": "Stairs fee, access time impact.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Stairs fee, access time impact."
   },
   {
@@ -1175,7 +2044,7 @@ window.FormulaMasterData = [
     "description": "Считает fee за лестницу только по billable floors. Множитель нужен, если fee зависит от заказа, item count или heavy items.",
     "source": "Billable floors, stairs fee variable, item/order multiplier.",
     "output": "Pickup/delivery access subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery access subtotal."
   },
   {
@@ -1186,7 +2055,7 @@ window.FormulaMasterData = [
     "description": "Если вручную добавлен extra labor, расчет должен учитывать minimum hours и ставку, чтобы не терять маржу на коротких работах.",
     "source": "Quote options; labor variables.",
     "output": "Access/service subtotal, payroll, margin.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Access/service subtotal, payroll, margin."
   },
   {
@@ -1197,7 +2066,7 @@ window.FormulaMasterData = [
     "description": "Каждое риск-условие должно превращаться в понятный warning: что случилось, почему важно, блокирует ли quote и кто должен approve.",
     "source": "Warning rules reference; formula outputs.",
     "output": "Broker UI, admin breakdown, approval workflow.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker UI, admin breakdown, approval workflow."
   },
   {
@@ -1208,7 +2077,7 @@ window.FormulaMasterData = [
     "description": "Показывает, что выбранная машина физически или по payload не подходит заказу.",
     "source": "Vehicle body specs; item dimensions; utilization outputs.",
     "output": "Quote warnings, vehicle recommendation, manager approval.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Quote warnings, vehicle recommendation, manager approval."
   },
   {
@@ -1219,7 +2088,7 @@ window.FormulaMasterData = [
     "description": "Ставит red flag, когда заказ нельзя надежно делать стандартной командой.",
     "source": "Item handling rules; max unit weight; required crew.",
     "output": "Broker warning, manager approval, labor cost.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker warning, manager approval, labor cost."
   },
   {
@@ -1230,7 +2099,7 @@ window.FormulaMasterData = [
     "description": "Определяет, можно ли сохранить/отправить estimate, если есть red flags.",
     "source": "Warning rules, approval status.",
     "output": "Estimate workflow, snapshot.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Estimate workflow, snapshot."
   },
   {
@@ -1241,7 +2110,7 @@ window.FormulaMasterData = [
     "description": "Показывает реальную прибыльность заказа после прямых расходов, выплат и распределенного overhead.",
     "source": "Final price, direct costs, payroll, compensation references.",
     "output": "Margin guardrail, CEO reporting.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Margin guardrail, CEO reporting."
   },
   {
@@ -1252,7 +2121,7 @@ window.FormulaMasterData = [
     "description": "Фиксирует, на каком этапе применяется discount, чтобы скидка не уничтожала margin незаметно.",
     "source": "Discount rule, margin rule, price build order.",
     "output": "Final customer price, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Final customer price, margin guardrail."
   },
   {
@@ -1263,7 +2132,7 @@ window.FormulaMasterData = [
     "description": "Считает выплату брокеру по утвержденному плану: процент, fixed fee или гибрид.",
     "source": "Broker compensation plan reference; order source/channel.",
     "output": "Contribution margin, payroll/payout reporting.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Contribution margin, payroll/payout reporting."
   },
   {
@@ -1274,7 +2143,7 @@ window.FormulaMasterData = [
     "description": "Считает выплату диспетчеру по утвержденной модели: fixed/order, per route, KPI или процент.",
     "source": "Dispatcher compensation plan reference.",
     "output": "Contribution margin, payout reporting.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Contribution margin, payout reporting."
   },
   {
@@ -1285,7 +2154,7 @@ window.FormulaMasterData = [
     "description": "Позволяет вручную добавить/исключить ZIP или изменить зону без переписывания логики калькулятора.",
     "source": "ZIP dictionary; manual override approval.",
     "output": "Route classification, fees, warnings.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Route classification, fees, warnings."
   },
   {
@@ -1296,7 +2165,7 @@ window.FormulaMasterData = [
     "description": "Отдельно учитывает corridor/remote pricing, чтобы удаленные или неудобные направления не продавались по средней цене.",
     "source": "Service area and ZIP dictionary zone class.",
     "output": "Route subtotal, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Route subtotal, margin guardrail."
   },
   {
@@ -1307,7 +2176,7 @@ window.FormulaMasterData = [
     "description": "Сохраняет именно те значения переменных, по которым был рассчитан estimate, чтобы старый estimate не менялся после изменения настроек.",
     "source": "Pricing variable store at calculation time.",
     "output": "Estimate snapshot, audit, admin breakdown.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Estimate snapshot, audit, admin breakdown."
   },
   {
@@ -1318,7 +2187,7 @@ window.FormulaMasterData = [
     "description": "Фиксирует версии справочников: vehicles, ZIP, rates, plans, labor, чтобы расчет был воспроизводим.",
     "source": "Reference version registry.",
     "output": "Estimate snapshot, audit.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Estimate snapshot, audit."
   },
   {
@@ -1329,7 +2198,7 @@ window.FormulaMasterData = [
     "description": "Порог плотности выбранного interstate vehicle. Если shipment density выше этого значения, заказ быстрее упирается в вес, чем в объем. Значение 5.33 для 8000 lb / 1500 cu ft является примером расчета, а не hardcoded constant.",
     "source": "Vehicle Reference / Vehicle Body Specs: payloadLb, capacityCuFt.",
     "output": "Shipment density comparison, interstate cost basis, warning engine.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Shipment density comparison, interstate cost basis, warning engine."
   },
   {
@@ -1340,7 +2209,7 @@ window.FormulaMasterData = [
     "description": "Показывает, какую долю объема interstate truck занимает заказ.",
     "source": "Effective volume from item calculations; vehicle capacity from vehicle reference.",
     "output": "Capacity constraint selector, interstate cost basis, volume fit warning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Capacity constraint selector, interstate cost basis, volume fit warning."
   },
   {
@@ -1351,7 +2220,7 @@ window.FormulaMasterData = [
     "description": "Показывает, какую долю payload выбранного interstate truck занимает заказ.",
     "source": "Total weight from item rows; vehicle payload from vehicle reference.",
     "output": "Capacity constraint selector, interstate cost basis, payload fit warning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Capacity constraint selector, interstate cost basis, payload fit warning."
   },
   {
@@ -1362,7 +2231,7 @@ window.FormulaMasterData = [
     "description": "Выбирает, чем ограничен заказ: весом или объемом. Это объясняет разницу между pillows и marble countertop.",
     "source": "Volume utilization and payload utilization.",
     "output": "Pricing trace, warning engine, interstate pricing basis.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pricing trace, warning engine, interstate pricing basis."
   },
   {
@@ -1373,7 +2242,7 @@ window.FormulaMasterData = [
     "description": "Для interstate pricing берется больший utilization. Если объем 30%, а payload 70%, cost basis = 70%.",
     "source": "Volume utilization and payload utilization.",
     "output": "Interstate capacity cost, route subtotal, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate capacity cost, route subtotal, margin guardrail."
   },
   {
@@ -1384,7 +2253,7 @@ window.FormulaMasterData = [
     "description": "Флаг, что заказ ограничен объемом. Пример: 1000 pillows занимают кузов, но почти не используют payload.",
     "source": "Volume utilization and payload utilization.",
     "output": "Interstate trace, warning engine, route capacity economics.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate trace, warning engine, route capacity economics."
   },
   {
@@ -1395,7 +2264,7 @@ window.FormulaMasterData = [
     "description": "Флаг, что заказ ограничен весом. Пример: marble countertops могут перегрузить payload при пустом кузове.",
     "source": "Volume utilization and payload utilization.",
     "output": "Interstate trace, warning engine, route capacity economics.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Interstate trace, warning engine, route capacity economics."
   },
   {
@@ -1406,7 +2275,7 @@ window.FormulaMasterData = [
     "description": "Считает labor time по объему. Используется как один из двух сценариев, но не суммируется с weight time.",
     "source": "Effective volume from item calculations; minutesPerCuFt variable.",
     "output": "Handling time selector.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Handling time selector."
   },
   {
@@ -1417,7 +2286,7 @@ window.FormulaMasterData = [
     "description": "Считает labor time по весу. Используется как второй сценарий, чтобы тяжелые компактные заказы не были недооценены.",
     "source": "Total weight from item rows; minutesPerLb variable.",
     "output": "Handling time selector.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Handling time selector."
   },
   {
@@ -1428,7 +2297,7 @@ window.FormulaMasterData = [
     "description": "Ключевое правило из meeting: не суммировать volume time и weight time, а брать большее значение, чтобы избежать double-counting.",
     "source": "Volume handling minutes and weight handling minutes.",
     "output": "Pickup/delivery split, labor cost, trace.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup/delivery split, labor cost, trace."
   },
   {
@@ -1439,7 +2308,7 @@ window.FormulaMasterData = [
     "description": "Pickup и delivery должны иметь разные коэффициенты. Delivery обычно быстрее pickup, но оба коэффициента должны быть variables.",
     "source": "Base handling minutes; pickup/delivery time multiplier variables.",
     "output": "Pickup subtotal, delivery subtotal, payroll, margin.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup subtotal, delivery subtotal, payroll, margin."
   },
   {
@@ -1450,7 +2319,7 @@ window.FormulaMasterData = [
     "description": "Не позволяет коротким заказам падать ниже минимального операционного времени.",
     "source": "Calculated handling minutes; minimumHandlingMinutes variable.",
     "output": "Labor cost, stage subtotal, margin guardrail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Labor cost, stage subtotal, margin guardrail."
   },
   {
@@ -1461,7 +2330,7 @@ window.FormulaMasterData = [
     "description": "Отдельный коэффициент pickup отражает check-in, упаковку, подготовку и более долгую операцию на pickup.",
     "source": "Base handling minutes; pickupTimeMultiplier variable; historical time metrics.",
     "output": "Pickup labor cost and pickup subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Pickup labor cost and pickup subtotal."
   },
   {
@@ -1472,7 +2341,7 @@ window.FormulaMasterData = [
     "description": "Отдельный коэффициент delivery отражает, что unloading обычно быстрее loading/pickup.",
     "source": "Base handling minutes; deliveryTimeMultiplier variable; historical time metrics.",
     "output": "Delivery labor cost and delivery subtotal.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Delivery labor cost and delivery subtotal."
   },
   {
@@ -1483,7 +2352,7 @@ window.FormulaMasterData = [
     "description": "Проверяет, входит ли самый крупный item в реальные внутренние габариты выбранного vehicle.",
     "source": "Item max dimensions; Vehicle Body Specs reference.",
     "output": "Vehicle fit, warning engine, recommended vehicle change.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle fit, warning engine, recommended vehicle change."
   },
   {
@@ -1494,7 +2363,7 @@ window.FormulaMasterData = [
     "description": "Проверяет, помещается ли заказ в выбранный vehicle по total effective volume.",
     "source": "Effective volume; vehicle capacity.",
     "output": "Vehicle fit, warning engine, vehicle recommendation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle fit, warning engine, vehicle recommendation."
   },
   {
@@ -1505,7 +2374,7 @@ window.FormulaMasterData = [
     "description": "Проверяет, помещается ли заказ в выбранный vehicle по payload.",
     "source": "Total weight; vehicle payload.",
     "output": "Vehicle fit, warning engine, vehicle recommendation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Vehicle fit, warning engine, vehicle recommendation."
   },
   {
@@ -1516,7 +2385,7 @@ window.FormulaMasterData = [
     "description": "Если хотя бы одна fit-проверка не проходит, заказ должен получить warning и review/recommendation.",
     "source": "Dimensional fit, volume fit, weight fit.",
     "output": "Warning engine, quote save logic, manager approval.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Warning engine, quote save logic, manager approval."
   },
   {
@@ -1527,7 +2396,7 @@ window.FormulaMasterData = [
     "description": "Если выбранный vehicle не подходит, система должна предложить минимальный следующий vehicle, который закрывает габариты, объем и payload.",
     "source": "Vehicle Body Specs reference; fit outputs.",
     "output": "Broker/admin recommendation, warnings, pricing recalculation.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Broker/admin recommendation, warnings, pricing recalculation."
   },
   {
@@ -1538,7 +2407,7 @@ window.FormulaMasterData = [
     "description": "Red flag для тяжелого единичного предмета. Влияет на helper, crew, time и manager review.",
     "source": "Max single item weight; heavy item threshold variable.",
     "output": "Warning list, crew logic, approval workflow.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Warning list, crew logic, approval workflow."
   },
   {
@@ -1549,7 +2418,7 @@ window.FormulaMasterData = [
     "description": "Red flag для bulky/moving-like заказа, который занимает значительную capacity.",
     "source": "Total effective volume; bulky volume threshold variable.",
     "output": "Warning list, capacity premium, route capacity pricing.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Warning list, capacity premium, route capacity pricing."
   },
   {
@@ -1560,7 +2429,7 @@ window.FormulaMasterData = [
     "description": "Предупреждение, что выбранный vehicle не подходит по габаритам, объему или весу.",
     "source": "FIT-001/FIT-002/FIT-003 outputs.",
     "output": "Quote blocking, vehicle recommendation, manager approval.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Quote blocking, vehicle recommendation, manager approval."
   },
   {
@@ -1571,7 +2440,7 @@ window.FormulaMasterData = [
     "description": "Предупреждение, что заказ требует больше стандартной команды.",
     "source": "Crew calculation, item handling rules, access conditions.",
     "output": "Labor cost, approval workflow, broker warning.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Labor cost, approval workflow, broker warning."
   },
   {
@@ -1582,7 +2451,7 @@ window.FormulaMasterData = [
     "description": "Предупреждение для ZIP/route вне стандартной зоны.",
     "source": "ZIP dictionary, service areas, manual override register.",
     "output": "Route pricing, approval workflow, quote save logic.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Route pricing, approval workflow, quote save logic."
   },
   {
@@ -1593,7 +2462,7 @@ window.FormulaMasterData = [
     "description": "Direct/specific-date service ломает consolidated route economics и требует отдельной fee/distance логики.",
     "source": "Quote service flags, route type.",
     "output": "Direct fee, route recalculation, approval workflow.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Direct fee, route recalculation, approval workflow."
   },
   {
@@ -1604,7 +2473,7 @@ window.FormulaMasterData = [
     "description": "Общий флаг, что quote нельзя считать финальным без manager approval.",
     "source": "Warning engine outputs, approval rules reference.",
     "output": "Quote can save, snapshot, audit trail.",
-    "level": "Target Architecture",
+    "level": "Formula Architecture",
     "usedIn": "Quote can save, snapshot, audit trail."
   }
 ];

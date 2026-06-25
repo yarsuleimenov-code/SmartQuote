@@ -5,8 +5,11 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const source = fs.readFileSync("docs/formula-spec/tobe_formula_master.csv", "utf8");
-const expectedIds = [...source.matchAll(/^"([^"]+)"/gm)].map((match) => match[1]).filter((id) => id !== "ID");
+const asIsSource = fs.readFileSync("docs/formula-spec/as_is_formula_master.csv", "utf8");
+const toBeSource = fs.readFileSync("docs/formula-spec/tobe_formula_master.csv", "utf8");
+const asIsIds = [...asIsSource.matchAll(/^"([^"]+)"/gm)].map((match) => match[1]).filter((id) => id !== "Formula ID");
+const toBeIds = [...toBeSource.matchAll(/^"([^"]+)"/gm)].map((match) => match[1]).filter((id) => id !== "ID");
+const expectedIds = [...asIsIds, ...toBeIds];
 const context = { window: {} };
 vm.createContext(context);
 vm.runInContext(fs.readFileSync("js/formulaMasterData.js", "utf8"), context);
@@ -20,7 +23,9 @@ const html = fs.readFileSync("formulas.html", "utf8");
 const renderer = fs.readFileSync("js/formulasCatalog.js", "utf8");
 
 assert(records.length === expectedIds.length, `Expected ${expectedIds.length} formulas, received ${records.length}.`);
-assert(records.length > 79, "TO-BE catalog should be broader than the previous 79-row AS-IS catalog.");
+assert(records.length === 225, `Expected unified catalog with 225 formulas, received ${records.length}.`);
+assert(asIsIds.every((id) => actualIds.includes(id)), "All AS-IS Formula IDs must be included.");
+assert(toBeIds.every((id) => actualIds.includes(id)), "All TO-BE Formula IDs must be included.");
 assert(missing.length === 0, `Missing formula IDs: ${missing.join(", ")}`);
 assert(duplicates.length === 0, `Duplicate formula IDs: ${duplicates.join(", ")}`);
 assert(records.every((record) => record.block && record.name && record.formula), "Every formula must include block, name, and expression.");

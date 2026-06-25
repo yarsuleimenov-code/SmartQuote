@@ -246,9 +246,9 @@ Fuel Prices affect calculation, but editing governance is not enabled yet.
 
 `references.html` manages runtime Vehicles. References and Variables are not fully governed admin-save screens yet.
 
-`formulas.html` is a unified read-only target architecture catalog generated from `docs/formula-spec/tobe_formula_master.csv`:
+`formulas.html` is a unified read-only formula architecture catalog:
 
-- all TO-BE master formulas are displayed in one consistent architecture without separate AS-IS / TO-BE sections;
+- all 79 AS-IS and 146 TO-BE master formulas are displayed as one 225-formula architecture without separate AS-IS / TO-BE sections;
 - Formula ID, expression, description, source, output, and usage are searchable;
 - formula text uses black for input/calculated terms, blue for TO-BE variables, and green for TO-BE reference data;
 - the page is documentation and does not change `js/calculator.js` or active pricing.
