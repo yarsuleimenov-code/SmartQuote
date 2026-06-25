@@ -76,7 +76,10 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Admin ZIP Coverage is sourced from `coverage_zip_route_zone_map.xlsx`, with ZIP search, zone filtering, and locally saved coverage statuses.
 - Coverage states are Covered, Excluded, and Review.
 - Every ZIP currently has a read-only default price coefficient of `1.00`; coefficient pricing is not active.
-- The ZIP Coverage screen is not connected to the active calculator ZIP mapping or pricing formulas.
+- ZIP coefficients can be captured locally within `0.50-2.00`; they remain inactive in pricing.
+- The 2,607 ZIPs from `coverage_zip_route_zone_map.xlsx` are the active test coverage dataset.
+- Excluded and Review ZIPs surface warnings in Quote Draft but do not block estimate generation.
+- ZIP coverage status does not change pricing formulas.
 
 ## Next Business Handoff Priorities
 

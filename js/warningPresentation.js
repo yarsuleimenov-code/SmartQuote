@@ -42,6 +42,39 @@
       }));
     }
 
+    [
+      { label: "Pickup", zip: pickupZip, target: "pickupZip" },
+      { label: "Delivery", zip: deliveryZip, target: "deliveryZip" },
+    ].forEach((point) => {
+      if (!point.zip || !window.ZipCoverage) return;
+      const coverage = window.ZipCoverage.get(point.zip);
+      if (!coverage.inCoverageDataset) return;
+
+      if (coverage.coverageStatus === "disabled") {
+        warnings.push(warning({
+          id: `WARN-UI-ZIP-EXCLUDED-${point.zip}`,
+          severity: "warning",
+          scope: "route",
+          target: point.target,
+          title: `${point.label} ZIP is excluded`,
+          message: `ZIP ${point.zip} is marked Excluded from standard coverage. Review before sending the estimate.`,
+          actionLabel: "Review ZIP",
+          approvalRole: "Operations",
+        }));
+      } else if (coverage.coverageStatus === "approval_required") {
+        warnings.push(warning({
+          id: `WARN-UI-ZIP-REVIEW-${point.zip}`,
+          severity: "approval",
+          scope: "route",
+          target: point.target,
+          title: `${point.label} ZIP requires review`,
+          message: `ZIP ${point.zip} is a remote or uncommon service area and requires business review.`,
+          actionLabel: "Review ZIP",
+          approvalRole: "Admin / Head of Sales",
+        }));
+      }
+    });
+
     const calculatedItems = Array.isArray(result?.items) ? result.items : [];
     if (!calculatedItems.length) {
       warnings.push(warning({

@@ -6,8 +6,8 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current implementation baseline:
 
-- Previous committed checkpoint: `8891570 Add searchable ZIP coverage directory`.
-- Working tree contains ZIP coverage status and coefficient preparation pending review.
+- Previous committed checkpoint: `4fc1e05 Color code ZIP coverage zones`.
+- Working tree contains active ZIP coverage integration pending review.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
 - CEO Formula Review Pack completed.
@@ -114,7 +114,11 @@ Implemented:
   - Displays 2,607 unique ZIP codes across 11 zones and CA/NY regions.
   - Coverage status is locally configurable as Covered, Excluded, or Review.
   - ZIP coefficient is displayed as `1.00` for all records; editing and pricing impact are intentionally deferred.
-  - Does not modify `js/calculator.js`, active ZIP resolution, or pricing formulas.
+  - Coefficient can be captured locally between `0.50` and `2.00`, but does not affect quote pricing.
+  - The 2,607-ZIP workbook dataset is now the only active calculator ZIP coverage map.
+  - Excluded and Review statuses create non-blocking Quote Readiness warnings.
+  - ZIP status and coefficient metadata are saved with Quote Draft route data and estimate snapshots.
+  - Does not modify `js/calculator.js` or pricing formulas.
 
 ## Business Feedback Sprint
 

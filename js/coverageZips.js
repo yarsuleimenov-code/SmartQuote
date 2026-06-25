@@ -1,7 +1,7 @@
 (function () {
   const pageSize = 100;
-  const storageKey = "zaberman-zip-coverage-overrides";
-  const defaultPriceCoefficient = 1;
+  const storageKey = window.ZipCoverage.storageKey;
+  const defaultPriceCoefficient = window.ZipCoverage.defaultPriceCoefficient;
   const source = window.CoverageZipData || {};
   const records = Array.isArray(source.records) ? source.records : [];
   const coverageStatuses = [
@@ -39,6 +39,7 @@
   const fields = {
     search: document.getElementById("coverageZipSearch"),
     zone: document.getElementById("coverageZoneFilter"),
+    coverage: document.getElementById("coverageStatusFilter"),
     clear: document.getElementById("coverageClearFilters"),
     rows: document.getElementById("coverageZipRows"),
     empty: document.getElementById("coverageEmptyState"),
@@ -65,12 +66,7 @@
   let overrides = readOverrides();
 
   function readOverrides() {
-    try {
-      const parsed = JSON.parse(window.localStorage?.getItem(storageKey) || "{}");
-      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
-    } catch {
-      return {};
-    }
+    return window.ZipCoverage.readOverrides();
   }
 
   function writeOverrides() {
@@ -128,13 +124,15 @@
   function filteredRecords() {
     const search = fields.search.value.replace(/\D/g, "").slice(0, 5);
     const zone = fields.zone.value;
+    const coverageStatus = fields.coverage.value;
 
     if (fields.search.value !== search) fields.search.value = search;
 
     return records.filter((record) => {
       const matchesZip = !search || record.zip.startsWith(search);
       const matchesZone = !zone || record.zone === zone;
-      return matchesZip && matchesZone;
+      const matchesCoverage = !coverageStatus || recordSettings(record).coverageStatus === coverageStatus;
+      return matchesZip && matchesZone && matchesCoverage;
     });
   }
 
@@ -153,7 +151,17 @@
           </span>
         </td>
         <td class="px-5 py-3 text-right">
-          <span class="font-mono font-semibold text-slate-700">${settings.priceCoefficient.toFixed(2)}x</span>
+          <input
+            class="zip-coefficient-input w-24 border border-slate-300 rounded-lg px-3 py-2 text-right font-mono font-semibold text-slate-700"
+            data-zip="${escapeHtml(record.zip)}"
+            type="number"
+            min="0.5"
+            max="2"
+            step="0.05"
+            value="${settings.priceCoefficient.toFixed(2)}"
+            aria-label="ZIP coefficient for ${escapeHtml(record.zip)}"
+            title="Future pricing coefficient; not active in quote calculations"
+          />
         </td>
         <td class="px-5 py-3 text-right">
           <select
@@ -235,9 +243,15 @@
     render();
   });
 
+  fields.coverage.addEventListener("change", () => {
+    currentPage = 1;
+    render();
+  });
+
   fields.clear.addEventListener("click", () => {
     fields.search.value = "";
     fields.zone.value = "";
+    fields.coverage.value = "";
     currentPage = 1;
     fields.search.focus();
     render();
@@ -262,7 +276,35 @@
     });
   });
 
-  fields.rows.addEventListener("change", (event) => {
+  function handleRowEdit(event) {
+    const coefficientInput = event.target.closest(".zip-coefficient-input");
+    if (coefficientInput) {
+      const zip = coefficientInput.dataset.zip;
+      const existing = recordSettings({ zip });
+      if (event.type === "input" && coefficientInput.value.trim() === "") return;
+      const parsed = Number(coefficientInput.value);
+      const priceCoefficient = Number.isFinite(parsed)
+        ? Math.min(2, Math.max(0.5, Math.round(parsed * 100) / 100))
+        : defaultPriceCoefficient;
+      if (event.type === "change") coefficientInput.value = priceCoefficient.toFixed(2);
+
+      if (existing.coverageStatus === "covered" && priceCoefficient === defaultPriceCoefficient) {
+        delete overrides[zip];
+      } else {
+        overrides[zip] = {
+          coverageStatus: existing.coverageStatus,
+          priceCoefficient,
+        };
+      }
+
+      const saved = writeOverrides();
+      fields.status.textContent = saved
+        ? `ZIP ${zip} coefficient saved locally; quote pricing remains unchanged`
+        : `ZIP ${zip} coefficient could not be saved`;
+      return;
+    }
+
+    if (event.type !== "change") return;
     const select = event.target.closest(".coverage-status-select");
     if (!select) return;
 
@@ -286,7 +328,11 @@
     fields.status.textContent = saved
       ? `ZIP ${zip} coverage status saved locally`
       : `ZIP ${zip} coverage status could not be saved`;
-  });
+    if (fields.coverage.value) render();
+  }
+
+  fields.rows.addEventListener("input", handleRowEdit);
+  fields.rows.addEventListener("change", handleRowEdit);
 
   initializeFilters();
   render();

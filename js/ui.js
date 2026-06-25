@@ -121,6 +121,8 @@
         deliveryZip: fields.deliveryZip.value.trim(),
         pickupAddress: fields.pickupAddress.value.trim(),
         deliveryAddress: fields.deliveryAddress.value.trim(),
+        pickupCoverage: window.ZipCoverage?.get(fields.pickupZip.value.trim()) || null,
+        deliveryCoverage: window.ZipCoverage?.get(fields.deliveryZip.value.trim()) || null,
       };
       quote.access = {
         pickup: {

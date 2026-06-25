@@ -216,7 +216,7 @@ Vehicle fields should eventually include interior dimensions, door opening, payl
 
 **Priority:** P2
 
-**Status:** Read-only ZIP coverage directory implemented. Editing, overrides, and audit workflow remain deferred.
+**Status:** Active test coverage directory implemented. Shared governance and pricing impact remain deferred.
 
 After ZIP data cleanup and ownership approval, add:
 
@@ -235,8 +235,10 @@ Current read-only slice:
 - supports ZIP prefix search and zone filtering;
 - shows region, assigned zone, ZIP coefficient, and coverage status;
 - coverage status can be set to Covered, Excluded, or Review and is saved locally;
-- all ZIP coefficients default to `1.00`; coefficient editing and pricing impact remain deferred;
-- does not change the active calculator ZIP mapping or pricing formulas.
+- all ZIP coefficients default to `1.00`; local capture supports `0.50-2.00`;
+- the workbook's 2,607 ZIPs are the active test coverage map;
+- Excluded and Review statuses create non-blocking broker warnings;
+- ZIP coefficients do not change current pricing formulas.
 
 ### UI-09: Benchmark Impact Preview
 

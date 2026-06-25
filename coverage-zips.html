@@ -68,7 +68,7 @@
         </section>
 
         <section class="bg-white rounded-lg border border-slate-200 p-5 mb-5">
-          <div class="grid grid-cols-1 md:grid-cols-[minmax(240px,2fr)_minmax(220px,1fr)_auto] gap-4 items-end">
+          <div class="grid grid-cols-1 md:grid-cols-[minmax(220px,2fr)_minmax(180px,1fr)_minmax(180px,1fr)_auto] gap-4 items-end">
             <label class="text-sm">
               <span class="text-xs uppercase text-slate-400">Search ZIP</span>
               <div class="relative mt-2">
@@ -88,6 +88,16 @@
               <span class="text-xs uppercase text-slate-400">Zone</span>
               <select id="coverageZoneFilter" class="mt-2 w-full border border-slate-300 rounded-lg px-3 py-2 bg-white">
                 <option value="">All zones</option>
+              </select>
+            </label>
+
+            <label class="text-sm">
+              <span class="text-xs uppercase text-slate-400">Coverage</span>
+              <select id="coverageStatusFilter" class="mt-2 w-full border border-slate-300 rounded-lg px-3 py-2 bg-white">
+                <option value="">All statuses</option>
+                <option value="covered">✅ Covered</option>
+                <option value="disabled">⛔ Excluded</option>
+                <option value="approval_required">⚠ Review</option>
               </select>
             </label>
 
@@ -153,6 +163,7 @@
   </div>
 
   <script src="js/coverageZipData.js"></script>
+  <script src="js/zipCoverage.js"></script>
   <script src="js/coverageZips.js"></script>
   <script src="sidebar.js"></script>
 </body>

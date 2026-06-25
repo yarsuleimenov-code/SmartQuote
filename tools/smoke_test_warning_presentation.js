@@ -5,9 +5,20 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const context = { window: {} };
+const storage = new Map();
+const localStorage = {
+  getItem(key) { return storage.has(key) ? storage.get(key) : null; },
+  setItem(key, value) { storage.set(key, String(value)); },
+};
+const context = { window: { localStorage } };
 context.window.window = context.window;
 vm.createContext(context);
+vm.runInContext(fs.readFileSync("js/coverageZipData.js", "utf8"), context, {
+  filename: "js/coverageZipData.js",
+});
+vm.runInContext(fs.readFileSync("js/zipCoverage.js", "utf8"), context, {
+  filename: "js/zipCoverage.js",
+});
 vm.runInContext(fs.readFileSync("js/warningPresentation.js", "utf8"), context, {
   filename: "js/warningPresentation.js",
 });
@@ -82,12 +93,40 @@ const ready = build({
 assert(ready.readiness.id === "ready", "Valid AS-IS quote should be ready.");
 assert(ready.warnings.length === 0, "Valid AS-IS quote should not show warning cards.");
 
+localStorage.setItem("zaberman-zip-coverage-overrides", JSON.stringify({
+  "11211": { coverageStatus: "disabled", priceCoefficient: 1 },
+  "90021": { coverageStatus: "approval_required", priceCoefficient: 1.2 },
+}));
+const coverageReview = build({
+  quote: { route: { pickupZip: "11211", deliveryZip: "90021" } },
+  result: {
+    routeSupported: true,
+    items: [{
+      id: "item-4",
+      name: "Chair",
+      warning: "OK",
+      protectionPlan: "RV",
+      declaredValue: 0,
+    }],
+    totals: { effectiveVolume: 10 },
+  },
+});
+assert(
+  coverageReview.warnings.some((entry) => entry.id === "WARN-UI-ZIP-EXCLUDED-11211"),
+  "Expected Excluded ZIP warning.",
+);
+assert(
+  coverageReview.warnings.some((entry) => entry.id === "WARN-UI-ZIP-REVIEW-90021"),
+  "Expected Review ZIP warning.",
+);
+assert(coverageReview.blocksEstimate === false, "ZIP coverage statuses must warn without blocking.");
+
 console.log(JSON.stringify({
   blankReadiness: blank.readiness.label,
   unsupportedReadiness: unsupported.readiness.label,
   fvpReadiness: fvp.readiness.label,
   heavyReadiness: heavy.readiness.label,
   readyReadiness: ready.readiness.label,
+  coverageReadiness: coverageReview.readiness.label,
   enforcementEnabled: unsupported.enforcementEnabled,
 }, null, 2));
-
