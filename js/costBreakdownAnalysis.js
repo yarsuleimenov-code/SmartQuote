@@ -6,6 +6,42 @@
     return Number.isFinite(parsed) ? parsed : 0;
   }
 
+  function contract(result) {
+    return result?.calculationContract || null;
+  }
+
+  function percent(value) {
+    if (!Number.isFinite(Number(value))) return notAvailable;
+    return `${Math.round(Number(value) * 100)}%`;
+  }
+
+  function decimal(value, digits = 2) {
+    if (!Number.isFinite(Number(value))) return notAvailable;
+    return Number(value).toFixed(digits);
+  }
+
+  function label(value) {
+    if (value === true) return "Pass";
+    if (value === false) return "Fail";
+    if (value === "not_available" || value === null || value === undefined || value === "") return notAvailable;
+    return String(value)
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (character) => character.toUpperCase());
+  }
+
+  function traceBlock(formulaId) {
+    if (String(formulaId).startsWith("TBE-RTE") || String(formulaId).startsWith("WARN-005") || String(formulaId).startsWith("WARN-006")) return "Route Contract";
+    if (String(formulaId).startsWith("TBE-HND") || String(formulaId).startsWith("TBE-WARN")) return "Item Handling";
+    if (String(formulaId).startsWith("TBE-CAP")) return "Capacity Analysis";
+    if (String(formulaId).startsWith("FIT") || String(formulaId).startsWith("WARN-003")) return "Vehicle Fit";
+    if (String(formulaId).startsWith("TBE-VEH")) return "Vehicle Reference";
+    if (String(formulaId).startsWith("FINAL")) return "Final Total";
+    if (String(formulaId).startsWith("PICK")) return "Pickup Stage";
+    if (String(formulaId).startsWith("INT")) return "Interstate Stage";
+    if (String(formulaId).startsWith("DEL")) return "Delivery Stage";
+    return "Calculation Contract";
+  }
+
   function stageReconciliation(result) {
     const stages = result?.stageBreakdown || {};
     const pickup = number(stages.pickup?.total);
@@ -48,6 +84,21 @@
   }
 
   function capacityAnalysis(result, presentation) {
+    const fit = contract(result)?.capacityVehicleFit;
+    if (fit) {
+      return {
+        shipmentDensity: `${decimal(fit.utilization?.shipmentDensityLbPerCuFt)} lb/cu ft`,
+        vehicleDensityThreshold: `${decimal(fit.utilization?.vehicleDensityCapacityLbPerCuFt)} lb/cu ft`,
+        volumeUtilization: percent(fit.utilization?.vehicleUtilization),
+        payloadUtilization: percent(fit.utilization?.payloadUtilization),
+        limitingFactor: percent(fit.utilization?.limitingCapacityFactor),
+        selectedCostBasis: label(fit.utilization?.capacityConstraintType),
+        selectedVehicle: fit.selectedVehicle?.name || result?.vehicle?.name || notAvailable,
+        recommendedVehicle: fit.recommendedVehicle?.name || notAvailable,
+        warningStatus: "No price impact",
+      };
+    }
+
     return {
       shipmentDensity: notAvailable,
       vehicleDensityThreshold: notAvailable,
@@ -62,6 +113,20 @@
   }
 
   function vehicleFit(result) {
+    const fit = contract(result)?.capacityVehicleFit;
+    if (fit) {
+      return {
+        status: fit.fit?.capacityOverflowFlag ? "Review Required" : "Capacity fit",
+        selectedVehicle: fit.selectedVehicle?.name || result?.vehicle?.name || notAvailable,
+        recommendedVehicle: fit.recommendedVehicle?.name || notAvailable,
+        dimensionalFit: fit.fit?.dimensionalFit,
+        doorOpeningFit: fit.fit?.doorOpeningFit,
+        volumeFit: fit.fit?.volumeFit,
+        payloadFit: fit.fit?.weightFit,
+        equipmentFit: fit.fit?.equipmentFit,
+      };
+    }
+
     return {
       status: notAvailable,
       selectedVehicle: result?.vehicle?.name || result?.vehicle?.vehicleName || notAvailable,
@@ -75,6 +140,21 @@
   }
 
   function formulaTrace(result, snapshotMeta = {}) {
+    const contractRows = contract(result)?.trace;
+    if (Array.isArray(contractRows) && contractRows.length) {
+      return contractRows.map((row) => ({
+        formulaId: row.formulaId,
+        block: traceBlock(row.formulaId),
+        input: row.outputPath,
+        source: row.status?.startsWith("Implemented") ? "calculator result" : "calculationContract",
+        formula: row.status?.startsWith("Implemented") ? "Baseline calculator output" : "Contract-only output; no price impact",
+        result: row.value,
+        unit: "",
+        goesTo: row.outputPath,
+        status: row.status,
+      }));
+    }
+
     const stages = result?.stageBreakdown || {};
     const totals = result?.totals || {};
     const reconciliation = stageReconciliation(result);

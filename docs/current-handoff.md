@@ -6,8 +6,8 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current implementation baseline:
 
-- Current committed checkpoint: `8582273 Normalize pricing masterdata and add calculation contract`.
-- Working tree contains the first TO-BE contract slice for Normalized Order Inputs and Route Classification.
+- Current committed checkpoint: `9247644 Add capacity vehicle fit contract outputs`.
+- Working tree contains the presentation slice that surfaces contract-only Capacity Analysis and Formula Trace in Cost Breakdown.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
 - CEO Formula Review Pack completed.
@@ -17,9 +17,13 @@ Current implementation baseline:
 - Normalized Order Inputs and Route Classification are captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Item Handling / Crew Feasibility is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Capacity / Vehicle Fit is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
+- Cost Breakdown displays contract-only Capacity / Vehicle Fit outputs and normalized Formula Trace rows without changing pricing.
 
 Checkpoint history:
 
+- `9247644 Add capacity vehicle fit contract outputs`.
+- `d077f3b Add item handling contract outputs`.
+- `365d91e Add normalized route contract slice`.
 - `8582273 Normalize pricing masterdata and add calculation contract`.
 - `44adfb6 Merge AS-IS formulas into unified catalog`.
 - `58b0b04 Build unified target formula catalog`.
@@ -87,10 +91,10 @@ Implemented:
 - Cost Breakdown CB-01 through CB-05 presentation slice:
   - available and missing result fields are documented in `docs/cost-breakdown-output-audit.md`;
   - pickup, interstate, and delivery stage totals are reconciled against route cost, then route plus non-route components are reconciled against Operational Cost;
-  - Capacity Analysis shows the selected AS-IS vehicle and explicit `Not available` states for missing Formula Sprint outputs;
+  - Capacity Analysis shows contract-only shipment density, vehicle density threshold, volume utilization, payload utilization, limiting factor, selected capacity basis, selected vehicle, and recommended vehicle;
   - Warning and Readiness Details use the normalized warning contract;
-  - Vehicle Fit details remain read-only and do not infer dimensional, door, payload, volume, or equipment fit;
-  - Formula Trace shows existing AS-IS stage/final outputs and marks unapproved capacity/fit rows as blocked.
+  - Vehicle Fit details show contract-only volume/payload fit while dimensional, door, and equipment fit remain explicitly `Not available`;
+  - Formula Trace shows existing AS-IS stage/final outputs and contract-only TO-BE rows with `No price impact` status.
 - Variables screen:
   - shows one active runtime value for each displayed calculation variable;
   - does not duplicate Current / Proposed values;

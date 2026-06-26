@@ -51,6 +51,7 @@
     if (status === "Blocked") return "bg-red-100 text-red-700";
     if (status === "Review Required") return "bg-amber-100 text-amber-800";
     if (status === "Ready") return "bg-green-100 text-green-700";
+    if (status === "No price impact" || status === "Capacity fit" || status === "Audit only") return "bg-blue-50 text-blue-700";
     return "bg-slate-100 text-slate-600";
   }
 
@@ -82,6 +83,7 @@
 
   function traceResult(row) {
     if (row.result === null || row.result === undefined) return "Not available";
+    if (typeof row.result === "object") return JSON.stringify(row.result);
     return row.unit === "USD" ? currency(row.result) : `${row.result}${row.unit ? ` ${row.unit}` : ""}`;
   }
 
@@ -183,12 +185,16 @@
     const snapshot = window.CalculatorStorage.selectEstimateSnapshot(selectedId)
       || window.CalculatorStorage.loadEstimateSnapshot();
     if (snapshot?.quote && snapshot?.result) {
+      const result = {
+        ...snapshot.result,
+        calculationContract: snapshot.result.calculationContract || snapshot.calculationContract || null,
+      };
       return {
         source: "Snapshot",
         sourceType: "estimate",
         recordId: snapshot.snapshotId,
         quote: snapshot.quote,
-        result: snapshot.result,
+        result,
         estimateId: snapshot.estimateId || snapshot.quote.estimateId,
         snapshotMeta: {
           formulaVersion: snapshot.formulaVersion,

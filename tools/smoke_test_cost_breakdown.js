@@ -41,6 +41,7 @@ vm.createContext(context);
   "js/pricingConfig.js",
   "js/mockData.js",
   "js/calculator.js",
+  "js/calculationContract.js",
   "js/warningPresentation.js",
   "js/costBreakdownAnalysis.js",
 ].forEach((file) => {
@@ -78,10 +79,13 @@ assert(
   Math.abs(reconciliation.operationalStageTotal - result.totals.operationalCost) <= 1,
   "Expected operational stage total within $1 of operational cost.",
 );
-assert(capacity.shipmentDensity === "Not available", "Expected shipment density not to be inferred.");
-assert(capacity.volumeUtilization === "Not available", "Expected volume utilization not to be inferred.");
+assert(capacity.shipmentDensity !== "Not available", "Expected shipment density from calculation contract.");
+assert(capacity.volumeUtilization !== "Not available", "Expected volume utilization from calculation contract.");
+assert(capacity.payloadUtilization !== "Not available", "Expected payload utilization from calculation contract.");
+assert(capacity.warningStatus === "No price impact", "Expected capacity output to remain audit-only.");
 assert(capacity.selectedVehicle === result.vehicle.name, "Expected selected AS-IS vehicle to remain visible.");
-assert(fit.dimensionalFit === null && fit.doorOpeningFit === null, "Expected dimensional fit fields to remain unavailable.");
+assert(fit.volumeFit === true && fit.payloadFit === true, "Expected capacity fit outputs from calculation contract.");
+assert(fit.dimensionalFit === "not_available" && fit.doorOpeningFit === "not_available", "Expected body fit fields to remain unavailable.");
 assert(
   presentation.warnings.some((warning) => warning.id.includes("ZIP-EXCLUDED")),
   "Expected frozen stored ZIP coverage metadata to drive estimate warning review.",
@@ -89,8 +93,12 @@ assert(
 assert(trace.some((row) => row.formulaId === "PICK-007" && row.result > 0), "Expected pickup AS-IS trace row.");
 assert(trace.some((row) => row.formulaId === "FINAL-014" && row.result === result.totals.finalPrice), "Expected final price trace row.");
 assert(
-  trace.some((row) => row.formulaId === "INT-CAP-*" && row.status.startsWith("Blocked")),
-  "Expected unapproved capacity trace to remain blocked.",
+  trace.some((row) => row.formulaId === "TBE-CAP-001" && row.status === "Contract only / No price impact"),
+  "Expected capacity trace to come from calculation contract.",
+);
+assert(
+  trace.some((row) => row.formulaId === "FIT-001-DIMENSIONAL-FIT" && row.result === "not_available"),
+  "Expected dimensional fit trace to remain explicitly unavailable.",
 );
 
 const html = fs.readFileSync("breakdown.html", "utf8");
@@ -117,13 +125,13 @@ console.log(JSON.stringify({
   operationalDelta: reconciliation.operationalDelta,
   readiness: presentation.readiness.label,
   capacitySelectedVehicle: capacity.selectedVehicle,
-  unavailableCapacityFields: [
+  availableCapacityFields: [
     capacity.shipmentDensity,
     capacity.vehicleDensityThreshold,
     capacity.volumeUtilization,
     capacity.payloadUtilization,
     capacity.limitingFactor,
     capacity.selectedCostBasis,
-  ].filter((value) => value === "Not available").length,
+  ].filter((value) => value !== "Not available").length,
   traceRows: trace.length,
 }, null, 2));
