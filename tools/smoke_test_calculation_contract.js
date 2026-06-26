@@ -31,6 +31,8 @@ vm.createContext(context);
 
 [
   "js/zoneZipMap.js",
+  "js/coverageZipData.js",
+  "js/zipCoverage.js",
   "js/variables.js",
   "js/pricingConfig.js",
   "js/mockData.js",
@@ -38,6 +40,8 @@ vm.createContext(context);
 ].forEach((file) => vm.runInContext(fs.readFileSync(file, "utf8"), context, { filename: file }));
 
 const quote = clone(context.window.CalculatorMockData);
+quote.options.pickupDirect = true;
+quote.options.pickupDirectDate = "2026-07-02";
 const baseline = context.window.PricingCalculator.calculateQuote(quote);
 
 vm.runInContext(fs.readFileSync("js/calculationContract.js", "utf8"), context, {
@@ -57,7 +61,16 @@ assert(contract?.traceVersion === "normalized-formula-trace-v1", "Expected trace
 assert(contract?.formulaVersion === context.window.CalculatorVariables.formulaVersion, "Expected formula version.");
 assert(contract?.variablesVersion === context.window.CalculatorVariables.variablesVersion, "Expected variables version.");
 assert(contract?.normalizedInput?.route?.pickupZip === String(quote.route.pickupZip), "Expected normalized route input.");
+assert(contract?.normalizedOrderInputs?.service?.pickupDirect === true, "Expected normalized direct pickup input.");
+assert(contract?.normalizedOrderInputs?.items?.billableRows === 2, "Expected normalized billable item rows.");
+assert(contract?.routeClassification?.routeType === "direct", "Expected direct route classification.");
+assert(contract?.routeClassification?.pickup?.zip === "11211", "Expected pickup ZIP classification.");
+assert(contract?.routeClassification?.delivery?.zip === "90021", "Expected delivery ZIP classification.");
+assert(contract?.routeClassification?.distance?.priceImpactActive === false, "Expected route classification to have no price impact.");
+assert(contract?.routeClassification?.routeCoefficient?.priceImpactActive === false, "Expected ZIP coefficient to have no price impact.");
 assert(contract?.trace?.some((row) => row.formulaId === "FINAL-014" && row.value === baseline.totals.finalPrice), "Expected final price trace.");
+assert(contract?.trace?.some((row) => row.formulaId === "TBE-RTE-001" && row.status === "Contract only / No price impact"), "Expected route type contract trace.");
+assert(contract?.trace?.some((row) => row.formulaId === "SYS-001" && row.outputPath === "calculationContract.normalizedOrderInputs"), "Expected normalized input contract trace.");
 assert(contract?.trace?.every((row) => row.formulaId && row.outputPath), "Expected normalized trace rows.");
 assert(blankResult.totals.finalPrice === 0, "Blank quote must remain zero.");
 assert(blankResult.calculationContract?.trace?.length > 0, "Blank quote should still have an auditable trace.");
@@ -69,6 +82,9 @@ console.log(JSON.stringify({
   formulaVersion: contract.formulaVersion,
   variablesVersion: contract.variablesVersion,
   traceRows: contract.trace.length,
+  routeType: contract.routeClassification.routeType,
+  pickupReadiness: contract.routeClassification.pickup.readiness,
+  deliveryReadiness: contract.routeClassification.delivery.readiness,
   baselineFinalPrice: baseline.totals.finalPrice,
   contractedFinalPrice: contracted.totals.finalPrice,
   blankFinalPrice: blankResult.totals.finalPrice,

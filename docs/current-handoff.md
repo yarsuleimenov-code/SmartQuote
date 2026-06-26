@@ -6,17 +6,21 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current implementation baseline:
 
-- Current committed checkpoint: `e816356 Integrate active ZIP coverage warnings`.
-- Working tree contains documentation-only synchronization and Cost Breakdown planning changes.
+- Current committed checkpoint: `8582273 Normalize pricing masterdata and add calculation contract`.
+- Working tree contains the first TO-BE contract slice for Normalized Order Inputs and Route Classification.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
 - CEO Formula Review Pack completed.
 - UI Sprint Plan from the June 19 Calculator meeting documented.
 - Masterdata normalization completed for Formula Sprint planning.
 - Formula Sprint Foundation adds a versioned calculation contract and normalized Formula ID trace without changing quote prices.
+- Normalized Order Inputs and Route Classification are captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 
 Checkpoint history:
 
+- `8582273 Normalize pricing masterdata and add calculation contract`.
+- `44adfb6 Merge AS-IS formulas into unified catalog`.
+- `58b0b04 Build unified target formula catalog`.
 - `e816356 Integrate active ZIP coverage warnings`.
 - `4fc1e05 Color code ZIP coverage zones`.
 - `0318d9b Add ZIP coverage status controls`.
@@ -270,6 +274,9 @@ Formula Sprint Foundation:
 - preserves the original function as `PricingCalculator.calculateQuoteBaseline`;
 - adds contract, formula, variable, and reference version metadata;
 - stores normalized inputs and Formula ID trace in new estimate snapshots;
+- emits `calculationContract.normalizedOrderInputs` for normalized customer/order, route, service, access, and item inputs;
+- emits `calculationContract.routeClassification` for route type, ZIP coverage readiness, distance source, and captured ZIP coefficients;
+- keeps Direct, specific-date, coverage status, and ZIP coefficient outputs audit-only with `priceImpactActive = false`;
 - uses snapshot version 2 while keeping old snapshots compatible;
 - is documented in `docs/formula-sprint-foundation.md`.
 

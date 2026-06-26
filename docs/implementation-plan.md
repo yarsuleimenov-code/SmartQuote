@@ -11,7 +11,14 @@ Masterdata normalization is complete:
 
 Formula Sprint Foundation is implemented: input normalization, version metadata, and Formula ID trace are added without changing current quote prices.
 
-The next recommended slice is the first approved TO-BE calculation block behind the contract, starting with normalized order inputs and route classification outputs.
+The first approved TO-BE contract slice is implemented:
+
+- Normalized Order Inputs are captured in `calculationContract.normalizedOrderInputs`.
+- Route Classification is captured in `calculationContract.routeClassification`.
+- Direct/specific-date flags, ZIP coverage readiness, distance source, and ZIP coefficients are audit outputs only.
+- No price impact is enabled.
+
+The next recommended slice is item handling / crew feasibility outputs behind the same contract, still without enabling new pricing until regression and business review are complete.
 
 ## Current Project Shape
 

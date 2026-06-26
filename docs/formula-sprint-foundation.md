@@ -41,6 +41,7 @@ Current versions:
 
 The foundation trace uses Formula IDs from normalized masterdata and records the output path and value for:
 
+- normalized order inputs;
 - route classification;
 - pickup, interstate, and delivery stage totals;
 - route cost;
@@ -48,6 +49,24 @@ The foundation trace uses Formula IDs from normalized masterdata and records the
 - final rounded price.
 
 The trace is an audit structure. It does not execute new TO-BE formulas.
+
+## First TO-BE Contract Slice
+
+Normalized Order Inputs and Route Classification are now emitted as contract-only outputs:
+
+- `calculationContract.normalizedOrderInputs`;
+- `calculationContract.routeClassification`.
+
+This slice records normalized customer/order fields, ZIPs, service/direct flags, access capture, item rows, route type, ZIP coverage readiness, distance source, and captured ZIP coefficients.
+
+Business rule for this slice:
+
+- no pricing formula changes;
+- ZIP coefficients are captured but `priceImpactActive = false`;
+- Direct / specific-date service is classified for review but does not recalculate miles or price;
+- coverage `Excluded` / `Review` remains readiness/audit data only.
+
+The original price remains produced by `PricingCalculator.calculateQuoteBaseline`.
 
 ## Snapshot Behavior
 
@@ -64,4 +83,4 @@ Old snapshots remain readable because all new fields are additive and optional.
 
 ## Next Formula Sprint Slice
 
-Implement the first approved TO-BE block behind the calculation contract. Recommended first block: normalized order inputs and route classification outputs, with regression comparison against the baseline before enabling any price impact.
+Next recommended Formula Sprint slice: add item handling / crew feasibility outputs behind the contract, still comparing against the baseline before enabling any price impact.
