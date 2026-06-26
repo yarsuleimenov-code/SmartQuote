@@ -68,6 +68,21 @@ Business rule for this slice:
 
 The original price remains produced by `PricingCalculator.calculateQuoteBaseline`.
 
+## Second TO-BE Contract Slice
+
+Item Handling / Crew Feasibility is now emitted as a contract-only output:
+
+- `calculationContract.itemHandlingFeasibility`.
+
+This slice records max single-item weight, weight class, total pieces, heavy piece count, one-person eligibility, required crew from current item rules, hard access constraints, per-item handling complexity factors, and crew-review readiness.
+
+Business rule for this slice:
+
+- no pricing formula changes;
+- current AS-IS `crewNeed` remains the only value used by the baseline calculator;
+- handling score and crew review are audit/readiness outputs only;
+- hard access constraints are captured for future labor logic but do not change price.
+
 ## Snapshot Behavior
 
 New estimate snapshots use `snapshotVersion: 2` and preserve `calculationContract`.
@@ -83,4 +98,4 @@ Old snapshots remain readable because all new fields are additive and optional.
 
 ## Next Formula Sprint Slice
 
-Next recommended Formula Sprint slice: add item handling / crew feasibility outputs behind the contract, still comparing against the baseline before enabling any price impact.
+Next recommended Formula Sprint slice: add capacity / vehicle fit contract outputs using existing vehicle references and current selected vehicle, still comparing against the baseline before enabling any price impact.

@@ -192,6 +192,87 @@
     };
   }
 
+  function itemWeightClass(unitWeight) {
+    if (unitWeight >= 200) return "two_person_required";
+    if (unitWeight >= 100) return "heavy";
+    if (unitWeight > 40) return "standard";
+    return "light";
+  }
+
+  function handlingComplexity(item) {
+    const factors = [];
+    if (item.fragile) factors.push("fragile");
+    if (item.nonStackable) factors.push("non_stackable");
+    if (item.crated) factors.push("custom_crate");
+    if (number(item.effectiveVolume) >= 80) factors.push("bulky_volume");
+    if (number(item.weight) >= 100) factors.push("heavy_unit_weight");
+
+    return {
+      factors,
+      score: factors.length,
+      classification: factors.length >= 2 ? "complex" : factors.length === 1 ? "attention_required" : "standard",
+    };
+  }
+
+  function accessConstraint(accessSide) {
+    const side = accessSide || {};
+    return Boolean(
+      (side.stairs && number(side.floor, 1) > 1) ||
+      (!side.elevatorAvailable && number(side.floor, 1) > 1) ||
+      side.coi
+    );
+  }
+
+  function itemHandlingFeasibility(input, result) {
+    const resultItems = Array.isArray(result?.items) ? result.items : [];
+    const sourceById = new Map(input.items.map((item) => [item.id, item]));
+    const rows = resultItems.map((item, index) => {
+      const source = sourceById.get(item.id) || input.items[index] || {};
+      const unitWeight = number(source.weight);
+      const qty = Math.max(number(source.qty, 1), 0);
+      const complexity = handlingComplexity({ ...source, ...item });
+      return {
+        id: item.id || source.id || `item-${index + 1}`,
+        name: item.name || source.name || "",
+        unitWeight,
+        quantity: qty,
+        totalWeight: number(item.totalWeight, unitWeight * qty),
+        physicalVolume: number(item.volume),
+        effectiveVolume: number(item.effectiveVolume),
+        weightClass: itemWeightClass(unitWeight),
+        handlingComplexity: complexity,
+        warning: item.warning || "OK",
+        baselineCrewNeed: number(item.crewNeed, 0),
+        onePersonEligibleByWeight: unitWeight > 0 && unitWeight <= 100,
+      };
+    });
+
+    const maxSingleItemWeight = rows.reduce((max, item) => Math.max(max, item.unitWeight), 0);
+    const totalPieces = rows.reduce((sum, item) => sum + item.quantity, 0);
+    const heavyPieceCount = rows.reduce((sum, item) => sum + (item.unitWeight >= 100 ? item.quantity : 0), 0);
+    const pickupHardAccess = accessConstraint(input.access?.pickup);
+    const deliveryHardAccess = accessConstraint(input.access?.delivery);
+    const requiredCrewFromItems = rows.length ? Math.max(...rows.map((item) => item.baselineCrewNeed || 1)) : 0;
+    const hardAccessCrewReview = (pickupHardAccess || deliveryHardAccess) && maxSingleItemWeight >= 100;
+
+    return {
+      priceImpactActive: false,
+      maxSingleItemWeight,
+      heaviestItemWeightClass: itemWeightClass(maxSingleItemWeight),
+      totalPieces,
+      heavyPieceCount,
+      onePersonEligible: rows.length > 0 && maxSingleItemWeight > 0 && maxSingleItemWeight <= 100 && !hardAccessCrewReview,
+      requiredCrewFromItems,
+      crewReviewRequired: requiredCrewFromItems > 2 || hardAccessCrewReview || maxSingleItemWeight >= 200,
+      hardAccessConstraint: {
+        pickup: pickupHardAccess,
+        delivery: deliveryHardAccess,
+        combined: pickupHardAccess || deliveryHardAccess,
+      },
+      rows,
+    };
+  }
+
   function referenceVersions(variablesSnapshot) {
     let vehicleSeedVersion = "runtime-unversioned";
     try {
@@ -209,7 +290,7 @@
     };
   }
 
-  function traceRows(input, result, normalizedInputs, classification) {
+  function traceRows(input, result, normalizedInputs, classification, handling) {
     const totals = result?.totals || {};
     const stages = result?.stageBreakdown || {};
     const baselineRows = [
@@ -237,6 +318,13 @@
       { formulaId: "WARN-005-OUT-OF-ZONE", outputPath: "calculationContract.routeClassification.delivery.readiness", value: classification.delivery.readiness },
       { formulaId: "WARN-006-DIRECT-SERVICE-REVIEW", outputPath: "calculationContract.routeClassification.serviceFlags", value: classification.serviceFlags },
       { formulaId: "SYS-001", outputPath: "calculationContract.normalizedOrderInputs", value: normalizedInputs },
+      { formulaId: "TBE-HND-001", outputPath: "calculationContract.itemHandlingFeasibility.maxSingleItemWeight", value: handling.maxSingleItemWeight },
+      { formulaId: "TBE-HND-002", outputPath: "calculationContract.itemHandlingFeasibility.heaviestItemWeightClass", value: handling.heaviestItemWeightClass },
+      { formulaId: "TBE-HND-003", outputPath: "calculationContract.itemHandlingFeasibility.onePersonEligible", value: handling.onePersonEligible },
+      { formulaId: "TBE-HND-006", outputPath: "calculationContract.itemHandlingFeasibility.rows", value: handling.rows },
+      { formulaId: "TBE-HND-007", outputPath: "calculationContract.itemHandlingFeasibility.requiredCrewFromItems", value: handling.requiredCrewFromItems },
+      { formulaId: "TBE-HND-017", outputPath: "calculationContract.itemHandlingFeasibility.hardAccessConstraint", value: handling.hardAccessConstraint },
+      { formulaId: "TBE-WARN-003", outputPath: "calculationContract.itemHandlingFeasibility.crewReviewRequired", value: handling.crewReviewRequired },
     ].map((row) => ({
       ...row,
       status: "Contract only / No price impact",
@@ -250,6 +338,7 @@
     const variablesSnapshot = window.PricingConfig?.snapshot?.() || null;
     const normalizedInputs = normalizedOrderInputs(input);
     const classification = routeClassification(input, result);
+    const handling = itemHandlingFeasibility(input, result);
     return {
       ...result,
       calculationContract: {
@@ -262,7 +351,8 @@
         normalizedInput: clone(input),
         normalizedOrderInputs: normalizedInputs,
         routeClassification: classification,
-        trace: traceRows(input, result, normalizedInputs, classification),
+        itemHandlingFeasibility: handling,
+        trace: traceRows(input, result, normalizedInputs, classification, handling),
       },
     };
   }
@@ -282,6 +372,7 @@
     normalizeInput,
     normalizedOrderInputs,
     routeClassification,
+    itemHandlingFeasibility,
     referenceVersions,
     traceRows,
     finalize,

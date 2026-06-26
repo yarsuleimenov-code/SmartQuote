@@ -18,7 +18,13 @@ The first approved TO-BE contract slice is implemented:
 - Direct/specific-date flags, ZIP coverage readiness, distance source, and ZIP coefficients are audit outputs only.
 - No price impact is enabled.
 
-The next recommended slice is item handling / crew feasibility outputs behind the same contract, still without enabling new pricing until regression and business review are complete.
+The second approved TO-BE contract slice is implemented:
+
+- Item Handling / Crew Feasibility is captured in `calculationContract.itemHandlingFeasibility`.
+- Max single item weight, weight class, item handling factors, one-person eligibility, required crew from current item rules, hard access constraints, and crew review readiness are audit outputs only.
+- No price impact is enabled.
+
+The next recommended slice is capacity / vehicle fit contract outputs behind the same contract, still without enabling new pricing until regression and business review are complete.
 
 ## Current Project Shape
 

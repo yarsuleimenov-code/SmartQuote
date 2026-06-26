@@ -15,6 +15,7 @@ Current implementation baseline:
 - Masterdata normalization completed for Formula Sprint planning.
 - Formula Sprint Foundation adds a versioned calculation contract and normalized Formula ID trace without changing quote prices.
 - Normalized Order Inputs and Route Classification are captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
+- Item Handling / Crew Feasibility is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 
 Checkpoint history:
 
@@ -277,6 +278,8 @@ Formula Sprint Foundation:
 - emits `calculationContract.normalizedOrderInputs` for normalized customer/order, route, service, access, and item inputs;
 - emits `calculationContract.routeClassification` for route type, ZIP coverage readiness, distance source, and captured ZIP coefficients;
 - keeps Direct, specific-date, coverage status, and ZIP coefficient outputs audit-only with `priceImpactActive = false`;
+- emits `calculationContract.itemHandlingFeasibility` for max single item weight, weight class, item handling factors, one-person eligibility, hard access constraints, and crew review readiness;
+- keeps item handling and crew feasibility outputs audit-only with `priceImpactActive = false`;
 - uses snapshot version 2 while keeping old snapshots compatible;
 - is documented in `docs/formula-sprint-foundation.md`.
 
