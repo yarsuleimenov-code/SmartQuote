@@ -81,10 +81,120 @@
     return "bg-slate-100 text-slate-600";
   }
 
+  function traceCheck(row) {
+    const checks = {
+      pickupZone: "Pickup route zone",
+      deliveryZone: "Delivery route zone",
+      distance: "Interstate distance",
+      "stageBreakdown.pickup.total": "Pickup stage total",
+      "stageBreakdown.interstate.total": "Interstate stage total",
+      "stageBreakdown.delivery.total": "Delivery stage total",
+      "totals.routeCost": "Route cost",
+      "totals.rawPrice": "Price before rounding",
+      "totals.finalPrice": "Final customer price",
+      "calculationContract.routeClassification.routeType": "Route service type",
+      "calculationContract.routeClassification.pickup.coverage": "Pickup ZIP coverage",
+      "calculationContract.routeClassification.delivery.coverage": "Delivery ZIP coverage",
+      "calculationContract.routeClassification.distance.source": "Distance source",
+      "calculationContract.routeClassification.pickup.readiness": "Pickup route readiness",
+      "calculationContract.routeClassification.delivery.readiness": "Delivery route readiness",
+      "calculationContract.routeClassification.serviceFlags": "Direct / specific-date request",
+      "calculationContract.normalizedOrderInputs": "Order data captured",
+      "calculationContract.itemHandlingFeasibility.maxSingleItemWeight": "Heaviest single item",
+      "calculationContract.itemHandlingFeasibility.heaviestItemWeightClass": "Heaviest item class",
+      "calculationContract.itemHandlingFeasibility.onePersonEligible": "One-person handling eligibility",
+      "calculationContract.itemHandlingFeasibility.rows": "Item handling review",
+      "calculationContract.itemHandlingFeasibility.requiredCrewFromItems": "Crew required from items",
+      "calculationContract.itemHandlingFeasibility.hardAccessConstraint": "Access constraint review",
+      "calculationContract.itemHandlingFeasibility.crewReviewRequired": "Crew review requirement",
+      "calculationContract.capacityVehicleFit.selectedVehicle": "Selected vehicle",
+      "calculationContract.capacityVehicleFit.utilization.vehicleUtilization": "Vehicle volume utilization",
+      "calculationContract.capacityVehicleFit.utilization.payloadUtilization": "Vehicle payload utilization",
+      "calculationContract.capacityVehicleFit.fit.volumeFit": "Volume capacity fit",
+      "calculationContract.capacityVehicleFit.fit.weightFit": "Payload capacity fit",
+      "calculationContract.capacityVehicleFit.utilization.shipmentDensityLbPerCuFt": "Shipment density",
+      "calculationContract.capacityVehicleFit.utilization.vehicleDensityCapacityLbPerCuFt": "Vehicle density capacity",
+      "calculationContract.capacityVehicleFit.utilization.capacityConstraintType": "Capacity limiting factor",
+      "calculationContract.capacityVehicleFit.utilization.limitingCapacityFactor": "Capacity utilization limit",
+      "calculationContract.capacityVehicleFit.fit.capacityOverflowFlag": "Capacity overflow check",
+      "calculationContract.capacityVehicleFit.fit.dimensionalFit": "Dimensional fit",
+      "calculationContract.capacityVehicleFit.warnings.vehicleFitWarning": "Vehicle fit warning",
+      "calculationContract.capacityVehicleFit.recommendedVehicle": "Recommended vehicle",
+      "calculationContract.capacityVehicleFit.warnings.itemDoesNotFitVehicle": "Item fit warning",
+    };
+    return checks[row.input] || row.block || "Calculation check";
+  }
+
+  function traceStatusLabel(status) {
+    if (String(status).startsWith("Implemented")) return "Calculated";
+    if (String(status).includes("No price impact")) return "Audit only";
+    return status || "Review";
+  }
+
+  function traceBoolean(row, value) {
+    const path = String(row.input || "");
+    if (path.includes("volumeFit") || path.includes("weightFit")) return value ? "Pass" : "Review required";
+    if (path.includes("onePersonEligible")) return value ? "Eligible" : "Not eligible";
+    if (path.includes("crewReviewRequired")) return value ? "Review required" : "No review required";
+    if (path.includes("capacityOverflowFlag")) return value ? "Over capacity" : "No overflow";
+    if (path.includes("Warning") || path.includes("DoesNotFit")) return value ? "Review required" : "No warning";
+    return value ? "Yes" : "No";
+  }
+
+  function traceObjectResult(row, value) {
+    const path = String(row.input || "");
+    if (path.endsWith(".coverage")) {
+      const state = { covered: "Covered", disabled: "Excluded", approval_required: "Review required" }[value.coverageStatus] || "Coverage unknown";
+      return [value.zone || value.zip, state, `Coefficient ${number(value.priceCoefficient || 1).toFixed(2)}`].filter(Boolean).join(" | ");
+    }
+    if (path.endsWith(".serviceFlags")) {
+      return `${value.directRequested ? "Direct requested" : "No direct service"} | ${value.specificDateRequested ? "Specific date requested" : "No specific date"}`;
+    }
+    if (path.endsWith("normalizedOrderInputs")) {
+      const billable = number(value.items?.billableRows);
+      const pickup = value.route?.pickupZip ? "Pickup ZIP captured" : "Pickup ZIP missing";
+      const delivery = value.route?.deliveryZip ? "Delivery ZIP captured" : "Delivery ZIP missing";
+      return `${billable} billable item${billable === 1 ? "" : "s"} | ${pickup} | ${delivery}`;
+    }
+    if (path.endsWith(".rows")) return `${value.length || 0} item${value.length === 1 ? "" : "s"} reviewed`;
+    if (path.endsWith("hardAccessConstraint")) {
+      return `Pickup: ${value.pickup ? "review" : "clear"} | Delivery: ${value.delivery ? "review" : "clear"}`;
+    }
+    if (path.endsWith("selectedVehicle") || path.endsWith("recommendedVehicle")) return vehicleName(value);
+    return "Available in detailed analysis";
+  }
+
   function traceResult(row) {
     if (row.result === null || row.result === undefined) return "Not available";
-    if (typeof row.result === "object") return JSON.stringify(row.result);
-    return row.unit === "USD" ? currency(row.result) : `${row.result}${row.unit ? ` ${row.unit}` : ""}`;
+    if (typeof row.result === "object") return traceObjectResult(row, row.result);
+    if (typeof row.result === "boolean") return traceBoolean(row, row.result);
+    if (row.unit === "USD" || /^(PICK|INT|DEL|FINAL)-/.test(row.formulaId)) return currency(row.result);
+
+    const path = String(row.input || "");
+    if (path === "distance") return `${number(row.result).toLocaleString("en-US")} mi`;
+    if (path.includes("Weight")) return `${number(row.result).toLocaleString("en-US")} lb`;
+    if (path.includes("Crew")) return `${number(row.result)} people`;
+    if (path.includes("Utilization") || path.includes("limitingCapacityFactor")) return `${Math.round(number(row.result) * 100)}%`;
+    if (path.includes("Density")) return `${number(row.result).toFixed(2)} lb/cu ft`;
+
+    const labels = {
+      consolidated: "Consolidated route",
+      direct: "Direct service",
+      specific_date: "Specific service date",
+      approved_average_matrix: "Approved average matrix",
+      approved_average_pending_direct_mileage: "Direct mileage review needed",
+      covered: "Covered",
+      excluded: "Excluded",
+      review_required: "Review required",
+      volume_limited: "Volume limited",
+      weight_limited: "Weight limited",
+      not_available: "Not available",
+      heavy: "Heavy",
+      two_person_required: "Two people required",
+      standard: "Standard",
+      light: "Light",
+    };
+    return labels[row.result] || `${row.result}${row.unit ? ` ${row.unit}` : ""}`;
   }
 
   function buildSnapshot(quote, result) {
@@ -374,9 +484,9 @@
     byId("bdFormulaTrace").innerHTML = rows.map((row) => `
       <tr>
         <td class="px-3 py-3 align-top"><p class="font-mono font-semibold text-slate-700">${escapeHtml(row.formulaId)}</p><p class="mt-1 font-medium text-slate-800">${escapeHtml(row.block)}</p></td>
-        <td class="px-3 py-3 align-top"><p class="text-slate-700">${escapeHtml(row.input)}</p><span class="mt-2 inline-flex rounded px-2 py-1 ${traceSourceClass(row.source)}">${escapeHtml(row.source)}</span></td>
-        <td class="px-3 py-3 align-top"><p class="font-mono text-slate-600">${escapeHtml(row.formula)}</p><p class="mt-2 rounded bg-slate-100 px-2 py-1 font-semibold text-slate-800">${escapeHtml(traceResult(row))}</p></td>
-        <td class="px-3 py-3 align-top"><p class="text-slate-600">${escapeHtml(row.goesTo)}</p><span class="mt-2 inline-flex rounded px-2 py-1 font-semibold ${traceStatusClass(row.status)}">${escapeHtml(row.status)}</span></td>
+        <td class="px-3 py-3 align-top"><p class="font-medium text-slate-800">${escapeHtml(traceCheck(row))}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(row.source === "calculator result" ? "Current calculation" : "Contract audit check")}</p></td>
+        <td class="px-3 py-3 align-top"><p class="rounded bg-slate-100 px-2 py-1 font-semibold text-slate-800">${escapeHtml(traceResult(row))}</p></td>
+        <td class="px-3 py-3 align-top"><span class="inline-flex rounded px-2 py-1 font-semibold ${traceStatusClass(row.status)}">${escapeHtml(traceStatusLabel(row.status))}</span></td>
       </tr>
     `).join("");
   }

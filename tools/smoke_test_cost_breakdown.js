@@ -113,6 +113,8 @@ const breakdownJs = fs.readFileSync("js/breakdown.js", "utf8");
 assert(html.includes("js/costBreakdownAnalysis.js"), "Expected Cost Breakdown analysis adapter.");
 assert(breakdownJs.includes("stageReconciliation"), "Expected stage reconciliation rendering.");
 assert(breakdownJs.includes("renderFormulaTrace"), "Expected Formula Trace rendering.");
+assert(breakdownJs.includes("traceObjectResult"), "Expected Formula Trace object values to use business-friendly formatting.");
+assert(!breakdownJs.includes("JSON.stringify(row.result)"), "Formula Trace must not render raw JSON objects.");
 
 console.log(JSON.stringify({
   status: "passed",
