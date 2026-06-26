@@ -18,6 +18,7 @@ Current implementation baseline:
 - Item Handling / Crew Feasibility is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Capacity / Vehicle Fit is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Cost Breakdown displays contract-only Capacity / Vehicle Fit outputs and normalized Formula Trace rows without changing pricing.
+- Cost Breakdown displays Item Handling and Crew Feasibility as a contract-only admin review block without changing pricing.
 
 Checkpoint history:
 

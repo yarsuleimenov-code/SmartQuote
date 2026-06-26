@@ -451,6 +451,31 @@
     setText("bdRecommendedVehicle", capacity.recommendedVehicle);
   }
 
+  function renderItemHandling(result) {
+    const handling = window.CostBreakdownAnalysis.itemHandling(result);
+    setText("bdHandlingStatus", handling.status);
+    byId("bdHandlingStatus").className = `text-xs px-3 py-1 rounded-full font-semibold ${statusClass(handling.status)}`;
+    setText("bdHandlingRequiredCrew", handling.requiredCrew === "Not available" ? handling.requiredCrew : `${handling.requiredCrew} ${handling.requiredCrew === 1 ? "person" : "people"}`);
+    setText("bdHandlingHeaviestItem", handling.maxSingleItemWeight);
+    setText("bdHandlingWeightClass", handling.heaviestItemClass);
+    setText("bdHandlingOnePerson", handling.onePersonEligible);
+    setText("bdHandlingAccess", handling.accessConstraint);
+    setText("bdHandlingTotalPieces", handling.totalPieces === "Not available" ? handling.totalPieces : `${handling.totalPieces} pieces`);
+    setText("bdHandlingHeavyPieces", handling.heavyPieceCount === "Not available" ? handling.heavyPieceCount : `${handling.heavyPieceCount} pieces`);
+    byId("bdHandlingItems").innerHTML = handling.rows.length
+      ? handling.rows.map((item) => `
+          <tr>
+            <td class="px-4 py-3 font-medium text-slate-800">${escapeHtml(item.name || "Unnamed item")}</td>
+            <td class="px-4 py-3 text-slate-600">${escapeHtml(item.quantity)}</td>
+            <td class="px-4 py-3 text-slate-600">${escapeHtml(`${number(item.unitWeight)} lb`)}</td>
+            <td class="px-4 py-3 text-slate-600">${escapeHtml(item.handlingComplexity?.classification ? item.handlingComplexity.classification.replace(/_/g, " ") : "standard")}</td>
+            <td class="px-4 py-3 ${item.warning && item.warning !== "OK" ? "text-amber-700" : "text-emerald-700"}">${escapeHtml(item.warning || "OK")}</td>
+            <td class="px-4 py-3 text-slate-600">${item.onePersonEligibleByWeight ? "Eligible" : "Review"}</td>
+          </tr>
+        `).join("")
+      : `<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400">No item handling data available.</td></tr>`;
+  }
+
   function renderWarningDetails(presentation) {
     setText("bdReadiness", presentation.readiness.label);
     byId("bdReadiness").className = `text-xs px-3 py-1 rounded-full font-semibold ${statusClass(presentation.readiness.label)}`;
@@ -538,6 +563,7 @@
     renderWarnings(result.warnings || []);
     const presentation = window.CostBreakdownAnalysis.warningPresentation(quote, result, sourceType === "estimate");
     renderCapacityAnalysis(result, presentation);
+    renderItemHandling(result);
     renderWarningDetails(presentation);
     renderVehicleFit(result);
     renderFormulaTrace(result, snapshotMeta || {});

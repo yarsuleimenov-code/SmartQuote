@@ -112,6 +112,40 @@
     };
   }
 
+  function itemHandling(result) {
+    const handling = contract(result)?.itemHandlingFeasibility;
+    if (handling) {
+      const hardAccess = handling.hardAccessConstraint || {};
+      return {
+        status: handling.crewReviewRequired ? "Review Required" : "Ready",
+        requiredCrew: number(handling.requiredCrewFromItems),
+        maxSingleItemWeight: `${number(handling.maxSingleItemWeight)} lb`,
+        heaviestItemClass: label(handling.heaviestItemWeightClass),
+        onePersonEligible: handling.onePersonEligible ? "Eligible" : "Not eligible",
+        accessConstraint: hardAccess.combined
+          ? `Pickup: ${hardAccess.pickup ? "review" : "clear"} | Delivery: ${hardAccess.delivery ? "review" : "clear"}`
+          : "No access constraint",
+        totalPieces: number(handling.totalPieces),
+        heavyPieceCount: number(handling.heavyPieceCount),
+        rows: Array.isArray(handling.rows) ? handling.rows : [],
+        priceImpactActive: false,
+      };
+    }
+
+    return {
+      status: notAvailable,
+      requiredCrew: notAvailable,
+      maxSingleItemWeight: notAvailable,
+      heaviestItemClass: notAvailable,
+      onePersonEligible: notAvailable,
+      accessConstraint: notAvailable,
+      totalPieces: notAvailable,
+      heavyPieceCount: notAvailable,
+      rows: [],
+      priceImpactActive: false,
+    };
+  }
+
   function vehicleFit(result) {
     const fit = contract(result)?.capacityVehicleFit;
     if (fit) {
@@ -258,6 +292,7 @@
     stageReconciliation,
     warningPresentation,
     capacityAnalysis,
+    itemHandling,
     vehicleFit,
     formulaTrace,
   };

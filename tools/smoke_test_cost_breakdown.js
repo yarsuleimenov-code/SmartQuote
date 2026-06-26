@@ -67,6 +67,7 @@ const analysis = context.window.CostBreakdownAnalysis;
 const reconciliation = analysis.stageReconciliation(result);
 const presentation = analysis.warningPresentation(quote, result, true);
 const capacity = analysis.capacityAnalysis(result, presentation);
+const handling = analysis.itemHandling(result);
 const fit = analysis.vehicleFit(result);
 const trace = analysis.formulaTrace(result, {
   rounding: context.window.CalculatorVariables.settings.rounding,
@@ -84,6 +85,9 @@ assert(capacity.volumeUtilization !== "Not available", "Expected volume utilizat
 assert(capacity.payloadUtilization !== "Not available", "Expected payload utilization from calculation contract.");
 assert(capacity.warningStatus === "No price impact", "Expected capacity output to remain audit-only.");
 assert(capacity.selectedVehicle === result.vehicle.name, "Expected selected AS-IS vehicle to remain visible.");
+assert(handling.requiredCrew === result.requiredCrew, "Expected handling contract to expose required crew from items.");
+assert(handling.rows.length === result.items.length, "Expected handling contract to expose each calculated item.");
+assert(handling.status === "Review Required", "Expected heavy baseline items to require handling review.");
 assert(fit.volumeFit === true && fit.payloadFit === true, "Expected capacity fit outputs from calculation contract.");
 assert(fit.dimensionalFit === "not_available" && fit.doorOpeningFit === "not_available", "Expected body fit fields to remain unavailable.");
 assert(
@@ -105,6 +109,7 @@ const html = fs.readFileSync("breakdown.html", "utf8");
 const breakdownJs = fs.readFileSync("js/breakdown.js", "utf8");
 [
   "Capacity Analysis",
+  "Item Handling and Crew Feasibility",
   "Warning and Readiness Details",
   "Vehicle Fit Details",
   "Formula Trace",
@@ -113,6 +118,7 @@ const breakdownJs = fs.readFileSync("js/breakdown.js", "utf8");
 assert(html.includes("js/costBreakdownAnalysis.js"), "Expected Cost Breakdown analysis adapter.");
 assert(breakdownJs.includes("stageReconciliation"), "Expected stage reconciliation rendering.");
 assert(breakdownJs.includes("renderFormulaTrace"), "Expected Formula Trace rendering.");
+assert(breakdownJs.includes("renderItemHandling"), "Expected Item Handling rendering.");
 assert(breakdownJs.includes("traceObjectResult"), "Expected Formula Trace object values to use business-friendly formatting.");
 assert(!breakdownJs.includes("JSON.stringify(row.result)"), "Formula Trace must not render raw JSON objects.");
 
