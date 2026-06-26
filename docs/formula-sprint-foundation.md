@@ -83,6 +83,21 @@ Business rule for this slice:
 - handling score and crew review are audit/readiness outputs only;
 - hard access constraints are captured for future labor logic but do not change price.
 
+## Third TO-BE Contract Slice
+
+Capacity / Vehicle Fit is now emitted as a contract-only output:
+
+- `calculationContract.capacityVehicleFit`.
+
+This slice records the selected vehicle snapshot, recommended vehicle by current volume/payload capacity, total physical volume, total effective volume, total weight, vehicle utilization, payload utilization, shipment density, vehicle density capacity, limiting capacity factor, capacity constraint type, and capacity fit warnings.
+
+Business rule for this slice:
+
+- no pricing formula changes;
+- volume fit and payload fit use existing vehicle capacity and payload data;
+- dimensional fit, door opening fit, and equipment fit are marked `not_available` until governed vehicle body specs exist;
+- vehicle recommendation is audit/readiness data only and does not recalculate price.
+
 ## Snapshot Behavior
 
 New estimate snapshots use `snapshotVersion: 2` and preserve `calculationContract`.
@@ -98,4 +113,4 @@ Old snapshots remain readable because all new fields are additive and optional.
 
 ## Next Formula Sprint Slice
 
-Next recommended Formula Sprint slice: add capacity / vehicle fit contract outputs using existing vehicle references and current selected vehicle, still comparing against the baseline before enabling any price impact.
+Next recommended Formula Sprint slice: expose contract-only outputs in Cost Breakdown Formula Trace / Capacity Analysis, or add labor-time architecture outputs behind the contract. Do not enable price impact until business review approves the next formula block.

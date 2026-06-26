@@ -16,6 +16,7 @@ Current implementation baseline:
 - Formula Sprint Foundation adds a versioned calculation contract and normalized Formula ID trace without changing quote prices.
 - Normalized Order Inputs and Route Classification are captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Item Handling / Crew Feasibility is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
+- Capacity / Vehicle Fit is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 
 Checkpoint history:
 
@@ -280,6 +281,9 @@ Formula Sprint Foundation:
 - keeps Direct, specific-date, coverage status, and ZIP coefficient outputs audit-only with `priceImpactActive = false`;
 - emits `calculationContract.itemHandlingFeasibility` for max single item weight, weight class, item handling factors, one-person eligibility, hard access constraints, and crew review readiness;
 - keeps item handling and crew feasibility outputs audit-only with `priceImpactActive = false`;
+- emits `calculationContract.capacityVehicleFit` for selected vehicle, recommended vehicle by current volume/payload capacity, utilization, density, volume fit, payload fit, and capacity warnings;
+- keeps capacity and vehicle-fit outputs audit-only with `priceImpactActive = false`;
+- marks dimensional fit, door opening fit, and equipment fit as `not_available` until governed vehicle body specs exist;
 - uses snapshot version 2 while keeping old snapshots compatible;
 - is documented in `docs/formula-sprint-foundation.md`.
 

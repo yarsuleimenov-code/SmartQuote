@@ -24,7 +24,14 @@ The second approved TO-BE contract slice is implemented:
 - Max single item weight, weight class, item handling factors, one-person eligibility, required crew from current item rules, hard access constraints, and crew review readiness are audit outputs only.
 - No price impact is enabled.
 
-The next recommended slice is capacity / vehicle fit contract outputs behind the same contract, still without enabling new pricing until regression and business review are complete.
+The third approved TO-BE contract slice is implemented:
+
+- Capacity / Vehicle Fit is captured in `calculationContract.capacityVehicleFit`.
+- Selected vehicle snapshot, recommended vehicle by current volume/payload capacity, utilization, density, limiting capacity factor, volume fit, payload fit, and capacity warnings are audit outputs only.
+- Dimensional fit, door opening fit, and equipment fit are explicitly `not_available` until governed vehicle body specs exist.
+- No price impact is enabled.
+
+The next recommended slice is exposing the new contract-only outputs in Cost Breakdown Formula Trace / Capacity Analysis, or adding labor-time architecture outputs behind the contract. Do not enable new pricing until business review approves the next formula block.
 
 ## Current Project Shape
 

@@ -75,9 +75,22 @@ assert(contract?.itemHandlingFeasibility?.requiredCrewFromItems === 2, "Expected
 assert(contract?.itemHandlingFeasibility?.crewReviewRequired === true, "Expected heavy item crew review.");
 assert(contract?.itemHandlingFeasibility?.rows?.length === 2, "Expected item handling rows.");
 assert(contract?.itemHandlingFeasibility?.rows?.[0]?.handlingComplexity?.classification === "complex", "Expected complex handling classification.");
+assert(contract?.capacityVehicleFit?.priceImpactActive === false, "Expected capacity fit to have no price impact.");
+assert(contract?.capacityVehicleFit?.selectedVehicle?.name === baseline.vehicle.name, "Expected selected vehicle snapshot.");
+assert(contract?.capacityVehicleFit?.totals?.totalEffectiveVolume === baseline.totals.effectiveVolume, "Expected fit effective volume.");
+assert(contract?.capacityVehicleFit?.totals?.totalWeight === baseline.totals.totalWeight, "Expected fit total weight.");
+assert(contract?.capacityVehicleFit?.fit?.volumeFit === true, "Expected volume fit.");
+assert(contract?.capacityVehicleFit?.fit?.weightFit === true, "Expected payload fit.");
+assert(contract?.capacityVehicleFit?.fit?.dimensionalFit === "not_available", "Expected dimensional fit to remain unavailable.");
+assert(contract?.capacityVehicleFit?.utilization?.vehicleUtilization > 0, "Expected vehicle utilization.");
+assert(contract?.capacityVehicleFit?.utilization?.payloadUtilization > 0, "Expected payload utilization.");
+assert(contract?.capacityVehicleFit?.utilization?.limitingCapacityFactor >= contract.capacityVehicleFit.utilization.vehicleUtilization, "Expected limiting factor.");
+assert(contract?.capacityVehicleFit?.recommendedVehicle?.name, "Expected recommended vehicle by capacity.");
 assert(contract?.trace?.some((row) => row.formulaId === "FINAL-014" && row.value === baseline.totals.finalPrice), "Expected final price trace.");
 assert(contract?.trace?.some((row) => row.formulaId === "TBE-RTE-001" && row.status === "Contract only / No price impact"), "Expected route type contract trace.");
 assert(contract?.trace?.some((row) => row.formulaId === "TBE-HND-001" && row.status === "Contract only / No price impact"), "Expected item handling contract trace.");
+assert(contract?.trace?.some((row) => row.formulaId === "TBE-CAP-001" && row.status === "Contract only / No price impact"), "Expected capacity contract trace.");
+assert(contract?.trace?.some((row) => row.formulaId === "FIT-001-DIMENSIONAL-FIT" && row.value === "not_available"), "Expected dimensional fit unavailable trace.");
 assert(contract?.trace?.some((row) => row.formulaId === "TBE-WARN-003" && row.value === true), "Expected crew review warning trace.");
 assert(contract?.trace?.some((row) => row.formulaId === "SYS-001" && row.outputPath === "calculationContract.normalizedOrderInputs"), "Expected normalized input contract trace.");
 assert(contract?.trace?.every((row) => row.formulaId && row.outputPath), "Expected normalized trace rows.");
@@ -97,6 +110,9 @@ console.log(JSON.stringify({
   maxSingleItemWeight: contract.itemHandlingFeasibility.maxSingleItemWeight,
   heaviestItemWeightClass: contract.itemHandlingFeasibility.heaviestItemWeightClass,
   crewReviewRequired: contract.itemHandlingFeasibility.crewReviewRequired,
+  selectedVehicle: contract.capacityVehicleFit.selectedVehicle.name,
+  vehicleUtilization: contract.capacityVehicleFit.utilization.vehicleUtilization,
+  payloadUtilization: contract.capacityVehicleFit.utilization.payloadUtilization,
   baselineFinalPrice: baseline.totals.finalPrice,
   contractedFinalPrice: contracted.totals.finalPrice,
   blankFinalPrice: blankResult.totals.finalPrice,
