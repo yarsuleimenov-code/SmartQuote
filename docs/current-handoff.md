@@ -28,12 +28,16 @@ Current implementation baseline:
   - Broad editing remains disabled until versioning and benchmark preview are separately approved.
 - P0 operational masterdata mapping is implemented:
   - `tools/build_operational_masterdata.js` generates the mapping from normalized variable/reference registries.
-  - `variables.html` renders all 116 variables with only `Variable ID | Name | Active Value | Unit` plus search and section filtering; active values use gray, blue-text read-only cells.
+  - `variables.html` renders 52 business-owned values with only `Variable ID | Name | Active Value | Unit` plus search and section filtering; active values use gray, blue-text read-only cells. The full 116-variable registry remains available for Formula Trace and Formula Sprint governance.
+  - Variables retains primary labor/time and access inputs for approval: pickup coefficient `1.0`, delivery coefficient `0.8`, Direct Fixed Fee `$300`, Free Floor Count `3`, and COI Fee `$35`. Only COI is active in the current AS-IS calculator; the other new values do not affect price until their Formula Sprint contracts are activated.
+  - Pickup Time Curve is presented through business control points rather than `Loading Formula A/B`: anchor `35 cu ft / 40 min`, transition `80 cu ft / 73.13 min`, post-transition `0.5 min/cu ft`, and minimum pickup loading `40 min`. Legacy A/B remains internal for UAT compatibility.
+  - `variables.html` includes a read-only Pickup Time Curve matrix with volume bands, control points, and example minutes; it explains the active curve without introducing a matrix-based pricing model.
   - `references.html` renders operational reference tables on one open screen; runtime values use gray, blue-text read-only cells and unfilled datasets show an explicit empty state.
   - Vehicles remains an editable existing reference table inside the Vehicles group; no pricing formula is changed.
   - Service Areas use the prior approved test rows for NYC, NY Area, Boston, Washington DC, and CA South.
   - Crate Materials and Labor captures test-mode plywood material, 15% waste, and hired assembly labor at `$4.50/sq ft`; it is not active in quote pricing.
-  - Broker compensation is captured as `4%` of order margin and dispatcher compensation as `$4` per closed order; neither is active in quote pricing.
+  - Broker commission (`4%` of order margin) remains a Variables discussion input. The current quote uses `Dispatch Fee`; the separate dispatcher payout rule is deferred and hidden from the operational screen.
+  - Fuel prices are maintained in References -> Fuel Prices, not Variables. Repair Cost per volume/weight is the current damage/repair surcharge, not vehicle depreciation.
 
 Checkpoint history:
 

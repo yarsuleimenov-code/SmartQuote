@@ -4,6 +4,56 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const sourceDir = path.join(root, "docs", "formula-spec", "normalized");
 
+// Business-operational Variables screen: active AS-IS inputs plus approved
+// compensation and primary labor, handling, access, and time inputs for
+// business review. The full registry remains available for Formula Trace.
+const visibleVariableIds = new Set([
+  "VAR-001", "VAR-002", "VAR-003",
+  "VAR-006", "VAR-007", "VAR-008", "VAR-009", "VAR-010", "VAR-011", "VAR-012", "VAR-013", "VAR-014", "VAR-015", "VAR-016", "VAR-017", "VAR-019", "VAR-020", "VAR-021", "VAR-022", "VAR-023", "VAR-024", "VAR-025", "VAR-026", "VAR-027", "VAR-029", "VAR-030",
+  "VAR-TBE-002", "VAR-TBE-003", "VAR-TBE-004", "VAR-TBE-008", "VAR-TBE-009", "VAR-TBE-014", "VAR-TBE-015", "VAR-TBE-016", "VAR-TBE-017", "VAR-TBE-018",
+  "VAR-TIME-003", "VAR-TIME-010", "VAR-HND-001", "VAR-HND-002", "VAR-HND-003", "VAR-HND-004", "VAR-HND-005", "VAR-HND-007", "VAR-HND-010", "VAR-HND-013", "VAR-ACC-001", "VAR-ACC-003", "VAR-LAB-001", "VAR-LAB-002", "VAR-LAB-003", "VAR-LAB-004", "VAR-LAB-005",
+]);
+
+const businessUnits = {
+  directFixedFee: "USD/order",
+  pickupTimeCoefficients: "multiplier",
+  deliveryTimeCoefficients: "multiplier",
+  hourlyWageByRole: "USD/hour",
+  overtimeMultiplier: "multiplier",
+  payrollBurdenRate: "%",
+  timeEstimateBufferPct: "%",
+  onePersonMaxItemWeightLb: "lb",
+  twoPersonItemWeightThresholdLb: "lb",
+  awkwardItemLengthThresholdIn: "in",
+  itemMinimumHandlingMinutes: "minutes",
+  largeLightItemVolumeThresholdCuFt: "cu ft",
+  heavyPieceWeightThresholdLb: "lb",
+  helperActiveMinutesPerHeavyPiece: "minutes/piece",
+  accessHeavyImpactMinutes: "minutes",
+  freeFloorCount: "floors",
+  extraLaborMinimumHours: "hours",
+  minutesPerCuFt: "min/cu ft",
+  minutesPerLb: "min/lb",
+  pickupTimeMultiplier: "multiplier",
+  deliveryTimeMultiplier: "multiplier",
+  minimumHandlingMinutes: "minutes",
+  pickupCurveAnchorVolume: "cu ft",
+  pickupCurveAnchorMinutes: "minutes",
+  pickupCurveTransitionVolume: "cu ft",
+  pickupCurveTransitionMinutes: "minutes",
+  pickupPostThresholdRate: "min/cu ft",
+  minimumPickupLoadingMinutes: "minutes",
+};
+
+const businessVariablePresentation = {
+  "VAR-008": { name: "pickupCurveAnchorVolume", displayName: "Pickup Curve Anchor Volume", presentation: "pickupCurveAnchorVolume" },
+  "VAR-009": { name: "pickupCurveAnchorMinutes", displayName: "Pickup Curve Anchor Time", presentation: "pickupCurveAnchorMinutes" },
+  "VAR-010": { name: "pickupCurveTransitionVolume", displayName: "Pickup Curve Transition Volume", activeKey: "loadingVolumeThresholdCuFt" },
+  "VAR-011": { name: "pickupCurveTransitionMinutes", displayName: "Pickup Curve Transition Time", activeKey: "loadingThresholdMinutes" },
+  "VAR-014": { name: "minimumPickupLoadingMinutes", displayName: "Minimum Pickup Loading Time", activeKey: "minLoadingMinutes" },
+  "VAR-TIME-010": { name: "pickupPostThresholdRate", displayName: "Pickup Time After Transition", presentation: "pickupPostThresholdRate" },
+};
+
 function parseCsv(content) {
   const rows = [];
   let row = [];
@@ -79,14 +129,19 @@ function activeKey(name) {
 }
 
 function normalizeVariable(record) {
+  const presentation = businessVariablePresentation[record["Canonical Variable ID"]] || {};
+  const name = presentation.name || record.Name;
   return {
     id: record["Canonical Variable ID"],
-    name: record.Name,
+    name,
+    displayName: presentation.displayName || "",
     section: variableSection(record),
-    activeKey: activeKey(record.Name),
+    activeKey: presentation.activeKey || activeKey(record.Name),
+    presentation: presentation.presentation || "",
     exampleValue: record["Current / Example Value"],
-    unit: record["Unit / Type"],
+    unit: businessUnits[name] || record["Unit / Type"],
     readiness: record["Data Readiness"],
+    visibleInVariables: visibleVariableIds.has(record["Canonical Variable ID"]),
   };
 }
 

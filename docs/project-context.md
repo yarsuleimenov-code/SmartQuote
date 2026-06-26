@@ -48,7 +48,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Normalized Formula Sprint registries are stored under `docs/formula-spec/normalized/`; the review workbook is `outputs/masterdata-normalization/SmartQuote_Masterdata_Normalization.xlsx`.
 - `js/calculationContract.js` provides the versioned Formula Sprint input/output boundary and normalized Formula ID trace while preserving the UAT-approved calculation outputs.
 - The next masterdata sprint keeps two operational screens: Variables for concise active parameter control and References for business lookup tables. A separate System Registry is not planned because it has no current broker or operations value.
-- Operational masterdata mapping is generated from the normalized registries in `js/operationalMasterdata.js` and `docs/operational-masterdata-mapping.csv`. Variables exposes all 116 records in seven concise sections; References exposes all 40 records in six operational groups.
+- Operational masterdata mapping is generated from the normalized registries in `js/operationalMasterdata.js` and `docs/operational-masterdata-mapping.csv`. Variables exposes 52 business-owned values, including primary labor/time and access inputs, while retaining all 116 records for Formula Trace; References exposes all 40 records in six operational groups, including Fuel Prices.
 
 ## Current Implementation Status
 
@@ -79,6 +79,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - `My Drafts`, `My Estimates`, `Cost Breakdown`, and `Estimate Document` are linked to local snapshots.
 - `My Drafts` and `My Estimates` include compact Storage / Backup controls and local storage health warnings.
 - Quote Draft warning presentation is normalized through `js/warningPresentation.js`.
+- Pickup Time Curve is a hybrid AS-IS contract: a smooth rational curve to `80 cu ft`, then `0.5 min/cu ft`. Variables presents business control points instead of technical A/B coefficients; legacy A/B remains internal until governed curve editing is approved.
 - Quote readiness is presentation-only until blocking/approval governance is approved.
 - Vehicle Fit / Capacity TO-BE outputs are defined in `docs/vehicle-fit-capacity-output-contract.md`; the frontend must not infer missing density or dimensional-fit values.
 - Admin ZIP Coverage uses generated runtime data derived from the external `coverage_zip_route_zone_map.xlsx` source, with ZIP search, zone filtering, and locally saved coverage statuses.

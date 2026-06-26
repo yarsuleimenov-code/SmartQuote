@@ -5,1046 +5,1394 @@
     {
       "id": "VAR-001",
       "name": "rounding",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "rounding",
+      "presentation": "",
       "exampleValue": "10",
       "unit": "USD",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-002",
       "name": "repairCostPerCuFt",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "repairCostPerCuFt",
+      "presentation": "",
       "exampleValue": "0.1832",
       "unit": "USD/cu ft",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-003",
       "name": "repairCostPerLb",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "repairCostPerLb",
+      "presentation": "",
       "exampleValue": "0.043",
       "unit": "USD/lb",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-002",
       "name": "marginRate",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "marginRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-003",
       "name": "brokerFeeRate",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "brokerFeeRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-006",
       "name": "storagePerCuFtPerDay",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "storagePerCuFtPerDay",
+      "presentation": "",
       "exampleValue": "0.03333333333",
       "unit": "USD/cu ft/day",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-007",
       "name": "packagingPerShipment",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "packagingPerShipment",
+      "presentation": "",
       "exampleValue": "6.32",
       "unit": "USD/order",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-008",
-      "name": "loadingFormulaA",
+      "name": "pickupCurveAnchorVolume",
+      "displayName": "Pickup Curve Anchor Volume",
       "section": "Labor and Time",
       "activeKey": "loadingFormulaA",
+      "presentation": "pickupCurveAnchorVolume",
       "exampleValue": "205.57",
-      "unit": "coefficient",
-      "readiness": "Ready"
+      "unit": "cu ft",
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-009",
-      "name": "loadingFormulaB",
+      "name": "pickupCurveAnchorMinutes",
+      "displayName": "Pickup Curve Anchor Time",
       "section": "Labor and Time",
       "activeKey": "loadingFormulaB",
+      "presentation": "pickupCurveAnchorMinutes",
       "exampleValue": "144.87",
-      "unit": "coefficient",
-      "readiness": "Ready"
+      "unit": "minutes",
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-010",
-      "name": "loadingVolumeThresholdCuFt",
+      "name": "pickupCurveTransitionVolume",
+      "displayName": "Pickup Curve Transition Volume",
       "section": "Labor and Time",
       "activeKey": "loadingVolumeThresholdCuFt",
+      "presentation": "",
       "exampleValue": "80",
       "unit": "cu ft",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-011",
-      "name": "loadingThresholdMinutes",
+      "name": "pickupCurveTransitionMinutes",
+      "displayName": "Pickup Curve Transition Time",
       "section": "Labor and Time",
       "activeKey": "loadingThresholdMinutes",
+      "presentation": "",
       "exampleValue": "73.13",
       "unit": "minutes",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-012",
       "name": "unloadingPerCuFtMinute",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "unloadingPerCuFtMinute",
+      "presentation": "",
       "exampleValue": "0.5",
       "unit": "min/cu ft",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-013",
       "name": "packagingLoadingUnloadingPerLbMinute",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "packagingLoadingUnloadingPerLbMinute",
+      "presentation": "",
       "exampleValue": "0.2",
       "unit": "min/lb",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-014",
-      "name": "minLoadingMinutes",
+      "name": "minimumPickupLoadingMinutes",
+      "displayName": "Minimum Pickup Loading Time",
       "section": "Labor and Time",
       "activeKey": "minLoadingMinutes",
+      "presentation": "",
       "exampleValue": "40",
       "unit": "minutes",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-015",
       "name": "wagePerMinute",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "wagePerMinute",
+      "presentation": "",
       "exampleValue": "0.4777088333",
       "unit": "USD/min/person",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-016",
       "name": "pickupWagePerMile",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "pickupWagePerMile",
+      "presentation": "",
       "exampleValue": "0.6369451111",
       "unit": "USD/mile/person",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-017",
       "name": "interstateDriverCostPerMile",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "interstateDriverCostPerMile",
+      "presentation": "",
       "exampleValue": "0.56825",
       "unit": "USD/mile",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-014",
       "name": "managementFee",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "managementFee",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-019",
       "name": "dispatchFee",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "dispatchFee",
+      "presentation": "",
       "exampleValue": "3.5",
       "unit": "USD/stage",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-020",
       "name": "coiFee",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "coiFee",
+      "presentation": "",
       "exampleValue": "25",
       "unit": "USD/point",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-021",
       "name": "stairsFeePerFloor",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "stairsFeePerFloor",
+      "presentation": "",
       "exampleValue": "18",
       "unit": "USD/floor",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-022",
       "name": "narrowAccessFee",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "narrowAccessFee",
+      "presentation": "",
       "exampleValue": "20",
       "unit": "USD/point",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-023",
       "name": "longCarryFeePer50Ft",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "longCarryFeePer50Ft",
+      "presentation": "",
       "exampleValue": "12",
       "unit": "USD/50 ft",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-024",
       "name": "priorityDateFee",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "priorityDateFee",
+      "presentation": "",
       "exampleValue": "75",
       "unit": "USD/order",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-025",
       "name": "exclusiveDeliveryMultiplier",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "exclusiveDeliveryMultiplier",
+      "presentation": "",
       "exampleValue": "1.35",
       "unit": "multiplier",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-026",
       "name": "extraLaborRate",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "extraLaborRate",
+      "presentation": "",
       "exampleValue": "50",
       "unit": "USD/hour/person",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-027",
       "name": "interstateVehicleName",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "interstateVehicleName",
+      "presentation": "",
       "exampleValue": "Penske 26 ft",
       "unit": "vehicle name",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-028",
       "name": "fuel currentAvg / fuelSurchargePct",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "fuelPrices",
+      "presentation": "",
       "exampleValue": "Regular 4.555 / Diesel 5.652; surcharge 10%",
       "unit": "USD/gal, %",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-029",
       "name": "protectionPlans.Full Coverage",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "protectionPlans.Full Coverage",
+      "presentation": "",
       "exampleValue": "rate 0.025; fixedFee 15",
       "unit": "rate, USD",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-030",
       "name": "packagingRates",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "packagingRates",
+      "presentation": "",
       "exampleValue": "None 0; Blanket Wrap 8; Bubble 18; TV Box 35; Custom Crate 95",
       "unit": "USD/item",
-      "readiness": "Ready"
+      "readiness": "Ready",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-001",
       "name": "roundingIncrement",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "rounding",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-004",
       "name": "directFixedFee",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "directFixedFee",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "USD/order",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-005",
       "name": "directMileageFee",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "directMileageFee",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-006",
       "name": "remoteZoneCoefficient",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "remoteZoneCoefficient",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-007",
       "name": "bulkyVolumeThreshold",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "bulkyVolumeThreshold",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-008",
       "name": "pickupTimeCoefficients",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "pickupTimeCoefficients",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable set",
-      "readiness": "Test Assumption"
+      "unit": "multiplier",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-009",
       "name": "deliveryTimeCoefficients",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "deliveryTimeCoefficients",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable set",
-      "readiness": "Test Assumption"
+      "unit": "multiplier",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-010",
       "name": "crateMaterialPrice",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "crateMaterialPrice",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-011",
       "name": "crateWasteCoefficient",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "crateWasteCoefficient",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-012",
       "name": "storageRate",
+      "displayName": "",
       "section": "Protection, Storage and Packaging",
       "activeKey": "storagePerCuFtPerDay",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-013",
       "name": "fvpRate / fvpFixedFee",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "protectionPlans.Full Coverage",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-015",
       "name": "hourlyWageByRole",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "hourlyWageByRole",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Reference",
-      "readiness": "Test Assumption"
+      "unit": "USD/hour",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-016",
       "name": "overtimeMultiplier",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "overtimeMultiplier",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "multiplier",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-017",
       "name": "payrollBurdenRate",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "payrollBurdenRate",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "%",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-018",
       "name": "brokerCommissionRate",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "brokerCommissionRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TBE-019",
       "name": "dispatcherPayoutRate",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "dispatcherPayoutRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-020",
       "name": "minContributionMarginPct",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "minContributionMarginPct",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-021",
       "name": "overheadAllocationRate",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "overheadAllocationRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-022",
       "name": "routeCapacityRate",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "routeCapacityRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-023",
       "name": "bulkyPremiumMultiplier",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "bulkyPremiumMultiplier",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-024",
       "name": "locationTypeTimeMultiplier",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "locationTypeTimeMultiplier",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-025",
       "name": "locationTypeFixedMinutes",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "locationTypeFixedMinutes",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-026",
       "name": "locationTypeCrewImpact",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "locationTypeCrewImpact",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-027",
       "name": "parkingLoadingComplexityMinutes",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "parkingLoadingComplexityMinutes",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-028",
       "name": "warehouseEfficiencyFactor",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "warehouseEfficiencyFactor",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TBE-029",
       "name": "auctionHandlingMinutes",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "auctionHandlingMinutes",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-001",
       "name": "timeDataConfidenceScore",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "timeDataConfidenceScore",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-002",
       "name": "minimumTimeSampleSize",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "minimumTimeSampleSize",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-003",
       "name": "timeEstimateBufferPct",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "timeEstimateBufferPct",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "%",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-001",
       "name": "onePersonMaxItemWeightLb",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "onePersonMaxItemWeightLb",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "lb",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-002",
       "name": "twoPersonItemWeightThresholdLb",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "twoPersonItemWeightThresholdLb",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "lb",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-003",
       "name": "awkwardItemLengthThresholdIn",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "awkwardItemLengthThresholdIn",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "in",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-004",
       "name": "itemMinimumHandlingMinutes",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "itemMinimumHandlingMinutes",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "unit": "minutes",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-005",
       "name": "largeLightItemVolumeThresholdCuFt",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "largeLightItemVolumeThresholdCuFt",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "cu ft",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-006",
       "name": "itemHandlingScoreThreshold",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "itemHandlingScoreThreshold",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-HND-007",
       "name": "heavyPieceWeightThresholdLb",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "heavyPieceWeightThresholdLb",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "lb",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-008",
       "name": "onePersonPieceLimit",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "onePersonPieceLimit",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-HND-009",
       "name": "minutesPerPieceByHandlingClass",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "minutesPerPieceByHandlingClass",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-HND-010",
       "name": "helperActiveMinutesPerHeavyPiece",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "helperActiveMinutesPerHeavyPiece",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "unit": "minutes/piece",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-011",
       "name": "partialHelperBillingPolicy",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "partialHelperBillingPolicy",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Governance variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-HND-012",
       "name": "hardAccessConstraintRule",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "hardAccessConstraintRule",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Rule set",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-HND-013",
       "name": "accessHeavyImpactMinutes",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "accessHeavyImpactMinutes",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "unit": "minutes",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-HND-014",
       "name": "physicalFeasibilityReviewThreshold",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "physicalFeasibilityReviewThreshold",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Rule set",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-001",
       "name": "selectedVehicleCargoHeightIn",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "selectedVehicleCargoHeightIn",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived reference value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-002",
       "name": "sideTransportAllowed",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "sideTransportAllowed",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Item/reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-003",
       "name": "sideTransportApprovalRequired",
+      "displayName": "",
       "section": "Warnings and Approval",
       "activeKey": "sideTransportApprovalRequired",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Governance variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-004",
       "name": "cargoInteriorLengthIn",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "cargoInteriorLengthIn",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-005",
       "name": "cargoInteriorWidthIn",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "cargoInteriorWidthIn",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-006",
       "name": "cargoInteriorHeightIn",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "cargoInteriorHeightIn",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-007",
       "name": "doorOpeningWidthIn",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "doorOpeningWidthIn",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-008",
       "name": "doorOpeningHeightIn",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "doorOpeningHeightIn",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-VEH-009",
       "name": "vehicleEquipmentFlags",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "vehicleEquipmentFlags",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-CAP-001",
       "name": "selectedVehicleCargoVolumeCuFt",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "selectedVehicleCargoVolumeCuFt",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived reference value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-CAP-002",
       "name": "selectedVehiclePayloadLb",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "selectedVehiclePayloadLb",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived reference value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-CAP-003",
       "name": "fullRouteCapacityCost",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "fullRouteCapacityCost",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-CAP-004",
       "name": "interstateCostPerCuFt",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "interstateCostPerCuFt",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-CAP-005",
       "name": "interstateCostPerLb",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "interstateCostPerLb",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-CAP-006",
       "name": "capacityPricingMethod",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "capacityPricingMethod",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Governance variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-006",
       "name": "loadingCurveVolumeThresholdCuFt",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "loadingCurveVolumeThresholdCuFt",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-007",
       "name": "loadingCurveNumerator",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "loadingCurveNumerator",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-008",
       "name": "loadingCurveDenominatorOffset",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "loadingCurveDenominatorOffset",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-009",
       "name": "loadingCurveBaseMinutes",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "loadingCurveBaseMinutes",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-TIME-010",
-      "name": "loadingPostThresholdMinutesPerCuFt",
+      "name": "pickupPostThresholdRate",
+      "displayName": "Pickup Time After Transition",
       "section": "Labor and Time",
       "activeKey": "loadingPostThresholdMinutesPerCuFt",
+      "presentation": "pickupPostThresholdRate",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "min/cu ft",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-TIME-011",
       "name": "unloadingTimeCoefficient",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "unloadingTimeCoefficient",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-ACC-001",
       "name": "freeFloorCount",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "freeFloorCount",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "floors",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-ACC-002",
       "name": "stairsFeePerBillableFloor",
+      "displayName": "",
       "section": "Access and Service",
       "activeKey": "stairsFeePerBillableFloor",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-ACC-003",
       "name": "extraLaborMinimumHours",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "extraLaborMinimumHours",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "hours",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-ACC-004",
       "name": "extraLaborHourlyRate",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "extraLaborHourlyRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-WARN-001",
       "name": "blockingWarningFlag",
+      "displayName": "",
       "section": "Warnings and Approval",
       "activeKey": "blockingWarningFlag",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Rule set",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-MRG-001",
       "name": "minimumContributionMarginRate",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "minimumContributionMarginRate",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Governance variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-MRG-002",
       "name": "discountApplicationOrder",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "discountApplicationOrder",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Governance variable",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-MRG-004",
       "name": "dispatcherPayoutRule",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "dispatcherPayoutRule",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Rule set",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-RTE-001",
       "name": "zoneMultiplier",
+      "displayName": "",
       "section": "Pricing and Margin",
       "activeKey": "zoneMultiplier",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Variable / Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-LAB-001",
       "name": "minutesPerCuFt",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "minutesPerCuFt",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "min/cu ft",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-LAB-002",
       "name": "minutesPerLb",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "minutesPerLb",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "min/lb",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-LAB-003",
       "name": "pickupTimeMultiplier",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "pickupTimeMultiplier",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "multiplier",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-LAB-004",
       "name": "deliveryTimeMultiplier",
+      "displayName": "",
       "section": "Labor and Time",
       "activeKey": "deliveryTimeMultiplier",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "multiplier",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-LAB-005",
       "name": "minimumHandlingMinutes",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "minimumHandlingMinutes",
+      "presentation": "",
       "exampleValue": "",
-      "unit": "Variable",
-      "readiness": "Test Assumption"
+      "unit": "minutes",
+      "readiness": "Test Assumption",
+      "visibleInVariables": true
     },
     {
       "id": "VAR-FIT-001",
       "name": "maxItemLength",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "maxItemLength",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-FIT-002",
       "name": "maxItemWidth",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "maxItemWidth",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-FIT-003",
       "name": "maxItemHeight",
+      "displayName": "",
       "section": "Item Handling",
       "activeKey": "maxItemHeight",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-FIT-004",
       "name": "vehicleInteriorLength",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "vehicleInteriorLength",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-FIT-005",
       "name": "vehicleInteriorWidth",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "vehicleInteriorWidth",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-FIT-006",
       "name": "vehicleInteriorHeight",
+      "displayName": "",
       "section": "Capacity and Vehicle Economics",
       "activeKey": "vehicleInteriorHeight",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Reference field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-WARN-002",
       "name": "warningSeverity",
+      "displayName": "",
       "section": "Warnings and Approval",
       "activeKey": "warningSeverity",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Rule set field",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     },
     {
       "id": "VAR-WARN-003",
       "name": "managerApprovalRequired",
+      "displayName": "",
       "section": "Warnings and Approval",
       "activeKey": "managerApprovalRequired",
+      "presentation": "",
       "exampleValue": "",
       "unit": "Derived value",
-      "readiness": "Test Assumption"
+      "readiness": "Test Assumption",
+      "visibleInVariables": false
     }
   ],
   "references": [
