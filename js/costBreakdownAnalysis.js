@@ -32,6 +32,7 @@
   function traceBlock(formulaId) {
     if (String(formulaId).startsWith("TBE-RTE") || String(formulaId).startsWith("WARN-005") || String(formulaId).startsWith("WARN-006")) return "Route Contract";
     if (String(formulaId).startsWith("TBE-HND") || String(formulaId).startsWith("TBE-WARN")) return "Item Handling";
+    if (String(formulaId).startsWith("TBE-FEE")) return "Protection Plan";
     if (String(formulaId).startsWith("TBE-CAP")) return "Capacity Analysis";
     if (String(formulaId).startsWith("FIT") || String(formulaId).startsWith("WARN-003")) return "Vehicle Fit";
     if (String(formulaId).startsWith("TBE-VEH")) return "Vehicle Reference";

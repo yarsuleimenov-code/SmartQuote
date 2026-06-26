@@ -59,7 +59,7 @@ const versions = JSON.parse(localStorage.getItem("variablesVersions"));
 const vehicles = JSON.parse(localStorage.getItem("vehicles"));
 const fuelPrices = JSON.parse(localStorage.getItem("fuelPrices"));
 
-if (currentVariables.formulaVersion !== "excel-derived-v0.1") {
+if (currentVariables.formulaVersion !== "formula-sprint-fvp-v1") {
   throw new Error(`Unexpected formulaVersion ${currentVariables.formulaVersion}.`);
 }
 

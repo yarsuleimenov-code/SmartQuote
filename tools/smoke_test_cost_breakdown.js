@@ -106,6 +106,10 @@ assert(
   "Expected capacity trace to come from calculation contract.",
 );
 assert(
+  trace.some((row) => row.formulaId === "TBE-FEE-002" && row.status === "Implemented / Formula Sprint"),
+  "Expected FVP Formula Sprint trace row.",
+);
+assert(
   trace.some((row) => row.formulaId === "FIT-001-DIMENSIONAL-FIT" && row.result === "not_available"),
   "Expected dimensional fit trace to remain explicitly unavailable.",
 );

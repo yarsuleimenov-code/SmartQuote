@@ -31,7 +31,15 @@ The third approved TO-BE contract slice is implemented:
 - Dimensional fit, door opening fit, and equipment fit are explicitly `not_available` until governed vehicle body specs exist.
 - No price impact is enabled.
 
-The next recommended slice is exposing the new contract-only outputs in Cost Breakdown Formula Trace / Capacity Analysis, or adding labor-time architecture outputs behind the contract. Do not enable new pricing until business review approves the next formula block.
+The first controlled price-impact Formula Sprint block is implemented in test mode:
+
+- `TBE-FEE-002` aggregates FVP declared values at the order level.
+- The FVP fixed fee is applied once per order, not once per protected item.
+- The active formula version is `formula-sprint-fvp-v1`.
+- RV remains included and DV remains future-ready without new pricing logic.
+- Frozen estimate snapshots preserve their saved result and variables snapshot.
+
+The next planned sprint is operational masterdata coverage. It does not activate another price formula: it maps all approved variables and references into concise Variables and References screens before `TBE-FEE-001` Custom Crate pricing is considered.
 
 ## Current Project Shape
 
@@ -272,7 +280,7 @@ Checks:
 - browser smoke test where runtime is available.
 - syntax check for JS modules.
 
-### Phase 8 - Interactive Variables MVP
+### Phase 8 - Operational Variables And References
 
 Files:
 
@@ -282,23 +290,25 @@ Files:
 - `js/variables.js`
 - `tools/smoke_test_calculator.js`
 
-Recommended first editable scope:
+Variables is a concise operational control screen. Each row contains only:
 
-- margin rate;
-- rounding increment;
-- priority date fee;
-- storage rate;
-- access fees;
-- packaging rates;
-- protection plans.
+```text
+Variable ID | Name | Active Value | Unit
+```
 
-Do not make vehicle parameters, route matrix, or effective-volume multipliers editable until benchmark impact preview is stable.
+Variables is grouped into Pricing and Margin, Labor and Time, Access and Service, Item Handling, Capacity and Vehicle Economics, Protection/Storage/Packaging, and Warnings/Approval.
+
+References is grouped into Route and Coverage, Vehicles, Items and Handling, Services, and People and Operations. Reference tables expose only operational columns needed to inspect and maintain the relevant entity.
+
+The screens must not show formula dependency payloads, Current/Proposed comparisons, or a separate System Registry. Formula architecture stays in `formulas.html`, Cost Breakdown, documentation, and tests.
+
+Do not enable broad editing until controlled versioning and benchmark preview are approved. Existing supported reference editing remains unchanged.
 
 Result:
 
-- Admin can preview before/after pricing impact against accepted benchmark cases.
-- Admin can save a controlled override set.
-- New drafts use current variables.
+- All approved variables and references have an operational screen/section assignment.
+- Active values, test assumptions, missing data, and legacy compatibility are explicit in the masterdata mapping.
+- New datasets required by a later Formula Sprint block can be introduced read-only before pricing activation.
 - Existing estimate snapshots stay frozen.
 
 Verification:

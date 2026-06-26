@@ -47,6 +47,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - `formulas.html` is a generated read-only catalog of the unified 225-formula architecture from AS-IS and TO-BE masterdata, not an executable pricing engine.
 - Normalized Formula Sprint registries are stored under `docs/formula-spec/normalized/`; the review workbook is `outputs/masterdata-normalization/SmartQuote_Masterdata_Normalization.xlsx`.
 - `js/calculationContract.js` provides the versioned Formula Sprint input/output boundary and normalized Formula ID trace while preserving the UAT-approved calculation outputs.
+- The next masterdata sprint keeps two operational screens: Variables for concise active parameter control and References for business lookup tables. A separate System Registry is not planned because it has no current broker or operations value.
 
 ## Current Implementation Status
 
@@ -60,6 +61,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - If both total weight and effective volume are `0`, item reference price is `0`.
 - `Item Ref. Price` must not be reused as customer/legal Declared Value.
 - Broker-facing Insurance language is now Protection Plan. `RV` maps to legacy Basic Liability behavior, `FVP` maps to legacy Full Coverage behavior, and `DV` is future-ready data capture only.
+- Formula Sprint `TBE-FEE-002` is active in test mode: FVP cost is `SUM(FVP declared value) x rate + fixed fee once per order`. The formula version is `formula-sprint-fvp-v1`; RV remains included and DV remains future-ready without new price logic.
 - DV must not use `Item Ref. Price` as Declared Value; new protection pricing logic is deferred.
 - Quote Draft does not show a separate Crate checkbox; custom crate handling should be captured through Packaging = Custom Crate while legacy `crated` data remains compatible.
 - Estimate Document is customer-facing and must stay free of margin, operational cost, fuel internals, vehicle cost internals, and management/dispatch details.
@@ -88,12 +90,11 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 
 ## Next Business Handoff Priorities
 
-1. CEO approval of P0 TO-BE formula decisions.
-2. Warning UI Contract and Quote Readiness states.
-3. Vehicle Fit / Capacity output contract and broker summary.
-4. Capacity Analysis and Formula Trace in Cost Breakdown after output approval.
-5. Governed Variables/References with benchmark preview before activation.
-6. ZIP/service-area management only after reference cleanup and ownership approval.
+1. Complete operational masterdata mapping for all 116 variables and 40 references.
+2. Expand Variables into concise read-only operational sections: `Variable ID | Name | Active Value | Unit`.
+3. Expand References into compact operational lookup tables without formula dependency data.
+4. Add data required for the next approved Formula Sprint block, `TBE-FEE-001 Custom Crate`, as read-only/test-mode masterdata before activating its formula.
+5. Keep broad governed editing and benchmark preview deferred until a separate approval.
 
 The implementation order from the June 19 Calculator meeting is documented in:
 

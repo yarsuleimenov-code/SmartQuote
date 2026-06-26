@@ -105,7 +105,9 @@
     const legacyInsurance = legacyInsuranceType(item);
     const protection = protectionPlans[legacyInsurance] || protectionPlans["Basic Liability"];
     const packaging = (packagingRates[item.packaging] || 0) * number(item.qty, 1);
-    const insurance = protection.rate > 0 ? number(item.declaredValue) * protection.rate + protection.fixedFee : 0;
+    const insurance = legacyInsurance === "Full Coverage" && protection.rate > 0
+      ? number(item.declaredValue) * protection.rate
+      : 0;
     const storage = effectiveVolume * number(item.storageDays) * settings.storagePerCuFtPerDay;
     const warning = itemWarning(item, volume, totalWeight);
     const crewNeed = warning.includes("2 people") || warning.toLowerCase().includes("heavy") ? 2 : 1;
@@ -123,6 +125,24 @@
       storageCost: money(storage),
       warning,
       crewNeed,
+    };
+  }
+
+  function fvpProtectionSummary(items) {
+    const fullCoverage = window.CalculatorVariables.protectionPlans["Full Coverage"] || { rate: 0, fixedFee: 0 };
+    const fvpItems = items.filter((item) => item.insurance === "Full Coverage");
+    const declaredValue = fvpItems.reduce((sum, item) => sum + number(item.declaredValue), 0);
+    const rate = number(fullCoverage.rate);
+    const fixedFee = fvpItems.length ? number(fullCoverage.fixedFee) : 0;
+    const variableCost = declaredValue * rate;
+
+    return {
+      itemCount: fvpItems.length,
+      declaredValue: money(declaredValue),
+      rate,
+      fixedFee: money(fixedFee),
+      variableCost: money(variableCost),
+      totalCost: money(variableCost + fixedFee),
     };
   }
 
@@ -267,7 +287,8 @@
     const effectiveVolume = calculatedItems.reduce((sum, item) => sum + item.effectiveVolume, 0);
     const totalWeight = calculatedItems.reduce((sum, item) => sum + item.totalWeight, 0);
     const packaging = calculatedItems.reduce((sum, item) => sum + item.packagingCost, 0) + (calculatedItems.length ? settings.packagingPerShipment : 0);
-    const insurance = calculatedItems.reduce((sum, item) => sum + item.insuranceCost, 0);
+    const fvpProtection = fvpProtectionSummary(calculatedItems);
+    const insurance = fvpProtection.totalCost;
     const storage = calculatedItems.reduce((sum, item) => sum + item.storageCost, 0);
     const vehicle = getVehicle(effectiveVolume, totalWeight);
     const interstateVehicle = getVehicleByName(settings.interstateVehicleName, vehicle);
@@ -362,6 +383,12 @@
         additionalCharges: money(additionalCharges),
         packaging: money(packaging),
         insurance: money(insurance),
+        fvpItemCount: fvpProtection.itemCount,
+        fvpDeclaredValue: fvpProtection.declaredValue,
+        fvpRate: fvpProtection.rate,
+        fvpFixedFee: fvpProtection.fixedFee,
+        fvpVariableCost: fvpProtection.variableCost,
+        fvpProtectionCost: fvpProtection.totalCost,
         storage: money(storage),
         accessFees: money(accessFees),
         optionFees: money(optionFees),

@@ -100,6 +100,7 @@
       "calculationContract.routeClassification.delivery.readiness": "Delivery route readiness",
       "calculationContract.routeClassification.serviceFlags": "Direct / specific-date request",
       "calculationContract.normalizedOrderInputs": "Order data captured",
+      "calculationContract.protectionPricing": "FVP protection pricing",
       "calculationContract.itemHandlingFeasibility.maxSingleItemWeight": "Heaviest single item",
       "calculationContract.itemHandlingFeasibility.heaviestItemWeightClass": "Heaviest item class",
       "calculationContract.itemHandlingFeasibility.onePersonEligible": "One-person handling eligibility",
@@ -161,6 +162,10 @@
       const pickup = value.route?.pickupZip ? "Pickup ZIP captured" : "Pickup ZIP missing";
       const delivery = value.route?.deliveryZip ? "Delivery ZIP captured" : "Delivery ZIP missing";
       return `${billable} billable item${billable === 1 ? "" : "s"} | ${pickup} | ${delivery}`;
+    }
+    if (path.endsWith("protectionPricing")) {
+      if (!value.fvpItemCount) return "No FVP items selected";
+      return `Declared value ${currency(value.declaredValue)} | Rate ${(number(value.rate) * 100).toFixed(2)}% | Fixed fee ${currency(value.fixedFee)} once | Total ${currency(value.totalCost)}`;
     }
     if (path.endsWith(".rows")) return `${value.length || 0} item${value.length === 1 ? "" : "s"} reviewed`;
     if (path.endsWith("hardAccessConstraint")) {

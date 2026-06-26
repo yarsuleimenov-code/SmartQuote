@@ -185,7 +185,7 @@ assert(
 const savedEstimate = context.window.CalculatorStorage.loadEstimateSnapshot();
 
 assert(savedEstimate?.snapshotId, "Expected generated estimate snapshotId.");
-assert(savedEstimate.formulaVersion === "excel-derived-v0.1", "Expected estimate formulaVersion.");
+assert(savedEstimate.formulaVersion === "formula-sprint-fvp-v1", "Expected estimate formulaVersion.");
 assert(savedEstimate.variablesVersion === "baseline-2026-06-02", "Expected estimate variablesVersion.");
 assert(savedEstimate.variablesSnapshot?.variablesVersion === "baseline-2026-06-02", "Expected variablesSnapshot.");
 assert(savedEstimate.calculationContract?.traceVersion === "normalized-formula-trace-v1", "Expected trace metadata.");

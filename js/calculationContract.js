@@ -273,6 +273,19 @@
     };
   }
 
+  function protectionPricing(result) {
+    const totals = result?.totals || {};
+    return {
+      priceImpactActive: true,
+      fvpItemCount: number(totals.fvpItemCount),
+      declaredValue: number(totals.fvpDeclaredValue),
+      rate: number(totals.fvpRate),
+      fixedFee: number(totals.fvpFixedFee),
+      variableCost: number(totals.fvpVariableCost),
+      totalCost: number(totals.fvpProtectionCost),
+    };
+  }
+
   function vehicleSnapshot(vehicle) {
     if (!vehicle) return null;
     return {
@@ -372,7 +385,7 @@
     };
   }
 
-  function traceRows(input, result, normalizedInputs, classification, handling, capacityFit) {
+  function traceRows(input, result, normalizedInputs, classification, handling, capacityFit, protection) {
     const totals = result?.totals || {};
     const stages = result?.stageBreakdown || {};
     const baselineRows = [
@@ -388,6 +401,14 @@
     ].map((row) => ({
       ...row,
       status: "Implemented / Baseline",
+      inputRecordId: input.localId || input.estimateId || null,
+    }));
+
+    const formulaSprintRows = [
+      { formulaId: "TBE-FEE-002", outputPath: "calculationContract.protectionPricing", value: protection },
+    ].map((row) => ({
+      ...row,
+      status: "Implemented / Formula Sprint",
       inputRecordId: input.localId || input.estimateId || null,
     }));
 
@@ -427,7 +448,7 @@
       inputRecordId: input.localId || input.estimateId || null,
     }));
 
-    return baselineRows.concat(contractOnlyRows);
+    return baselineRows.concat(formulaSprintRows, contractOnlyRows);
   }
 
   function finalize(input, result) {
@@ -436,6 +457,7 @@
     const classification = routeClassification(input, result);
     const handling = itemHandlingFeasibility(input, result);
     const capacityFit = capacityVehicleFit(input, result);
+    const protection = protectionPricing(result);
     return {
       ...result,
       calculationContract: {
@@ -450,7 +472,8 @@
         routeClassification: classification,
         itemHandlingFeasibility: handling,
         capacityVehicleFit: capacityFit,
-        trace: traceRows(input, result, normalizedInputs, classification, handling, capacityFit),
+        protectionPricing: protection,
+        trace: traceRows(input, result, normalizedInputs, classification, handling, capacityFit, protection),
       },
     };
   }

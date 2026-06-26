@@ -19,6 +19,13 @@ Current implementation baseline:
 - Capacity / Vehicle Fit is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Cost Breakdown displays contract-only Capacity / Vehicle Fit outputs and normalized Formula Trace rows without changing pricing. Formula Trace reads Formula ID expressions from the generated masterdata catalog for CFO/CEO review.
 - Cost Breakdown displays Item Handling and Crew Feasibility as a contract-only admin review block without changing pricing.
+- Formula Sprint `TBE-FEE-002` is active in test mode as `formula-sprint-fvp-v1`: FVP declared values are aggregated and the FVP fixed fee is applied once per order. The implementation checklist and UAT cases are in `docs/formula-sprint-readiness.md`.
+- The next approved UI sprint is Operational Variables and References:
+  - Variables remains concise and operational: `Variable ID | Name | Active Value | Unit`.
+  - References remains concise business lookup data, grouped by operational domain.
+  - Formula dependencies, payloads, and Current/Proposed comparisons do not belong on either operational screen.
+  - A separate System Registry is intentionally not planned at this stage.
+  - Broad editing remains disabled until versioning and benchmark preview are separately approved.
 
 Checkpoint history:
 

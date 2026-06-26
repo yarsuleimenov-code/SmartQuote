@@ -118,11 +118,11 @@
   ];
 
   window.CalculatorVariables = {
-    formulaVersion: "excel-derived-v0.1",
+    formulaVersion: "formula-sprint-fvp-v1",
     variablesVersion: "baseline-2026-06-02",
-    updatedAt: "2026-06-02T00:00:00.000+05:00",
+    updatedAt: "2026-06-26T00:00:00.000+05:00",
     updatedBy: "System",
-    changeNotes: "UAT-approved runtime baseline captured before Interactive Variables MVP.",
+    changeNotes: "Formula Sprint FVP update: Full Coverage fixed fee is applied once per order.",
     settings: {
       insuranceRate: 0.025,
       insuranceFixedFee: 15,
