@@ -18,6 +18,10 @@
       .replace(/'/g, "&#039;");
   }
 
+  function variableCell(value) {
+    return `<span class="inline-flex min-w-[64px] rounded-md border border-slate-200 bg-slate-50 px-2 py-1 font-medium text-blue-700">${safeText(value)}</span>`;
+  }
+
   function vehicleIdFromName(name) {
     return String(name || "")
       .toLowerCase()
@@ -35,6 +39,13 @@
       fuelType: "Diesel",
       mpg: 0,
       passengerCapacity: 1,
+      cargoInteriorLengthIn: 0,
+      cargoInteriorWidthIn: 0,
+      cargoInteriorHeightIn: 0,
+      doorOpeningWidthIn: 0,
+      doorOpeningHeightIn: 0,
+      rampFlag: false,
+      liftGateFlag: false,
       maintenanceCostPerMile: 0,
       active: true,
     };
@@ -103,6 +114,13 @@
       fuelType: formValue("vehicleFuelType"),
       mpg: number(formValue("vehicleMpg")),
       passengerCapacity: number(formValue("vehiclePassengerCapacity"), 1),
+      cargoInteriorLengthIn: number(formValue("vehicleInteriorLength")),
+      cargoInteriorWidthIn: number(formValue("vehicleInteriorWidth")),
+      cargoInteriorHeightIn: number(formValue("vehicleInteriorHeight")),
+      doorOpeningWidthIn: number(formValue("vehicleDoorWidth")),
+      doorOpeningHeightIn: number(formValue("vehicleDoorHeight")),
+      rampFlag: document.getElementById("vehicleRamp")?.checked === true,
+      liftGateFlag: document.getElementById("vehicleLiftGate")?.checked === true,
       maintenanceCostPerMile: number(formValue("vehicleMaintenanceCost")),
       active: document.getElementById("vehicleActive")?.checked !== false,
     });
@@ -118,6 +136,13 @@
     document.getElementById("vehicleFuelType").value = record.fuelType || "Diesel";
     document.getElementById("vehicleMpg").value = record.mpg || "";
     document.getElementById("vehiclePassengerCapacity").value = record.passengerCapacity || 1;
+    document.getElementById("vehicleInteriorLength").value = record.cargoInteriorLengthIn || "";
+    document.getElementById("vehicleInteriorWidth").value = record.cargoInteriorWidthIn || "";
+    document.getElementById("vehicleInteriorHeight").value = record.cargoInteriorHeightIn || "";
+    document.getElementById("vehicleDoorWidth").value = record.doorOpeningWidthIn || "";
+    document.getElementById("vehicleDoorHeight").value = record.doorOpeningHeightIn || "";
+    document.getElementById("vehicleRamp").checked = record.rampFlag === true;
+    document.getElementById("vehicleLiftGate").checked = record.liftGateFlag === true;
     document.getElementById("vehicleMaintenanceCost").value = record.maintenanceCostPerMile || "";
     document.getElementById("vehicleActive").checked = record.active !== false;
     document.getElementById("vehicleFormTitle").textContent = editingId ? "Edit Vehicle" : "Add Vehicle";
@@ -136,13 +161,16 @@
           <div class="font-semibold text-slate-800">${safeText(vehicle.vehicleName)}</div>
           <div class="text-xs text-slate-400">${safeText(vehicle.vehicleId)}</div>
         </td>
-        <td class="px-4 py-3">${safeText(vehicle.category)}</td>
-        <td class="px-4 py-3">${number(vehicle.capacityCuFt).toLocaleString()} cu ft</td>
-        <td class="px-4 py-3">${number(vehicle.maxWeightLb).toLocaleString()} lb</td>
-        <td class="px-4 py-3">${safeText(vehicle.fuelType)}</td>
-        <td class="px-4 py-3">${number(vehicle.mpg).toFixed(2)}</td>
-        <td class="px-4 py-3">${number(vehicle.passengerCapacity)}</td>
-        <td class="px-4 py-3">$${number(vehicle.maintenanceCostPerMile).toFixed(3)}</td>
+        <td class="px-4 py-3">${variableCell(vehicle.category)}</td>
+        <td class="px-4 py-3">${variableCell(`${number(vehicle.capacityCuFt).toLocaleString()} cu ft`)}</td>
+        <td class="px-4 py-3">${variableCell(`${number(vehicle.maxWeightLb).toLocaleString()} lb`)}</td>
+        <td class="px-4 py-3">${variableCell(vehicle.fuelType)}</td>
+        <td class="px-4 py-3">${variableCell(number(vehicle.mpg).toFixed(2))}</td>
+        <td class="px-4 py-3">${variableCell(number(vehicle.passengerCapacity))}</td>
+        <td class="px-4 py-3">${variableCell(vehicle.cargoInteriorLengthIn && vehicle.cargoInteriorWidthIn && vehicle.cargoInteriorHeightIn ? `${number(vehicle.cargoInteriorLengthIn)} x ${number(vehicle.cargoInteriorWidthIn)} x ${number(vehicle.cargoInteriorHeightIn)} in` : "Not configured")}</td>
+        <td class="px-4 py-3">${variableCell(vehicle.doorOpeningWidthIn && vehicle.doorOpeningHeightIn ? `${number(vehicle.doorOpeningWidthIn)} x ${number(vehicle.doorOpeningHeightIn)} in` : "Not configured")}</td>
+        <td class="px-4 py-3">${variableCell(`${vehicle.rampFlag ? "Ramp" : "-"}${vehicle.liftGateFlag ? `${vehicle.rampFlag ? ", " : ""}Lift gate` : ""}`)}</td>
+        <td class="px-4 py-3">${variableCell(`$${number(vehicle.maintenanceCostPerMile).toFixed(3)}`)}</td>
         <td class="px-4 py-3">
           <span class="px-2 py-1 rounded-full text-xs font-semibold ${vehicle.active === false ? "bg-slate-100 text-slate-500" : "bg-emerald-100 text-emerald-700"}">
             ${vehicle.active === false ? "Inactive" : "Active"}
@@ -166,7 +194,7 @@
       </div>
 
       <div class="overflow-x-auto border border-slate-200 rounded-xl">
-        <table class="w-full text-sm min-w-[1180px]">
+        <table class="w-full text-sm min-w-[1500px]">
           <thead class="bg-slate-50 text-slate-500">
             <tr>
               <th class="text-left px-4 py-3">Vehicle</th>
@@ -176,6 +204,9 @@
               <th class="text-left px-4 py-3">Fuel Type</th>
               <th class="text-left px-4 py-3">MPG</th>
               <th class="text-left px-4 py-3">Passenger Capacity</th>
+              <th class="text-left px-4 py-3">Cargo Interior, in</th>
+              <th class="text-left px-4 py-3">Door Opening, in</th>
+              <th class="text-left px-4 py-3">Equipment</th>
               <th class="text-left px-4 py-3">Maintenance / Mile</th>
               <th class="text-left px-4 py-3">Active</th>
               <th class="text-right px-4 py-3">Actions</th>
@@ -199,8 +230,13 @@
           <label><span class="text-xs text-slate-400">MPG</span><input id="vehicleMpg" type="number" min="0.1" step="0.01" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Passenger Capacity</span><input id="vehiclePassengerCapacity" type="number" min="1" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Maintenance / Mile</span><input id="vehicleMaintenanceCost" type="number" min="0" step="0.001" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+          <label><span class="text-xs text-slate-400">Cargo Interior Length, in</span><input id="vehicleInteriorLength" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+          <label><span class="text-xs text-slate-400">Cargo Interior Width, in</span><input id="vehicleInteriorWidth" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+          <label><span class="text-xs text-slate-400">Cargo Interior Height, in</span><input id="vehicleInteriorHeight" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+          <label><span class="text-xs text-slate-400">Door Opening Width, in</span><input id="vehicleDoorWidth" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+          <label><span class="text-xs text-slate-400">Door Opening Height, in</span><input id="vehicleDoorHeight" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
         </div>
-        <label class="mt-4 inline-flex items-center gap-2 text-sm"><input id="vehicleActive" type="checkbox" class="accent-teal-500" checked /> Active</label>
+        <div class="mt-4 flex flex-wrap gap-5 text-sm"><label class="inline-flex items-center gap-2"><input id="vehicleActive" type="checkbox" class="accent-teal-500" checked /> Active</label><label class="inline-flex items-center gap-2"><input id="vehicleRamp" type="checkbox" class="accent-teal-500" /> Ramp</label><label class="inline-flex items-center gap-2"><input id="vehicleLiftGate" type="checkbox" class="accent-teal-500" /> Lift gate</label></div>
         <div class="mt-4 flex justify-end gap-2">
           <button id="saveVehicleButton" type="button" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">Save Vehicle</button>
         </div>

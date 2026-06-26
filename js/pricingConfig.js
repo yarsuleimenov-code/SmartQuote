@@ -11,7 +11,7 @@
     calculationLogs: "calculationLogs",
   };
   const baseline = cloneData(window.CalculatorVariables || {});
-  const vehiclesSeedVersion = "business-seed-2026-06-02-v2";
+  const vehiclesSeedVersion = "business-seed-2026-06-26-v3";
 
   function cloneData(value) {
     return JSON.parse(JSON.stringify(value || {}));
@@ -87,6 +87,14 @@
       mpg: Number(raw.mpg || 0),
       calculationMpg: calculationMpg || Number(raw.mpg || 0),
       passengerCapacity: Math.max(Number(raw.passengerCapacity || 1), 1),
+      cargoInteriorLengthIn: Number(raw.cargoInteriorLengthIn || 0),
+      cargoInteriorWidthIn: Number(raw.cargoInteriorWidthIn || 0),
+      cargoInteriorHeightIn: Number(raw.cargoInteriorHeightIn || 0),
+      doorOpeningWidthIn: Number(raw.doorOpeningWidthIn || 0),
+      doorOpeningHeightIn: Number(raw.doorOpeningHeightIn || 0),
+      rampFlag: raw.rampFlag === true,
+      liftGateFlag: raw.liftGateFlag === true,
+      bodySpecsStatus: raw.bodySpecsStatus || "Not configured",
       maintenanceCostPerMile,
       maintenancePerMile: maintenanceCostPerMile,
       active: raw.active !== false,
@@ -129,6 +137,14 @@
       mpg: seed.mpg,
       calculationMpg: seed.calculationMpg,
       passengerCapacity: seed.passengerCapacity,
+      cargoInteriorLengthIn: seed.cargoInteriorLengthIn,
+      cargoInteriorWidthIn: seed.cargoInteriorWidthIn,
+      cargoInteriorHeightIn: seed.cargoInteriorHeightIn,
+      doorOpeningWidthIn: seed.doorOpeningWidthIn,
+      doorOpeningHeightIn: seed.doorOpeningHeightIn,
+      rampFlag: seed.rampFlag,
+      liftGateFlag: seed.liftGateFlag,
+      bodySpecsStatus: seed.bodySpecsStatus,
       maintenanceCostPerMile: seed.maintenanceCostPerMile,
       totalPriceReference: seed.totalPriceReference,
       milesLastReference: seed.milesLastReference,
@@ -268,6 +284,8 @@
 
   function applySavedConfig() {
     mergeInto(window.CalculatorVariables, readSavedConfig());
+    // Formula version is owned by the deployed calculation contract, not by a legacy local value override.
+    window.CalculatorVariables.formulaVersion = baseline.formulaVersion;
     applyVehiclesToRuntime();
     return window.CalculatorVariables;
   }

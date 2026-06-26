@@ -88,10 +88,13 @@ assert(vehicles.length >= 5, "Expected seeded vehicle list to include at least f
 assert(sprinter?.fuelType === "Diesel", "Expected Sprinter 488 to use Diesel.");
 assert(box16?.fuelType === "Regular", "Expected Box truck 16 ft to be a real Regular vehicle.");
 assert(sprinter?.category === "Van", "Expected Sprinter category Van.");
+assert(sprinter?.cargoInteriorLengthIn === 173, "Expected Sprinter cargo length seed.");
+assert(sprinter?.doorOpeningWidthIn === 61, "Expected Sprinter door width seed.");
 assert(box16?.category === "Box Truck", "Expected Box truck 16 category Box Truck.");
 assert(box16?.passengerCapacity === 3, "Expected Box truck 16 passenger capacity 3.");
 assert(sprinter?.passengerCapacity === 2, "Expected Sprinter passenger capacity 2.");
 assert(box16?.mpg === 14, "Expected Box truck 16 business MPG 14.");
+assert(box16?.cargoInteriorLengthIn === 192, "Expected Box truck 16 cargo length seed.");
 assert(box16?.calculationMpg !== box16?.mpg, "Expected Box truck 16 calculationMpg to remain separate from business MPG.");
 assert(enterprise?.vehicleName === "Enterprise 26 ft", "Expected Enterprise 26 ft seed vehicle.");
 assert(enterprise?.mpg === 9.47 && enterprise?.passengerCapacity === 3, "Expected Enterprise business MPG 9.47 and passenger capacity 3.");
@@ -156,6 +159,7 @@ console.log(JSON.stringify({
   sprinterFuelType: sprinter.fuelType,
   sprinterCategory: sprinter.category,
   sprinterPassengerCapacity: sprinter.passengerCapacity,
+  sprinterCargoInterior: `${sprinter.cargoInteriorLengthIn} x ${sprinter.cargoInteriorWidthIn} x ${sprinter.cargoInteriorHeightIn}`,
   boxTruck16Category: box16.category,
   boxTruck16PassengerCapacity: box16.passengerCapacity,
   boxTruck16BusinessMpg: box16.mpg,

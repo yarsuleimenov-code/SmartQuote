@@ -48,6 +48,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Normalized Formula Sprint registries are stored under `docs/formula-spec/normalized/`; the review workbook is `outputs/masterdata-normalization/SmartQuote_Masterdata_Normalization.xlsx`.
 - `js/calculationContract.js` provides the versioned Formula Sprint input/output boundary and normalized Formula ID trace while preserving the UAT-approved calculation outputs.
 - The next masterdata sprint keeps two operational screens: Variables for concise active parameter control and References for business lookup tables. A separate System Registry is not planned because it has no current broker or operations value.
+- Operational masterdata mapping is generated from the normalized registries in `js/operationalMasterdata.js` and `docs/operational-masterdata-mapping.csv`. Variables exposes all 116 records in seven concise sections; References exposes all 40 records in six operational groups.
 
 ## Current Implementation Status
 

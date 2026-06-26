@@ -26,6 +26,14 @@ Current implementation baseline:
   - Formula dependencies, payloads, and Current/Proposed comparisons do not belong on either operational screen.
   - A separate System Registry is intentionally not planned at this stage.
   - Broad editing remains disabled until versioning and benchmark preview are separately approved.
+- P0 operational masterdata mapping is implemented:
+  - `tools/build_operational_masterdata.js` generates the mapping from normalized variable/reference registries.
+  - `variables.html` renders all 116 variables with only `Variable ID | Name | Active Value | Unit` plus search and section filtering; active values use gray, blue-text read-only cells.
+  - `references.html` renders operational reference tables on one open screen; runtime values use gray, blue-text read-only cells and unfilled datasets show an explicit empty state.
+  - Vehicles remains an editable existing reference table inside the Vehicles group; no pricing formula is changed.
+  - Service Areas use the prior approved test rows for NYC, NY Area, Boston, Washington DC, and CA South.
+  - Crate Materials and Labor captures test-mode plywood material, 15% waste, and hired assembly labor at `$4.50/sq ft`; it is not active in quote pricing.
+  - Broker compensation is captured as `4%` of order margin and dispatcher compensation as `$4` per closed order; neither is active in quote pricing.
 
 Checkpoint history:
 
