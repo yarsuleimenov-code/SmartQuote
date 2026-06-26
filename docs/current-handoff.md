@@ -17,7 +17,7 @@ Current implementation baseline:
 - Normalized Order Inputs and Route Classification are captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Item Handling / Crew Feasibility is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
 - Capacity / Vehicle Fit is captured in the calculation contract as audit-only TO-BE outputs; no price impact is active.
-- Cost Breakdown displays contract-only Capacity / Vehicle Fit outputs and normalized Formula Trace rows without changing pricing.
+- Cost Breakdown displays contract-only Capacity / Vehicle Fit outputs and normalized Formula Trace rows without changing pricing. Formula Trace reads Formula ID expressions from the generated masterdata catalog for CFO/CEO review.
 - Cost Breakdown displays Item Handling and Crew Feasibility as a contract-only admin review block without changing pricing.
 
 Checkpoint history:

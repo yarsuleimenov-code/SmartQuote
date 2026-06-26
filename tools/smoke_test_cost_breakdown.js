@@ -42,6 +42,7 @@ vm.createContext(context);
   "js/mockData.js",
   "js/calculator.js",
   "js/calculationContract.js",
+  "js/formulaMasterData.js",
   "js/warningPresentation.js",
   "js/costBreakdownAnalysis.js",
 ].forEach((file) => {
@@ -95,6 +96,10 @@ assert(
   "Expected frozen stored ZIP coverage metadata to drive estimate warning review.",
 );
 assert(trace.some((row) => row.formulaId === "PICK-007" && row.result > 0), "Expected pickup AS-IS trace row.");
+assert(
+  trace.some((row) => row.formulaId === "DEL-007" && row.formula === "Delivery Mileage + Delivery Labor + Delivery Handling + Management Fee + Dispatch Fee"),
+  "Expected Formula Trace to use the masterdata delivery formula.",
+);
 assert(trace.some((row) => row.formulaId === "FINAL-014" && row.result === result.totals.finalPrice), "Expected final price trace row.");
 assert(
   trace.some((row) => row.formulaId === "TBE-CAP-001" && row.status === "Contract only / No price impact"),
@@ -118,6 +123,8 @@ const breakdownJs = fs.readFileSync("js/breakdown.js", "utf8");
 assert(html.includes("js/costBreakdownAnalysis.js"), "Expected Cost Breakdown analysis adapter.");
 assert(breakdownJs.includes("stageReconciliation"), "Expected stage reconciliation rendering.");
 assert(breakdownJs.includes("renderFormulaTrace"), "Expected Formula Trace rendering.");
+assert(breakdownJs.includes("traceFormula"), "Expected Formula Trace to render calculation logic.");
+assert(html.includes("Calculation Logic"), "Expected Formula Trace calculation logic column.");
 assert(breakdownJs.includes("renderItemHandling"), "Expected Item Handling rendering.");
 assert(breakdownJs.includes("traceObjectResult"), "Expected Formula Trace object values to use business-friendly formatting.");
 assert(!breakdownJs.includes("JSON.stringify(row.result)"), "Formula Trace must not render raw JSON objects.");

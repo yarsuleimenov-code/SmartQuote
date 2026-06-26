@@ -42,6 +42,11 @@
     return "Calculation Contract";
   }
 
+  function formulaExpression(formulaId) {
+    const catalog = Array.isArray(window.FormulaMasterData) ? window.FormulaMasterData : [];
+    return catalog.find((formula) => formula.id === formulaId)?.formula || "Formula definition unavailable";
+  }
+
   function stageReconciliation(result) {
     const stages = result?.stageBreakdown || {};
     const pickup = number(stages.pickup?.total);
@@ -181,7 +186,7 @@
         block: traceBlock(row.formulaId),
         input: row.outputPath,
         source: row.status?.startsWith("Implemented") ? "calculator result" : "calculationContract",
-        formula: row.status?.startsWith("Implemented") ? "Baseline calculator output" : "Contract-only output; no price impact",
+        formula: formulaExpression(row.formulaId),
         result: row.value,
         unit: "",
         goesTo: row.outputPath,

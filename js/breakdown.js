@@ -131,6 +131,12 @@
     return status || "Review";
   }
 
+  function traceFormula(row) {
+    return row.formula && row.formula !== "Formula definition unavailable"
+      ? row.formula
+      : "Formula definition unavailable";
+  }
+
   function traceBoolean(row, value) {
     const path = String(row.input || "");
     if (path.includes("volumeFit") || path.includes("weightFit")) return value ? "Pass" : "Review required";
@@ -510,6 +516,7 @@
       <tr>
         <td class="px-3 py-3 align-top"><p class="font-mono font-semibold text-slate-700">${escapeHtml(row.formulaId)}</p><p class="mt-1 font-medium text-slate-800">${escapeHtml(row.block)}</p></td>
         <td class="px-3 py-3 align-top"><p class="font-medium text-slate-800">${escapeHtml(traceCheck(row))}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(row.source === "calculator result" ? "Current calculation" : "Contract audit check")}</p></td>
+        <td class="px-3 py-3 align-top"><p class="font-mono text-xs leading-5 text-slate-600">${escapeHtml(traceFormula(row))}</p></td>
         <td class="px-3 py-3 align-top"><p class="rounded bg-slate-100 px-2 py-1 font-semibold text-slate-800">${escapeHtml(traceResult(row))}</p></td>
         <td class="px-3 py-3 align-top"><span class="inline-flex rounded px-2 py-1 font-semibold ${traceStatusClass(row.status)}">${escapeHtml(traceStatusLabel(row.status))}</span></td>
       </tr>
