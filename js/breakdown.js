@@ -8,6 +8,11 @@
     if (element) element.textContent = value;
   }
 
+  function setWidth(id, value) {
+    const element = byId(id);
+    if (element) element.style.width = `${Math.max(0, Number(value) || 0)}%`;
+  }
+
   function currency(value) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -361,7 +366,9 @@
   }
 
   function renderWarnings(warnings) {
-    byId("bdWarnings").innerHTML = warnings.length
+    const list = byId("bdWarnings");
+    if (!list) return;
+    list.innerHTML = warnings.length
       ? warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")
       : "<li>No item warnings</li>";
   }
@@ -532,6 +539,26 @@
     const totals = result.totals;
     const nonRouteOperationalCost = totals.operationalCost - totals.routeCost;
     const displayedAdditionalCharges = Number(totals.additionalCharges || 0) + Number(totals.manualAdjustment || 0) + Number(totals.extraLaborCost || 0);
+    const stageBreakdown = result.stageBreakdown || {};
+    const pickupStageTotal = number(stageBreakdown.pickup?.total);
+    const interstateStageTotal = number(stageBreakdown.interstate?.total);
+    const deliveryStageTotal = number(stageBreakdown.delivery?.total);
+    const stageSubtotal = pickupStageTotal + interstateStageTotal + deliveryStageTotal;
+    const rawPrice = number(totals.rawPrice);
+    const finalPrice = number(totals.finalPrice);
+    const roundingDelta = finalPrice - rawPrice;
+    const otherLegacyCharges = displayedAdditionalCharges
+      - number(totals.storage)
+      - number(totals.insurance)
+      - number(totals.accessFees)
+      - number(totals.extraLaborCost);
+    const visualTotal = Math.max(
+      1,
+      number(totals.operationalCost)
+        + displayedAdditionalCharges
+        + number(totals.margin)
+        + Math.max(0, roundingDelta)
+    );
     byId("bdSourceType").value = sourceType || "estimate";
     const selectedRecordId = populateRecordSelect(sourceType || "estimate", recordId);
     byId("bdRecordSelect").value = selectedRecordId || "";
@@ -543,33 +570,47 @@
     setText("bdOperationalCost", currency(totals.operationalCost));
     setText("bdAdditionalCharges", currency(displayedAdditionalCharges));
     setText("bdMargin", currency(totals.margin));
+    setText("bdRawPrice", currency(rawPrice));
     setText("bdFinalPrice", currency(totals.finalPrice));
+    setText("bdStoryOperational", currency(totals.operationalCost));
+    setText("bdStoryAdditional", currency(displayedAdditionalCharges));
+    setText("bdStoryMargin", currency(totals.margin));
+    setText("bdStoryRaw", currency(rawPrice));
+    setText("bdStoryFinal", currency(finalPrice));
+    setText("bdStoryFormula", `${currency(totals.operationalCost)} + ${currency(displayedAdditionalCharges)} + ${currency(totals.margin)} = ${currency(rawPrice)} -> rounded to ${currency(finalPrice)}`);
+    setText("bdRoundingDelta", currency(roundingDelta));
+    setText("bdRoundingDeltaLabel", `Rounding Delta ${currency(roundingDelta)}`);
+    setWidth("bdBarOperational", (number(totals.operationalCost) / visualTotal) * 100);
+    setWidth("bdBarAdditional", (displayedAdditionalCharges / visualTotal) * 100);
+    setWidth("bdBarMargin", (number(totals.margin) / visualTotal) * 100);
+    setWidth("bdBarRounding", (Math.max(0, roundingDelta) / visualTotal) * 100);
     setText("bdVehicle", result.vehicle?.name || "-");
+    setText("bdCompositionOperational", currency(totals.operationalCost));
+    setText("bdCompositionAdditional", currency(displayedAdditionalCharges));
+    setText("bdCompositionMargin", currency(totals.margin));
+    setText("bdCompositionRaw", currency(rawPrice));
+    setText("bdCompositionRounding", currency(roundingDelta));
+    setText("bdCompositionFinal", currency(finalPrice));
+    setText("bdPickupStageTotal", currency(pickupStageTotal));
+    setText("bdInterstateStageTotal", currency(interstateStageTotal));
+    setText("bdDeliveryStageTotal", currency(deliveryStageTotal));
+    setText("bdStageSubtotal", currency(stageSubtotal));
+    setText("bdOtherLegacyCharges", currency(otherLegacyCharges));
+    setText("bdOperationalReconciliation", `${currency(stageSubtotal)} stage subtotal + ${currency(nonRouteOperationalCost)} non-route = ${currency(totals.operationalCost)} operational cost`);
+    setText("bdRawReconciliation", `${currency(totals.operationalCost)} operational + ${currency(displayedAdditionalCharges)} additional + ${currency(totals.margin)} margin = ${currency(rawPrice)} raw price`);
+    setText("bdFinalReconciliation", `${currency(rawPrice)} raw price + ${currency(roundingDelta)} rounding = ${currency(finalPrice)} final price`);
     setText("bdRouteCost", currency(totals.routeCost));
     setText("bdDistance", `${Math.round(result.distance || 0)} mi`);
     setText("bdLaborCost", currency(totals.laborCost));
     setText("bdCrew", `${result.requiredCrew || 0} ${result.requiredCrew === 1 ? "person" : "people"}`);
     setText("bdNonRouteCost", currency(nonRouteOperationalCost));
-    setText("bdPackaging", currency(totals.packaging));
     setText("bdStorage", currency(totals.storage));
     setText("bdInsurance", currency(totals.insurance));
     setText("bdAccessFees", currency(totals.accessFees));
-    setText("bdOptionFees", currency(totals.optionFees));
     setText("bdSpecialLabor", currency(totals.extraLaborCost));
-    setText(
-      "bdSpecialLaborFormula",
-      `${totals.extraLaborPeople || 0} people x ${totals.extraLaborHours || 0} hours x ${currency(totals.extraLaborRate || 0)}/hour`
-    );
-    setText("bdManualAdjustment", currency(totals.manualAdjustment));
-    setText("bdAdditionalTotal", currency(displayedAdditionalCharges));
     setText("bdEffectiveVolume", `${Math.ceil(Number(totals.effectiveVolume || 0))} cu ft`);
     setText("bdTotalWeight", `${Number(totals.totalWeight || 0).toFixed(0)} lb`);
     setText("bdEffectiveCostPerCuFt", totals.totalVolume > 0 ? currency(totals.effectiveCostPerCuFt) : "N/A");
-    setText(
-      "bdRawFormula",
-      `${currency(totals.operationalCost)} + ${currency(displayedAdditionalCharges)} + ${currency(totals.margin)} = ${currency(totals.rawPrice)}`
-    );
-    setText("bdRoundedFormula", `CEILING(${currency(totals.rawPrice)}, 10) = ${currency(totals.finalPrice)}`);
     renderRouteStages(quote, result);
     renderItems(result.items || []);
     renderWarnings(result.warnings || []);
