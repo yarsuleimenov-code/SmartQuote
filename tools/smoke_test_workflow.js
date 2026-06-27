@@ -237,8 +237,8 @@ assert(quoteDraftUi.includes("Requires declared value."), "Expected compact FVP 
 assert(!quoteDraftHtml.includes(">Narrow<"), "Expected broker-facing Narrow control to be hidden.");
 assert(!quoteDraftHtml.includes("Long carry, ft"), "Expected broker-facing Long Carry control to be hidden.");
 assert(!quoteDraftHtml.includes("Bubble Protection</option>"), "Expected Bubble Protection not to be hardcoded as broker-facing option.");
-assert(breakdownHtml.includes("Route Stage Visibility"), "Expected Cost Breakdown to include route stage visibility.");
-assert(breakdownHtml.includes("No formula change"), "Expected route stage visibility to be marked as no formula change.");
+assert(breakdownHtml.includes("Route Stage Details"), "Expected Cost Breakdown to include collapsible route stage details.");
+assert(breakdownHtml.includes("No formula change"), "Expected route stage details to be marked as no formula change.");
 assert(estimateDocumentHtml.includes("Protection Plans & Liability"), "Expected customer estimate document to use Protection Plans language.");
 assert(!estimateDocumentHtml.includes("Operational Cost"), "Expected customer estimate document not to expose Operational Cost.");
 assert(!estimateDocumentHtml.includes("Margin"), "Expected customer estimate document not to expose Margin.");
