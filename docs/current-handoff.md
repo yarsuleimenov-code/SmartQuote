@@ -6,8 +6,8 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current implementation baseline:
 
-- Current committed checkpoint: `9247644 Add capacity vehicle fit contract outputs`.
-- Working tree contains the presentation slice that surfaces contract-only Capacity Analysis and Formula Trace in Cost Breakdown.
+- Current committed checkpoint: `30f1786 Refine operational variables and pickup time curve`.
+- Working tree is expected to be clean before Formula Sprint work starts.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
 - CEO Formula Review Pack completed.
@@ -41,6 +41,13 @@ Current implementation baseline:
 
 Checkpoint history:
 
+- `30f1786 Refine operational variables and pickup time curve`.
+- `274ca0a Implement operational masterdata mapping screens`.
+- `b2d9d1e Implement order-level FVP protection pricing and sync masterdata plan`.
+- `991e25d Show formula logic in cost breakdown trace`.
+- `bcec39f Add item handling review to cost breakdown`.
+- `4661948 Simplify formula trace for executive review`.
+- `87591ed Expose contract outputs in cost breakdown`.
 - `9247644 Add capacity vehicle fit contract outputs`.
 - `d077f3b Add item handling contract outputs`.
 - `365d91e Add normalized route contract slice`.
@@ -284,6 +291,38 @@ Fuel Prices affect calculation, but editing governance is not enabled yet.
 - Formula ID, expression, description, source, output, and usage are searchable;
 - formula text uses black for input/calculated terms, blue for TO-BE variables, and green for TO-BE reference data;
 - the page is documentation and does not change `js/calculator.js` or active pricing.
+
+## Source of Truth Hierarchy
+
+Use this order when resolving conflicts before Formula Sprint:
+
+1. **Executable runtime:** `js/calculator.js`, `js/variables.js`, `js/pricingConfig.js`, and runtime reference helpers define the active MVP calculation behavior.
+2. **Runtime contracts:** `js/calculationContract.js`, `js/costBreakdownAnalysis.js`, and snapshot fields expose audit-only TO-BE outputs and trace data around the active calculator.
+3. **Generated artifacts:** `js/formulaMasterData.js`, `js/operationalMasterdata.js`, `js/coverageZipData.js`, and `js/zoneZipMap.js` are derived files used by UI/reference screens.
+4. **Normalized formula sources:** `docs/formula-spec/normalized/*`, AS-IS/TO-BE formula CSVs, and generator scripts are the canonical planning source for Formula ID, variable, reference, and dependency mapping.
+5. **Approval workbooks:** `docs/formula-spec/*.xlsx` and `outputs/masterdata-normalization/*.xlsx` are review and approval artifacts for CEO/CFO/business alignment.
+6. **Historical documentation:** older docs, handoff notes, workbook extracts, and analysis files provide context but do not override executable runtime or normalized sources.
+
+If runtime behavior and documentation disagree, treat runtime smoke-tested behavior as current truth and update documentation before implementing new Formula Sprint work.
+
+## Generated Artifacts Rules
+
+- Do not edit generated JavaScript files manually.
+- Change the source CSV/workbook or generator script first.
+- Regenerate derived files with the relevant tool, for example `node tools/build_formula_catalog.js` or `node tools/build_operational_masterdata.js`.
+- Generated files are derived artifacts; they should be reviewed in diffs but not treated as independent source of truth.
+- If a generated output needs a manual hotfix, stop and document why the generator cannot produce the required result.
+
+## Formula Sprint Guardrails
+
+- Implement one Formula ID block per change.
+- Use a separate commit for each formula block.
+- Do not mix Formula Sprint changes with unrelated UI, storage, navigation, or copy changes.
+- Every price-impact change requires a `formulaVersion` bump.
+- Every price-impact change requires explicit UAT cases and smoke tests before commit.
+- Existing frozen estimates must remain immutable and auditable.
+- Audit-only contract outputs must stay marked as no price impact until the related formula block is approved.
+- Do not broadly refactor `js/calculator.js`; make the smallest targeted change needed for the approved Formula ID.
 
 Masterdata normalization:
 

@@ -22,6 +22,44 @@ Current implemented baseline:
 
 ---
 
+# Source of Truth Hierarchy
+
+Use this order when resolving conflicts:
+
+1. **Executable runtime** — `js/calculator.js`, `js/variables.js`, `js/pricingConfig.js`, and runtime reference helpers define the active MVP calculation behavior.
+2. **Runtime contracts** — `js/calculationContract.js`, `js/costBreakdownAnalysis.js`, and estimate snapshot fields expose audit-only TO-BE outputs around the active calculator.
+3. **Generated artifacts** — `js/formulaMasterData.js`, `js/operationalMasterdata.js`, `js/coverageZipData.js`, and `js/zoneZipMap.js` are derived files used by UI/reference screens.
+4. **Normalized formula sources** — `docs/formula-spec/normalized/*`, AS-IS/TO-BE formula CSVs, and generator scripts are the canonical planning source for Formula ID, variable, reference, and dependency mapping.
+5. **Approval workbooks** — `docs/formula-spec/*.xlsx` and `outputs/masterdata-normalization/*.xlsx` are CEO/CFO/business review artifacts.
+6. **Historical documentation** — older handoff notes, workbook extracts, and analysis files provide context but do not override executable runtime or normalized sources.
+
+If runtime behavior and documentation disagree, treat smoke-tested runtime behavior as the current truth and update documentation before implementing new Formula Sprint work.
+
+---
+
+# Generated Artifacts Rules
+
+- Do not edit generated JavaScript files manually.
+- Change the source CSV/workbook or generator script first.
+- Regenerate derived files with the relevant tool, for example `node tools/build_formula_catalog.js` or `node tools/build_operational_masterdata.js`.
+- Generated files are derived artifacts; review them in diffs but do not treat them as independent source of truth.
+- If a generated output needs a manual hotfix, document why the generator cannot produce the required result before changing anything.
+
+---
+
+# Formula Sprint Guardrails
+
+- Implement one Formula ID block per change.
+- Use a separate commit for each formula block.
+- Do not mix Formula Sprint changes with unrelated UI, storage, navigation, or copy changes.
+- Every price-impact change requires a `formulaVersion` bump.
+- Every price-impact change requires explicit UAT cases and smoke tests.
+- Existing frozen estimates must remain immutable and auditable.
+- Audit-only contract outputs must stay marked as no price impact until the related formula block is approved.
+- Do not broadly refactor `js/calculator.js`; make the smallest targeted change needed for the approved Formula ID.
+
+---
+
 # Важное предупреждение
 
 Этот репозиторий является **test-mode MVP / visual technical specification**, а не production-ready реализацией.
