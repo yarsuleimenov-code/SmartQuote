@@ -15,723 +15,364 @@
 </head>
 
 <body class="bg-slate-100 text-slate-700">
+  <div class="min-h-screen flex">
+    <div id="sidebar"></div>
 
-<div class="min-h-screen flex">
+    <main class="ml-64 w-full">
+      <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <div>
+          <p class="text-xs text-slate-400">Zaberman LLC / Reference</p>
+          <h2 class="text-lg font-semibold text-slate-800">Lifecycle Map</h2>
+        </div>
 
-  <div id="sidebar"></div>
+        <div class="flex items-center gap-3">
+          <a href="index.html" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
+            New Calculation
+          </a>
+          <a href="ebol.html" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
+            Open eBOL
+          </a>
+        </div>
+      </header>
 
-  <!-- MAIN -->
-  <main class="ml-64 w-full">
+      <div class="p-6 space-y-6">
+        <section class="bg-white rounded-lg border border-slate-200 p-6">
+          <div class="flex items-start justify-between gap-6">
+            <div class="max-w-4xl">
+              <div class="flex items-center gap-3 mb-3">
+                <h1 class="text-3xl font-bold text-slate-900">Quote Lifecycle Architecture</h1>
+                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-semibold">Architecture v1.1</span>
+              </div>
+              <p class="text-lg font-semibold text-slate-700">Commercial &rarr; Billing &rarr; Operational</p>
+              <p class="text-sm text-slate-500 mt-3 leading-6">
+                This reference explains how a broker quote becomes a customer estimate, then billing and operational execution.
+                The lifecycle separates editable commercial work from immutable snapshots and field execution records.
+              </p>
+            </div>
 
-    <!-- TOPBAR -->
-    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+            <div class="min-w-[280px] rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <p class="text-xs uppercase tracking-wide text-blue-600 font-semibold">Core Rule</p>
+              <p class="text-xl font-bold text-blue-900 mt-2">Draft editable &rarr; Estimate immutable</p>
+              <p class="text-xs text-blue-700 mt-2">Pricing can change in draft. Sent estimates must stay reproducible.</p>
+            </div>
+          </div>
+        </section>
 
-      <div>
-        <p class="text-xs text-slate-400">Zaberman LLC › Reference</p>
-        <h2 class="text-lg font-semibold text-slate-800">Lifecycle Map</h2>
+        <nav class="bg-white rounded-lg border border-slate-200 px-4 py-3 sticky top-16 z-20">
+          <div class="flex flex-wrap gap-2 text-sm">
+            <a href="#flow" class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">Flow</a>
+            <a href="#layers" class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">Layers</a>
+            <a href="#stages" class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">Stages</a>
+            <a href="#transitions" class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">Transitions</a>
+            <a href="#risks" class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">Risks</a>
+            <a href="#notes" class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">BA Notes</a>
+          </div>
+        </nav>
+
+        <section id="flow" class="bg-white rounded-lg border border-slate-200 p-5">
+          <div class="flex items-start justify-between gap-4 mb-6">
+            <div>
+              <h3 class="font-bold text-slate-800">Lifecycle Overview</h3>
+              <p class="text-sm text-slate-500 mt-1">The primary path from quote creation to completed delivery.</p>
+            </div>
+            <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">Reference flow</span>
+          </div>
+
+          <div class="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 items-stretch">
+            <article class="rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <i data-lucide="pencil-line" class="w-5 h-5 text-blue-700"></i>
+              <h4 class="font-bold text-blue-950 mt-3">Draft</h4>
+              <p class="text-xs text-blue-700 mt-1">Editable quote workspace</p>
+              <span class="inline-flex mt-3 px-2 py-1 rounded bg-white text-xs font-semibold text-blue-700">Mutable</span>
+            </article>
+            <div class="flex items-center text-slate-300"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
+
+            <article class="rounded-lg border border-green-200 bg-green-50 p-4">
+              <i data-lucide="file-check-2" class="w-5 h-5 text-green-700"></i>
+              <h4 class="font-bold text-green-950 mt-3">Estimate</h4>
+              <p class="text-xs text-green-700 mt-1">Customer-facing price snapshot</p>
+              <span class="inline-flex mt-3 px-2 py-1 rounded bg-white text-xs font-semibold text-green-700">Immutable</span>
+            </article>
+            <div class="flex items-center text-slate-300"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
+
+            <article class="rounded-lg border border-purple-200 bg-purple-50 p-4">
+              <i data-lucide="receipt-text" class="w-5 h-5 text-purple-700"></i>
+              <h4 class="font-bold text-purple-950 mt-3">Invoice</h4>
+              <p class="text-xs text-purple-700 mt-1">Billing request</p>
+              <span class="inline-flex mt-3 px-2 py-1 rounded bg-white text-xs font-semibold text-purple-700">Billing</span>
+            </article>
+            <div class="flex items-center text-slate-300"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
+
+            <article class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <i data-lucide="truck" class="w-5 h-5 text-slate-700"></i>
+              <h4 class="font-bold text-slate-900 mt-3">Order</h4>
+              <p class="text-xs text-slate-500 mt-1">Dispatch and execution entity</p>
+              <span class="inline-flex mt-3 px-2 py-1 rounded bg-white text-xs font-semibold text-slate-700">Operational</span>
+            </article>
+            <div class="flex items-center text-slate-300"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
+
+            <article class="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <i data-lucide="clipboard-check" class="w-5 h-5 text-amber-700"></i>
+              <h4 class="font-bold text-amber-950 mt-3">eBOL</h4>
+              <p class="text-xs text-amber-700 mt-1">Verification and POD</p>
+              <span class="inline-flex mt-3 px-2 py-1 rounded bg-white text-xs font-semibold text-amber-700">Proof</span>
+            </article>
+            <div class="flex items-center text-slate-300"><i data-lucide="arrow-right" class="w-5 h-5"></i></div>
+
+            <article class="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <i data-lucide="badge-check" class="w-5 h-5 text-emerald-700"></i>
+              <h4 class="font-bold text-emerald-950 mt-3">Completed</h4>
+              <p class="text-xs text-emerald-700 mt-1">Delivery closed</p>
+              <span class="inline-flex mt-3 px-2 py-1 rounded bg-white text-xs font-semibold text-emerald-700">Closed</span>
+            </article>
+          </div>
+        </section>
+
+        <section id="layers" class="grid grid-cols-3 gap-4">
+          <article class="rounded-lg border border-blue-200 bg-blue-50 p-5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="briefcase-business" class="w-5 h-5 text-blue-700"></i>
+              <h3 class="font-bold text-blue-950">Commercial Layer</h3>
+            </div>
+            <p class="text-sm text-blue-700 mt-2">Quote creation, customer pricing, and commercial approval.</p>
+            <div class="mt-4 flex gap-2">
+              <span class="px-3 py-1 rounded-md bg-white text-sm font-semibold text-blue-800">Draft</span>
+              <span class="px-3 py-1 rounded-md bg-white text-sm font-semibold text-blue-800">Estimate</span>
+            </div>
+          </article>
+
+          <article class="rounded-lg border border-purple-200 bg-purple-50 p-5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="wallet-cards" class="w-5 h-5 text-purple-700"></i>
+              <h3 class="font-bold text-purple-950">Billing Layer</h3>
+            </div>
+            <p class="text-sm text-purple-700 mt-2">Payment request and billing state tied to the estimate snapshot.</p>
+            <div class="mt-4 flex gap-2">
+              <span class="px-3 py-1 rounded-md bg-white text-sm font-semibold text-purple-800">Invoice</span>
+            </div>
+          </article>
+
+          <article class="rounded-lg border border-slate-200 bg-slate-50 p-5">
+            <div class="flex items-center gap-2">
+              <i data-lucide="route" class="w-5 h-5 text-slate-700"></i>
+              <h3 class="font-bold text-slate-900">Operational Layer</h3>
+            </div>
+            <p class="text-sm text-slate-600 mt-2">Dispatch, item verification, proof of delivery, and closure.</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="px-3 py-1 rounded-md bg-white text-sm font-semibold text-slate-700">Order</span>
+              <span class="px-3 py-1 rounded-md bg-white text-sm font-semibold text-slate-700">eBOL</span>
+              <span class="px-3 py-1 rounded-md bg-white text-sm font-semibold text-slate-700">Completed</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="bg-white rounded-lg border border-slate-200 p-5">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 class="font-bold text-slate-800">Architecture Principles</h3>
+              <p class="text-sm text-slate-500 mt-1">Rules that keep pricing, billing, and operations auditable.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-5 gap-3">
+            <div class="rounded-lg border border-slate-200 p-4"><i data-lucide="lock-keyhole" class="w-5 h-5 text-slate-600"></i><p class="font-semibold text-slate-800 mt-3">Immutable Estimates</p></div>
+            <div class="rounded-lg border border-slate-200 p-4"><i data-lucide="shield-check" class="w-5 h-5 text-slate-600"></i><p class="font-semibold text-slate-800 mt-3">Snapshot Integrity</p></div>
+            <div class="rounded-lg border border-slate-200 p-4"><i data-lucide="split" class="w-5 h-5 text-slate-600"></i><p class="font-semibold text-slate-800 mt-3">Layer Separation</p></div>
+            <div class="rounded-lg border border-slate-200 p-4"><i data-lucide="repeat-2" class="w-5 h-5 text-slate-600"></i><p class="font-semibold text-slate-800 mt-3">Reproducible Pricing</p></div>
+            <div class="rounded-lg border border-slate-200 p-4"><i data-lucide="search-check" class="w-5 h-5 text-slate-600"></i><p class="font-semibold text-slate-800 mt-3">Auditable Lifecycle</p></div>
+          </div>
+        </section>
+
+        <section id="stages" class="bg-white rounded-lg border border-slate-200 p-5">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 class="font-bold text-slate-800">Stage Cards</h3>
+              <p class="text-sm text-slate-500 mt-1">Compact ownership and action rules for each lifecycle entity.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4">
+            <article class="rounded-lg border border-slate-200 p-4">
+              <div class="flex items-center justify-between"><h4 class="font-bold text-slate-900">Draft</h4><span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-semibold">Mutable</span></div>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="text-xs uppercase text-slate-400">Purpose</dt><dd>Build and revise quote inputs.</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Owner</dt><dd class="font-semibold text-slate-800">Broker</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Allowed actions</dt><dd>Edit, recalculate, save, generate estimate.</dd></div>
+              </dl>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <div class="flex items-center justify-between"><h4 class="font-bold text-slate-900">Estimate</h4><span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700 font-semibold">Immutable</span></div>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="text-xs uppercase text-slate-400">Purpose</dt><dd>Customer-facing price snapshot.</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Owner</dt><dd class="font-semibold text-slate-800">Commercial</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Allowed actions</dt><dd>Send, view, approve, reject, reopen as draft.</dd></div>
+              </dl>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <div class="flex items-center justify-between"><h4 class="font-bold text-slate-900">Invoice</h4><span class="px-2 py-1 text-xs rounded bg-purple-100 text-purple-700 font-semibold">Billing</span></div>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="text-xs uppercase text-slate-400">Purpose</dt><dd>Payment request from approved estimate.</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Owner</dt><dd class="font-semibold text-slate-800">Billing</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Allowed actions</dt><dd>Send, track payment, mark paid, cancel.</dd></div>
+              </dl>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <div class="flex items-center justify-between"><h4 class="font-bold text-slate-900">Order</h4><span class="px-2 py-1 text-xs rounded bg-slate-100 text-slate-700 font-semibold">Operational</span></div>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="text-xs uppercase text-slate-400">Purpose</dt><dd>Dispatch and execution record.</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Owner</dt><dd class="font-semibold text-slate-800">Dispatch</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Allowed actions</dt><dd>Schedule, assign route, assign crew, update status.</dd></div>
+              </dl>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <div class="flex items-center justify-between"><h4 class="font-bold text-slate-900">eBOL</h4><span class="px-2 py-1 text-xs rounded bg-amber-100 text-amber-700 font-semibold">Proof</span></div>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="text-xs uppercase text-slate-400">Purpose</dt><dd>Item verification and proof of delivery.</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Owner</dt><dd class="font-semibold text-slate-800">Field Team</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Allowed actions</dt><dd>Verify items, upload photos, sign, report exceptions.</dd></div>
+              </dl>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <div class="flex items-center justify-between"><h4 class="font-bold text-slate-900">Completed</h4><span class="px-2 py-1 text-xs rounded bg-emerald-100 text-emerald-700 font-semibold">Closed</span></div>
+              <dl class="mt-4 space-y-3 text-sm">
+                <div><dt class="text-xs uppercase text-slate-400">Purpose</dt><dd>Closed delivery and audit state.</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Owner</dt><dd class="font-semibold text-slate-800">Operations Manager</dd></div>
+                <div><dt class="text-xs uppercase text-slate-400">Allowed actions</dt><dd>View, audit, export documents, review exceptions.</dd></div>
+              </dl>
+            </article>
+          </div>
+        </section>
+
+        <section id="transitions" class="bg-white rounded-lg border border-slate-200 p-5">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 class="font-bold text-slate-800">Transition Rules</h3>
+              <p class="text-sm text-slate-500 mt-1">Each transition creates or freezes a specific lifecycle entity.</p>
+            </div>
+            <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">Governance rules</span>
+          </div>
+
+          <div class="space-y-3">
+            <details class="rounded-lg border border-slate-200 bg-white p-4" open>
+              <summary class="cursor-pointer font-bold text-slate-800">Draft &rarr; Estimate</summary>
+              <div class="grid grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Trigger</p><p class="font-semibold">Generate Estimate</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Creates</p><p class="font-semibold">Estimate + Pricing Snapshot</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Rule</p><p class="font-semibold">Estimate becomes immutable.</p></div>
+              </div>
+            </details>
+
+            <details class="rounded-lg border border-slate-200 bg-white p-4">
+              <summary class="cursor-pointer font-bold text-slate-800">Estimate &rarr; Invoice</summary>
+              <div class="grid grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Trigger</p><p class="font-semibold">Customer approval</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Creates</p><p class="font-semibold">Invoice</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Rule</p><p class="font-semibold">Invoice references estimate snapshot.</p></div>
+              </div>
+            </details>
+
+            <details class="rounded-lg border border-slate-200 bg-white p-4">
+              <summary class="cursor-pointer font-bold text-slate-800">Invoice &rarr; Order</summary>
+              <div class="grid grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Trigger</p><p class="font-semibold">Paid or approved for execution</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Creates</p><p class="font-semibold">Order</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Rule</p><p class="font-semibold">Order cannot change pricing.</p></div>
+              </div>
+            </details>
+
+            <details class="rounded-lg border border-slate-200 bg-white p-4">
+              <summary class="cursor-pointer font-bold text-slate-800">Order &rarr; eBOL</summary>
+              <div class="grid grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Trigger</p><p class="font-semibold">Order created with item list</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Creates</p><p class="font-semibold">eBOL</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Rule</p><p class="font-semibold">eBOL uses frozen item snapshot.</p></div>
+              </div>
+            </details>
+
+            <details class="rounded-lg border border-slate-200 bg-white p-4">
+              <summary class="cursor-pointer font-bold text-slate-800">eBOL &rarr; Completed</summary>
+              <div class="grid grid-cols-3 gap-3 mt-4 text-sm">
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Trigger</p><p class="font-semibold">Delivery proof complete</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Creates</p><p class="font-semibold">POD / Completed Delivery</p></div>
+                <div class="rounded-lg bg-slate-50 p-3"><p class="text-xs uppercase text-slate-400">Rule</p><p class="font-semibold">Completed documents become read-only.</p></div>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section id="risks" class="bg-white rounded-lg border border-slate-200 p-5">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 class="font-bold text-slate-800">Lifecycle Risks</h3>
+              <p class="text-sm text-slate-500 mt-1">Architecture risks that the lifecycle separation is designed to prevent.</p>
+            </div>
+            <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-700 font-semibold">Critical controls</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <article class="rounded-lg border border-red-200 bg-red-50 p-4">
+              <div class="flex gap-3"><i data-lucide="file-pen-line" class="w-5 h-5 text-red-700"></i><div><p class="font-bold text-red-900">Direct Estimate Editing</p><p class="text-xs text-red-700 mt-1">Severity: High</p></div></div>
+              <p class="text-sm text-red-700 mt-3">Editing a sent estimate makes historical pricing unreliable.</p>
+              <p class="mt-3 rounded-md bg-white border border-red-200 p-3 text-xs text-red-700">Mitigation: any change creates a new draft and a new estimate version.</p>
+            </article>
+
+            <article class="rounded-lg border border-red-200 bg-red-50 p-4">
+              <div class="flex gap-3"><i data-lucide="circle-dollar-sign" class="w-5 h-5 text-red-700"></i><div><p class="font-bold text-red-900">Order Changes Pricing</p><p class="text-xs text-red-700 mt-1">Severity: High</p></div></div>
+              <p class="text-sm text-red-700 mt-3">Operational execution must not recalculate approved commercial pricing.</p>
+              <p class="mt-3 rounded-md bg-white border border-red-200 p-3 text-xs text-red-700">Mitigation: order uses the frozen estimate snapshot.</p>
+            </article>
+
+            <article class="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <div class="flex gap-3"><i data-lucide="clipboard-x" class="w-5 h-5 text-amber-700"></i><div><p class="font-bold text-amber-900">eBOL Without Snapshot</p><p class="text-xs text-amber-700 mt-1">Severity: Medium</p></div></div>
+              <p class="text-sm text-amber-700 mt-3">Field verification can lose connection to the original item list.</p>
+              <p class="mt-3 rounded-md bg-white border border-amber-200 p-3 text-xs text-amber-700">Mitigation: eBOL is created from order and frozen item data.</p>
+            </article>
+
+            <article class="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <div class="flex gap-3"><i data-lucide="layers-3" class="w-5 h-5 text-amber-700"></i><div><p class="font-bold text-amber-900">Lifecycle Overload</p><p class="text-xs text-amber-700 mt-1">Severity: Medium</p></div></div>
+              <p class="text-sm text-amber-700 mt-3">Putting dispatch and eBOL logic into quote creation slows broker work.</p>
+              <p class="mt-3 rounded-md bg-white border border-amber-200 p-3 text-xs text-amber-700">Mitigation: calculator creates quotes; operational screens execute delivery.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="notes" class="bg-white rounded-lg border border-slate-200 p-5">
+          <div class="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 class="font-bold text-slate-800">BA Notes</h3>
+              <p class="text-sm text-slate-500 mt-1">Short architecture notes for product and business review.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 text-sm">
+            <article class="rounded-lg border border-slate-200 p-4">
+              <h4 class="font-bold text-slate-800">Snapshot Integrity</h4>
+              <p class="text-slate-600 mt-2">Historical estimates must not recalculate after changes to fuel variables, formulas, pricing logic, or route rules.</p>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <h4 class="font-bold text-slate-800">Commercial vs Operational Separation</h4>
+              <p class="text-slate-600 mt-2">Calculator owns quote and estimate lifecycle. Orders and eBOL own dispatch, pickup, delivery, POD, and exceptions.</p>
+            </article>
+
+            <article class="rounded-lg border border-slate-200 p-4">
+              <h4 class="font-bold text-slate-800">Long-term Architecture Goal</h4>
+              <p class="text-slate-600 mt-2">Pricing should move to a governed backend engine, while every lifecycle transition remains auditable and reproducible.</p>
+            </article>
+          </div>
+        </section>
       </div>
-
-      <div class="flex items-center gap-3">
-
-        <a href="index.html" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">
-          New Calculation
-        </a>
-
-        <a href="ebol.html" class="px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-900">
-          Open eBOL
-        </a>
-
-      </div>
-
-    </header>
-
-    <!-- PAGE -->
-    <div class="p-6">
-
-      <!-- PAGE HEADER -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <div class="flex justify-between items-start gap-6">
-
-          <div>
-
-            <div class="flex items-center gap-3">
-
-              <h1 class="text-2xl font-bold text-slate-800">
-                Quote → Order → eBOL Lifecycle
-              </h1>
-
-              <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-semibold">
-                Reference
-              </span>
-
-              <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-semibold">
-                Architecture v1.1
-              </span>
-
-            </div>
-
-            <p class="text-sm text-slate-500 mt-2 max-w-5xl">
-              Страница показывает полный lifecycle от draft quote до completed delivery.
-              Используется для согласования границ между commercial workflow, pricing engine и operational execution.
-            </p>
-
-          </div>
-
-          <div class="text-right text-sm text-slate-500 min-w-[220px]">
-
-            <p>Core Rule:</p>
-
-            <p class="font-semibold text-slate-800">
-              Draft editable, Estimate immutable
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- INTRO -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <h3 class="font-bold text-slate-800 mb-3">
-          Назначение lifecycle map
-        </h3>
-
-        <div class="grid grid-cols-2 gap-6 text-sm text-slate-600 leading-6">
-
-          <div>
-
-            <p>
-              Lifecycle map фиксирует, какие сущности создаются на каждом этапе,
-              какие данные можно редактировать, а какие должны становиться immutable snapshot.
-            </p>
-
-            <p class="mt-2">
-              Это защищает систему от смешивания quote, estimate, order и eBOL в одну неуправляемую сущность.
-            </p>
-
-          </div>
-
-          <div>
-
-            <p>
-              Главная задача страницы — показать, где заканчивается commercial layer
-              и где начинается operational layer.
-            </p>
-
-            <p class="mt-2">
-              Pricing не должен изменяться после создания estimate snapshot.
-              Orders и eBOL работают только с зафиксированными данными.
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-            <!-- LIFECYCLE OVERVIEW -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <div class="flex items-center justify-between mb-5">
-
-          <div>
-            <h3 class="font-bold text-slate-800">Lifecycle Overview</h3>
-            <p class="text-sm text-slate-500 mt-1">
-              Основная цепочка перехода от коммерческого расчёта к operational execution.
-            </p>
-          </div>
-
-          <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">
-            Commercial → Operational
-          </span>
-
-        </div>
-
-        <div class="grid grid-cols-6 gap-3 text-sm">
-
-          <div class="border border-blue-200 bg-blue-50 rounded-xl p-4">
-            <p class="text-xs text-blue-600 font-semibold">STEP 1</p>
-            <h4 class="font-bold text-blue-900 mt-1">Draft</h4>
-            <p class="text-xs text-blue-700 mt-2">Editable quote workspace</p>
-          </div>
-
-          <div class="border border-green-200 bg-green-50 rounded-xl p-4">
-            <p class="text-xs text-green-600 font-semibold">STEP 2</p>
-            <h4 class="font-bold text-green-900 mt-1">Estimate</h4>
-            <p class="text-xs text-green-700 mt-2">Frozen customer-facing price</p>
-          </div>
-
-          <div class="border border-purple-200 bg-purple-50 rounded-xl p-4">
-            <p class="text-xs text-purple-600 font-semibold">STEP 3</p>
-            <h4 class="font-bold text-purple-900 mt-1">Invoice</h4>
-            <p class="text-xs text-purple-700 mt-2">Billing and payment request</p>
-          </div>
-
-          <div class="border border-slate-200 bg-slate-50 rounded-xl p-4">
-            <p class="text-xs text-slate-500 font-semibold">STEP 4</p>
-            <h4 class="font-bold text-slate-800 mt-1">Order</h4>
-            <p class="text-xs text-slate-500 mt-2">Operational execution entity</p>
-          </div>
-
-          <div class="border border-amber-200 bg-amber-50 rounded-xl p-4">
-            <p class="text-xs text-amber-600 font-semibold">STEP 5</p>
-            <h4 class="font-bold text-amber-900 mt-1">eBOL</h4>
-            <p class="text-xs text-amber-700 mt-2">Item verification and POD</p>
-          </div>
-
-          <div class="border border-emerald-200 bg-emerald-50 rounded-xl p-4">
-            <p class="text-xs text-emerald-600 font-semibold">STEP 6</p>
-            <h4 class="font-bold text-emerald-900 mt-1">Completed</h4>
-            <p class="text-xs text-emerald-700 mt-2">Delivery closed</p>
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- STAGE CARDS -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <div class="flex items-center justify-between mb-5">
-
-          <div>
-            <h3 class="font-bold text-slate-800">Lifecycle Stages</h3>
-            <p class="text-sm text-slate-500 mt-1">
-              Ownership, mutability и назначение каждого этапа.
-            </p>
-          </div>
-
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-
-          <!-- DRAFT -->
-          <div class="border border-slate-200 rounded-xl p-5">
-
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-slate-800">Draft</h4>
-              <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 font-semibold">Mutable</span>
-            </div>
-
-            <div class="text-sm text-slate-600 space-y-3">
-
-              <p>
-                Draft — рабочее состояние quote, которое брокер может редактировать и пересчитывать.
-              </p>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Owner</p>
-                <p class="font-semibold text-slate-800">Commercial Layer / Broker</p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Allowed Actions</p>
-                <p>Edit items, route, access conditions, quote options, recalculate.</p>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- ESTIMATE -->
-          <div class="border border-slate-200 rounded-xl p-5">
-
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-slate-800">Estimate</h4>
-              <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-700 font-semibold">Immutable</span>
-            </div>
-
-            <div class="text-sm text-slate-600 space-y-3">
-
-              <p>
-                Estimate — customer-facing snapshot цены, созданный из Draft после Generate Estimate.
-              </p>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Owner</p>
-                <p class="font-semibold text-slate-800">Commercial Layer / Snapshot Service</p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Allowed Actions</p>
-                <p>Send, view, approve, reject, reopen as new draft.</p>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- INVOICE -->
-          <div class="border border-slate-200 rounded-xl p-5">
-
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-slate-800">Invoice</h4>
-              <span class="px-2 py-1 text-xs rounded bg-purple-100 text-purple-700 font-semibold">Billing</span>
-            </div>
-
-            <div class="text-sm text-slate-600 space-y-3">
-
-              <p>
-                Invoice создаётся на основе approved estimate и не должен пересчитывать pricing.
-              </p>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Owner</p>
-                <p class="font-semibold text-slate-800">Commercial Layer / Billing</p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Allowed Actions</p>
-                <p>Send invoice, track payment, mark paid, cancel.</p>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- ORDER -->
-          <div class="border border-slate-200 rounded-xl p-5">
-
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-slate-800">Order</h4>
-              <span class="px-2 py-1 text-xs rounded bg-slate-100 text-slate-700 font-semibold">Operational</span>
-            </div>
-
-            <div class="text-sm text-slate-600 space-y-3">
-
-              <p>
-                Order — operational entity для выполнения перевозки после commercial approval.
-              </p>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Owner</p>
-                <p class="font-semibold text-slate-800">Operational Layer / Dispatch</p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Allowed Actions</p>
-                <p>Schedule, assign route, assign crew, update operational statuses.</p>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- EBOL -->
-          <div class="border border-slate-200 rounded-xl p-5">
-
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-slate-800">eBOL</h4>
-              <span class="px-2 py-1 text-xs rounded bg-amber-100 text-amber-700 font-semibold">Proof</span>
-            </div>
-
-            <div class="text-sm text-slate-600 space-y-3">
-
-              <p>
-                eBOL фиксирует item verification, pickup/delivery statuses, photos, signatures и exceptions.
-              </p>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Owner</p>
-                <p class="font-semibold text-slate-800">Operational Layer / Field Team</p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Allowed Actions</p>
-                <p>Verify items, upload photos, collect signature, report exceptions.</p>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- COMPLETED -->
-          <div class="border border-slate-200 rounded-xl p-5">
-
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-slate-800">Completed Delivery</h4>
-              <span class="px-2 py-1 text-xs rounded bg-emerald-100 text-emerald-700 font-semibold">Closed</span>
-            </div>
-
-            <div class="text-sm text-slate-600 space-y-3">
-
-              <p>
-                Completed state означает, что delivery подтверждена, POD создан, а operational workflow закрыт.
-              </p>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Owner</p>
-                <p class="font-semibold text-slate-800">Operational Layer / Manager</p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase text-slate-400 mb-1">Allowed Actions</p>
-                <p>View only, audit, export documents, review exceptions.</p>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-            <!-- TRANSITION RULES -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <div class="flex items-center justify-between mb-5">
-
-          <div>
-            <h3 class="font-bold text-slate-800">Transition Rules</h3>
-            <p class="text-sm text-slate-500 mt-1">
-              Условия перехода между lifecycle stages.
-            </p>
-          </div>
-
-          <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-semibold">
-            Governance Rules
-          </span>
-
-        </div>
-
-        <div class="overflow-x-auto border border-slate-200 rounded-xl">
-
-          <table class="w-full text-sm min-w-[1200px]">
-
-            <thead class="bg-slate-50 text-slate-500">
-
-              <tr>
-
-                <th class="text-left px-4 py-3">Transition</th>
-
-                <th class="text-left px-4 py-3">Required Condition</th>
-
-                <th class="text-left px-4 py-3">Created / Updated Entity</th>
-
-                <th class="text-left px-4 py-3">Key Rule</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody class="divide-y divide-slate-200">
-
-              <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">Draft → Estimate</td>
-                <td class="px-4 py-3">Quote data completed and broker clicks Generate Estimate.</td>
-                <td class="px-4 py-3">Estimate + Pricing Snapshot</td>
-                <td class="px-4 py-3">Estimate becomes immutable.</td>
-              </tr>
-
-              <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">Estimate → Invoice</td>
-                <td class="px-4 py-3">Customer approves estimate or broker confirms commercial acceptance.</td>
-                <td class="px-4 py-3">Invoice</td>
-                <td class="px-4 py-3">Invoice references estimate snapshot.</td>
-              </tr>
-
-              <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">Invoice → Order</td>
-                <td class="px-4 py-3">Invoice is paid or approved for operational execution.</td>
-                <td class="px-4 py-3">Order</td>
-                <td class="px-4 py-3">Order cannot change pricing.</td>
-              </tr>
-
-              <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">Order → eBOL</td>
-                <td class="px-4 py-3">Order created and item list is available for operational verification.</td>
-                <td class="px-4 py-3">eBOL</td>
-                <td class="px-4 py-3">eBOL uses frozen item snapshot.</td>
-              </tr>
-
-              <tr>
-                <td class="px-4 py-3 font-semibold text-slate-800">eBOL → Completed</td>
-                <td class="px-4 py-3">Items delivered, required photos uploaded, delivery signature collected.</td>
-                <td class="px-4 py-3">POD / Completed Delivery</td>
-                <td class="px-4 py-3">Completed documents become read-only.</td>
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-      <!-- RISK BLOCKS -->
-      <section class="bg-white rounded-xl border border-slate-200 p-5 mb-6">
-
-        <div class="flex items-center justify-between mb-5">
-
-          <div>
-            <h3 class="font-bold text-slate-800">Lifecycle Risks</h3>
-            <p class="text-sm text-slate-500 mt-1">
-              Главные ошибки, которые должны быть предотвращены архитектурой.
-            </p>
-          </div>
-
-          <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-700 font-semibold">
-            Critical
-          </span>
-
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-
-          <div class="border border-red-200 bg-red-50 rounded-xl p-5">
-
-            <h4 class="font-bold text-red-800 mb-2">
-              Risk 1 — Direct Estimate Editing
-            </h4>
-
-            <p class="text-sm text-red-700">
-              Если уже отправленный estimate можно редактировать напрямую, historical pricing становится недостоверным.
-            </p>
-
-            <div class="mt-3 bg-white border border-red-200 rounded-lg p-3 text-xs text-red-700">
-              Решение: любые изменения создают new draft и new estimate version.
-            </div>
-
-          </div>
-
-          <div class="border border-red-200 bg-red-50 rounded-xl p-5">
-
-            <h4 class="font-bold text-red-800 mb-2">
-              Risk 2 — Order Changes Pricing
-            </h4>
-
-            <p class="text-sm text-red-700">
-              Operational workflow не должен менять commercial pricing после approval.
-            </p>
-
-            <div class="mt-3 bg-white border border-red-200 rounded-lg p-3 text-xs text-red-700">
-              Решение: Order работает только с frozen estimate snapshot.
-            </div>
-
-          </div>
-
-          <div class="border border-amber-200 bg-amber-50 rounded-xl p-5">
-
-            <h4 class="font-bold text-amber-800 mb-2">
-              Risk 3 — eBOL Without Snapshot
-            </h4>
-
-            <p class="text-sm text-amber-700">
-              eBOL без item snapshot может потерять связь с изначальным заказом.
-            </p>
-
-            <div class="mt-3 bg-white border border-amber-200 rounded-lg p-3 text-xs text-amber-700">
-              Решение: eBOL создаётся из Order и frozen item list.
-            </div>
-
-          </div>
-
-          <div class="border border-amber-200 bg-amber-50 rounded-xl p-5">
-
-            <h4 class="font-bold text-amber-800 mb-2">
-              Risk 4 — Lifecycle Overload
-            </h4>
-
-            <p class="text-sm text-amber-700">
-              Если broker screen начнёт включать dispatch/eBOL логику, quote creation станет медленнее.
-            </p>
-
-            <div class="mt-3 bg-white border border-amber-200 rounded-lg p-3 text-xs text-amber-700">
-              Решение: Calculator = quote creation, eBOL = operational execution.
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-            <!-- BA NOTES -->
-      <section class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
-
-        <button
-          onclick="toggleBANotes()"
-          class="w-full flex items-center justify-between px-5 py-4 bg-slate-50 hover:bg-slate-100 transition"
-        >
-
-          <div class="flex items-center gap-3">
-
-            <i data-lucide="file-text" class="w-5 h-5 text-slate-600"></i>
-
-            <div class="text-left">
-
-              <p class="font-semibold text-slate-800">
-                BA Notes
-              </p>
-
-              <p class="text-xs text-slate-500">
-                Lifecycle architecture explanation
-              </p>
-
-            </div>
-
-          </div>
-
-          <i id="baIcon" data-lucide="chevron-down" class="w-5 h-5 text-slate-500"></i>
-
-        </button>
-
-        <div id="baNotes" class="hidden border-t border-slate-200 px-5 py-5 text-sm text-slate-600 leading-7">
-
-          <div class="space-y-5">
-
-            <div>
-
-              <h4 class="font-bold text-slate-800 mb-1">
-                1. Draft vs Estimate
-              </h4>
-
-              <p>
-                Draft является рабочим состоянием quote.
-                Estimate является frozen customer-facing snapshot.
-              </p>
-
-              <p class="mt-2">
-                Это одно из главных архитектурных разделений системы.
-              </p>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-bold text-slate-800 mb-1">
-                2. Snapshot Integrity
-              </h4>
-
-              <p>
-                Historical estimates не должны пересчитываться после:
-              </p>
-
-              <ul class="list-disc pl-5 mt-2 space-y-1">
-
-                <li>изменения fuel variables;</li>
-                <li>изменения formulas;</li>
-                <li>изменения pricing logic;</li>
-                <li>изменения route rules.</li>
-
-              </ul>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-bold text-slate-800 mb-1">
-                3. Commercial Layer vs Operational Layer
-              </h4>
-
-              <p>
-                Calculator отвечает за:
-              </p>
-
-              <ul class="list-disc pl-5 mt-2 space-y-1">
-
-                <li>pricing;</li>
-                <li>quote generation;</li>
-                <li>estimate lifecycle;</li>
-                <li>commercial workflow.</li>
-
-              </ul>
-
-              <p class="mt-3">
-                Orders и eBOL отвечают за:
-              </p>
-
-              <ul class="list-disc pl-5 mt-2 space-y-1">
-
-                <li>dispatch;</li>
-                <li>pickup;</li>
-                <li>delivery;</li>
-                <li>POD;</li>
-                <li>exceptions.</li>
-
-              </ul>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-bold text-slate-800 mb-1">
-                4. Main Lifecycle Rule
-              </h4>
-
-              <div class="mt-2 border border-slate-200 rounded-lg p-4 bg-slate-50 font-mono text-sm text-slate-700">
-
-                Draft → Editable<br>
-                Estimate → Immutable<br>
-                Order → Operational<br>
-                eBOL → Verification & POD
-
-              </div>
-
-            </div>
-
-            <div>
-
-              <h4 class="font-bold text-slate-800 mb-1">
-                5. Long-Term Architecture Goal
-              </h4>
-
-              <p>
-                В production architecture:
-              </p>
-
-              <ul class="list-disc pl-5 mt-2 space-y-1">
-
-                <li>pricing logic должна жить в backend pricing engine;</li>
-                <li>frontend не должен содержать hidden pricing rules;</li>
-                <li>all lifecycle transitions должны быть auditable;</li>
-                <li>every estimate должен быть reproducible.</li>
-
-              </ul>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </div>
-
-  </main>
-
-</div>
-
-<script>
-
-  function toggleBANotes() {
-
-    const notes = document.getElementById('baNotes');
-    const icon = document.getElementById('baIcon');
-
-    notes.classList.toggle('hidden');
-
-    icon.setAttribute(
-      'data-lucide',
-      notes.classList.contains('hidden')
-        ? 'chevron-down'
-        : 'chevron-up'
-    );
-
+    </main>
+  </div>
+
+  <script src="sidebar.js"></script>
+  <script>
     lucide.createIcons();
-
-  }
-
-  lucide.createIcons();
-
-</script>
-
-<script src="sidebar.js"></script>
-
+  </script>
 </body>
-</html>
-      
 
+</html>
