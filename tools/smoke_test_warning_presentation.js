@@ -121,6 +121,79 @@ assert(
 );
 assert(coverageReview.blocksEstimate === false, "ZIP coverage statuses must warn without blocking.");
 
+const directMissingDate = build({
+  quote: {
+    route: { pickupZip: "11211", deliveryZip: "90021" },
+    options: { pickupDirect: true, pickupDirectDate: "" },
+  },
+  result: {
+    routeSupported: true,
+    items: [{
+      id: "item-5",
+      name: "Sofa",
+      warning: "OK",
+      protectionPlan: "RV",
+      declaredValue: 0,
+    }],
+    totals: { effectiveVolume: 60 },
+  },
+});
+assert(directMissingDate.readiness.id === "review", "Direct service without date should require review without blocking calculation.");
+assert(directMissingDate.warnings.some((entry) => entry.id === "WARN-UI-DIRECT-DATE-PICKUP"), "Expected Direct pickup date warning.");
+assert(directMissingDate.enforcementEnabled === false, "Direct warning enforcement must remain disabled.");
+assert(directMissingDate.blocksEstimate === false, "Direct warning should not block estimate generation.");
+
+const accessReview = build({
+  quote: {
+    route: { pickupZip: "11211", deliveryZip: "90021" },
+    access: {
+      pickup: { floor: 5, elevatorAvailable: false, stairs: true },
+      delivery: { floor: 1, elevatorAvailable: true },
+    },
+  },
+  result: {
+    routeSupported: true,
+    items: [{
+      id: "item-6",
+      name: "Dresser",
+      warning: "OK",
+      protectionPlan: "RV",
+      declaredValue: 0,
+    }],
+    totals: { effectiveVolume: 30 },
+  },
+});
+assert(accessReview.readiness.id === "review", "High floor without elevator should require review.");
+assert(accessReview.warnings.some((entry) => entry.id === "WARN-UI-FLOOR-PICKUP"), "Expected floor/elevator access warning.");
+assert(accessReview.blocksEstimate === false, "Access review should not block estimate generation.");
+
+const specialRequirements = build({
+  quote: {
+    route: { pickupZip: "11211", deliveryZip: "90021" },
+    options: { extraLaborPeople: 2, extraLaborHours: 0 },
+  },
+  result: {
+    routeSupported: true,
+    items: [{
+      id: "item-7",
+      name: "Mirror",
+      warning: "OK",
+      protectionPlan: "RV",
+      declaredValue: 0,
+      fragile: true,
+      nonStackable: true,
+      packaging: "Custom Crate",
+    }],
+    totals: { effectiveVolume: 20 },
+  },
+});
+assert(specialRequirements.readiness.id === "review", "Special requirements should require review without formula changes.");
+assert(specialRequirements.warnings.some((entry) => entry.id === "WARN-UI-SPECIAL-LABOR-INCOMPLETE"), "Expected incomplete special labor warning.");
+assert(specialRequirements.warnings.some((entry) => entry.id === "WARN-UI-FRAGILE-item-7"), "Expected fragile item warning.");
+assert(specialRequirements.warnings.some((entry) => entry.id === "WARN-UI-NONSTACK-item-7"), "Expected non-stackable item warning.");
+assert(specialRequirements.warnings.some((entry) => entry.id === "WARN-UI-CRATE-item-7"), "Expected custom crate item warning.");
+assert(specialRequirements.blocksEstimate === false, "Special requirements should not block before governance approval.");
+
 console.log(JSON.stringify({
   blankReadiness: blank.readiness.label,
   unsupportedReadiness: unsupported.readiness.label,
@@ -128,5 +201,8 @@ console.log(JSON.stringify({
   heavyReadiness: heavy.readiness.label,
   readyReadiness: ready.readiness.label,
   coverageReadiness: coverageReview.readiness.label,
+  directReadiness: directMissingDate.readiness.label,
+  accessReadiness: accessReview.readiness.label,
+  specialRequirementsWarnings: specialRequirements.warnings.length,
   enforcementEnabled: unsupported.enforcementEnabled,
 }, null, 2));

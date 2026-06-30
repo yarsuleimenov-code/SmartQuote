@@ -38,6 +38,12 @@ Current implementation baseline:
   - Crate Materials and Labor captures test-mode plywood material, 15% waste, and hired assembly labor at `$4.50/sq ft`; it is not active in quote pricing.
   - Broker commission (`4%` of order margin) remains a Variables discussion input. The current quote uses `Dispatch Fee`; the separate dispatcher payout rule is deferred and hidden from the operational screen.
   - Fuel prices are maintained in References -> Fuel Prices, not Variables. Repair Cost per volume/weight is the current damage/repair surcharge, not vehicle depreciation.
+  - Vehicle depreciation / amortization is captured in References -> Vehicles as vehicle masterdata and shown in Cost Breakdown as a tracked audit field only. It is not included in AS-IS pricing until a Formula Sprint block explicitly approves the formula.
+- P1 warning / special requirements slice:
+  - Direct service date, high-floor/no-elevator, stairs, special labor completeness, fragile, non-stackable, and custom crate requirements are normalized through the shared warning presentation contract.
+  - Quote Draft and Cost Breakdown show business-friendly warning impact text.
+  - New warnings are review-only and do not block calculation or estimate generation.
+  - No pricing formula change is active.
 
 Checkpoint history:
 

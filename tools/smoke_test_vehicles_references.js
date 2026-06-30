@@ -90,6 +90,7 @@ assert(box16?.fuelType === "Regular", "Expected Box truck 16 ft to be a real Reg
 assert(sprinter?.category === "Van", "Expected Sprinter category Van.");
 assert(sprinter?.cargoInteriorLengthIn === 173, "Expected Sprinter cargo length seed.");
 assert(sprinter?.doorOpeningWidthIn === 61, "Expected Sprinter door width seed.");
+assert(sprinter?.depreciationPerMile > 0, "Expected Sprinter depreciation per mile seed.");
 assert(box16?.category === "Box Truck", "Expected Box truck 16 category Box Truck.");
 assert(box16?.passengerCapacity === 3, "Expected Box truck 16 passenger capacity 3.");
 assert(sprinter?.passengerCapacity === 2, "Expected Sprinter passenger capacity 2.");
@@ -99,16 +100,20 @@ assert(box16?.calculationMpg !== box16?.mpg, "Expected Box truck 16 calculationM
 assert(enterprise?.vehicleName === "Enterprise 26 ft", "Expected Enterprise 26 ft seed vehicle.");
 assert(enterprise?.mpg === 9.47 && enterprise?.passengerCapacity === 3, "Expected Enterprise business MPG 9.47 and passenger capacity 3.");
 assert(box16.volume === box16.capacityCuFt && box16.payload === box16.maxWeightLb, "Expected legacy volume/payload compatibility fields.");
+assert(box16.depreciationPerMile > 0, "Expected Box truck 16 depreciation per mile seed.");
 
 const editedVehicles = vehicles.map((vehicle) => (
   vehicle.vehicleId === "box-truck-16"
     ? { ...vehicle, mpg: 15, fuelType: "Diesel" }
+    : vehicle.vehicleId === "sprinter-488"
+      ? { ...vehicle, depreciationPerMile: 0.3 }
     : vehicle
 ));
 pricingConfig.saveVehicles(editedVehicles);
 const editedBox16 = pricingConfig.readVehicles().find((vehicle) => vehicle.vehicleId === "box-truck-16");
 assert(editedBox16.mpg === 15, "Expected edited MPG to persist.");
 assert(editedBox16.fuelType === "Diesel", "Expected edited fuelType to persist.");
+assert(pricingConfig.readVehicles().find((vehicle) => vehicle.vehicleId === "sprinter-488").depreciationPerMile === 0.3, "Expected edited depreciationPerMile to persist.");
 
 const deactivatedVehicles = pricingConfig.readVehicles().map((vehicle) => (
   vehicle.vehicleId === "sprinter-488" ? { ...vehicle, active: false } : vehicle
@@ -151,6 +156,7 @@ assert(migratedBox16.category === "Box Truck", "Expected stale Box truck 16 cate
 assert(migratedBox16.passengerCapacity === 3, "Expected stale Box truck 16 passenger capacity to migrate to 3.");
 assert(migratedBox16.mpg === 14, "Expected stale Box truck 16 business MPG to migrate to 14.");
 assert(migratedBox16.calculationMpg !== migratedBox16.mpg, "Expected migrated Box truck 16 calculationMpg to stay separate.");
+assert(migratedBox16.depreciationPerMile > 0, "Expected migrated Box truck 16 depreciation per mile seed.");
 assert(migratedBox16.active === false, "Expected stale active=false to be preserved during seed migration.");
 
 console.log(JSON.stringify({
@@ -160,6 +166,7 @@ console.log(JSON.stringify({
   sprinterCategory: sprinter.category,
   sprinterPassengerCapacity: sprinter.passengerCapacity,
   sprinterCargoInterior: `${sprinter.cargoInteriorLengthIn} x ${sprinter.cargoInteriorWidthIn} x ${sprinter.cargoInteriorHeightIn}`,
+  sprinterDepreciationPerMile: sprinter.depreciationPerMile,
   boxTruck16Category: box16.category,
   boxTruck16PassengerCapacity: box16.passengerCapacity,
   boxTruck16BusinessMpg: box16.mpg,
@@ -177,6 +184,7 @@ console.log(JSON.stringify({
     passengerCapacity: migratedBox16.passengerCapacity,
     mpg: migratedBox16.mpg,
     calculationMpg: migratedBox16.calculationMpg,
+    depreciationPerMile: migratedBox16.depreciationPerMile,
     active: migratedBox16.active,
   },
   calculationFinalPrice: result.totals.finalPrice,

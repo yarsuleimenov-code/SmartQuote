@@ -305,6 +305,9 @@
           const approval = entry.approvalRole
             ? `<span class="text-[11px] text-slate-500">Owner: ${escapeHtml(entry.approvalRole)}</span>`
             : "";
+          const impact = entry.businessImpact
+            ? `<p class="mt-1 text-[11px] leading-4 text-slate-500">Impact: ${escapeHtml(entry.businessImpact)}</p>`
+            : "";
           return `
             <article class="rounded-lg border p-3 ${style.card}">
               <div class="flex items-start justify-between gap-3">
@@ -314,6 +317,7 @@
                     <p class="font-semibold text-slate-800">${escapeHtml(entry.title)}</p>
                   </div>
                   <p class="mt-1 text-xs leading-5 text-slate-600">${escapeHtml(entry.message)}</p>
+                  ${impact}
                   ${approval}
                 </div>
                 <button type="button" data-warning-focus="${escapeHtml(entry.target)}" class="shrink-0 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline">${escapeHtml(entry.actionLabel)}</button>

@@ -4,12 +4,176 @@
     return Number.isFinite(parsed) ? parsed : 0;
   }
 
+  function dateText(value) {
+    return String(value || "").trim();
+  }
+
   function warning(record) {
     return {
       approvalRole: "",
       blocksEstimate: false,
+      businessImpact: "Review before sending estimate.",
       ...record,
     };
+  }
+
+  function addDirectWarnings(warnings, quote) {
+    [
+      {
+        label: "Pickup",
+        flag: Boolean(quote?.options?.pickupDirect),
+        date: dateText(quote?.options?.pickupDirectDate),
+        flagTarget: "pickupDirect",
+        dateTarget: "pickupDirectDate",
+      },
+      {
+        label: "Delivery",
+        flag: Boolean(quote?.options?.deliveryDirect),
+        date: dateText(quote?.options?.deliveryDirectDate),
+        flagTarget: "deliveryDirect",
+        dateTarget: "deliveryDirectDate",
+      },
+    ].forEach((point) => {
+      if (point.flag && !point.date) {
+        warnings.push(warning({
+          id: `WARN-UI-DIRECT-DATE-${point.label.toUpperCase()}`,
+          severity: "approval",
+          scope: "route",
+          target: point.dateTarget,
+          title: `${point.label} Direct date is required`,
+          message: "Direct service is selected manually and needs a specific service date for operations review.",
+          actionLabel: "Add date",
+          approvalRole: "Operations",
+          businessImpact: "Direct service may change dispatch planning and route availability.",
+        }));
+      } else if (!point.flag && point.date) {
+        warnings.push(warning({
+          id: `WARN-UI-DIRECT-FLAG-${point.label.toUpperCase()}`,
+          severity: "warning",
+          scope: "route",
+          target: point.flagTarget,
+          title: `${point.label} date entered without Direct flag`,
+          message: "A specific date does not automatically mean Direct service. Select Direct only when the route cannot be combined normally.",
+          actionLabel: "Review Direct",
+          approvalRole: "Broker",
+          businessImpact: "Prevents accidental Direct service assumptions.",
+        }));
+      }
+    });
+  }
+
+  function addAccessWarnings(warnings, quote) {
+    [
+      { label: "Pickup", point: quote?.access?.pickup, target: "pickupFloor" },
+      { label: "Delivery", point: quote?.access?.delivery, target: "deliveryFloor" },
+    ].forEach((entry) => {
+      const access = entry.point || {};
+      const floor = number(access.floor);
+      const elevatorAvailable = access.elevatorAvailable !== undefined
+        ? Boolean(access.elevatorAvailable)
+        : !Boolean(access.elevatorUnavailable);
+      if (floor > 3 && !elevatorAvailable) {
+        warnings.push(warning({
+          id: `WARN-UI-FLOOR-${entry.label.toUpperCase()}`,
+          severity: "approval",
+          scope: "access",
+          target: entry.target,
+          title: `${entry.label}: stairs / floor review`,
+          message: `Floor ${floor} without elevator is captured for future floor-fee logic. Review labor and helper need before sending.`,
+          actionLabel: "Review access",
+          approvalRole: "Operations",
+          businessImpact: "May require additional labor time or helper planning.",
+        }));
+      } else if (access.stairs && floor > 1) {
+        warnings.push(warning({
+          id: `WARN-UI-STAIRS-${entry.label.toUpperCase()}`,
+          severity: "warning",
+          scope: "access",
+          target: entry.target,
+          title: `${entry.label}: stairs selected`,
+          message: "Stairs are noted for operations review. Current AS-IS pricing is unchanged.",
+          actionLabel: "Review access",
+          approvalRole: "Operations",
+          businessImpact: "May affect handling plan and future labor pricing.",
+        }));
+      }
+    });
+  }
+
+  function addSpecialLaborWarnings(warnings, quote) {
+    const people = number(quote?.options?.extraLaborPeople);
+    const hours = number(quote?.options?.extraLaborHours);
+    if ((people > 0 && hours <= 0) || (hours > 0 && people <= 0)) {
+      warnings.push(warning({
+        id: "WARN-UI-SPECIAL-LABOR-INCOMPLETE",
+        severity: "warning",
+        scope: "quote",
+        target: "quoteOptions",
+        title: "Special Labor is incomplete",
+        message: "Enter both Extra Labor People and Extra Labor Hours, or leave both as 0.",
+        actionLabel: "Review labor",
+        approvalRole: "Broker",
+        businessImpact: "Avoids accidentally missing special handling cost.",
+      }));
+    } else if (people > 0 && hours > 0) {
+      warnings.push(warning({
+        id: "WARN-UI-SPECIAL-LABOR-CAPTURED",
+        severity: "info",
+        scope: "quote",
+        target: "quoteOptions",
+        title: "Special Labor captured",
+        message: `${people} ${people === 1 ? "person" : "people"} x ${hours} ${hours === 1 ? "hour" : "hours"} is included as special handling time.`,
+        actionLabel: "Review labor",
+        approvalRole: "Broker",
+        businessImpact: "Explains extra handling time included in the quote.",
+      }));
+    }
+  }
+
+  function addPackagingAndFlagWarnings(warnings, item, itemName, itemTarget) {
+    if (item.fragile) {
+      warnings.push(warning({
+        id: `WARN-UI-FRAGILE-${item.id}`,
+        severity: "warning",
+        scope: "item",
+        target: itemTarget,
+        title: `${itemName}: fragile handling`,
+        message: "Fragile item flag is captured. Confirm packaging and customer expectations before sending.",
+        actionLabel: "Review item",
+        approvalRole: "Broker",
+        businessImpact: "Reduces mismatch between quote assumptions and handling risk.",
+      }));
+    }
+    if (item.nonStackable) {
+      warnings.push(warning({
+        id: `WARN-UI-NONSTACK-${item.id}`,
+        severity: "approval",
+        scope: "item",
+        target: itemTarget,
+        title: `${itemName}: non-stackable item`,
+        message: "Non-stackable item affects capacity planning. Current AS-IS price is unchanged unless effective volume already captures it.",
+        actionLabel: "Review item",
+        approvalRole: "Operations",
+        businessImpact: "May reduce route consolidation capacity.",
+      }));
+    }
+    if (item.packaging === "Custom Crate") {
+      warnings.push(warning({
+        id: `WARN-UI-CRATE-${item.id}`,
+        severity: "approval",
+        scope: "item",
+        target: itemTarget,
+        title: `${itemName}: custom crate requested`,
+        message: "Custom crate is captured for review. Crate pricing formula is not active until approved.",
+        actionLabel: "Review crate",
+        approvalRole: "Operations",
+        businessImpact: "Requires material and labor confirmation before future formula activation.",
+      }));
+    }
+  }
+
+  function severityRank(severity) {
+    return { blocking: 0, approval: 1, warning: 2, info: 3 }[severity] ?? 4;
   }
 
   function build({ quote, result, useStoredCoverage = false }) {
@@ -17,6 +181,10 @@
     const pickupZip = String(quote?.route?.pickupZip || "").trim();
     const deliveryZip = String(quote?.route?.deliveryZip || "").trim();
     const hasBothZips = Boolean(pickupZip && deliveryZip);
+
+    addDirectWarnings(warnings, quote);
+    addAccessWarnings(warnings, quote);
+    addSpecialLaborWarnings(warnings, quote);
 
     if (!hasBothZips) {
       warnings.push(warning({
@@ -95,6 +263,7 @@
       const itemName = item.name || "Item";
       const itemTarget = `item:${item.id}`;
       const itemWarning = String(item.warning || "");
+      addPackagingAndFlagWarnings(warnings, item, itemName, itemTarget);
       if (itemWarning === "Fill up the weight") {
         warnings.push(warning({
           id: `WARN-UI-ITEM-WEIGHT-${item.id}`,
@@ -170,6 +339,7 @@
     }
 
     const hasBlocking = warnings.some((entry) => entry.severity === "blocking");
+    warnings.sort((a, b) => severityRank(a.severity) - severityRank(b.severity) || String(a.title).localeCompare(String(b.title)));
     const readiness = hasBlocking
       ? { id: "blocked", label: "Blocked" }
       : warnings.length

@@ -11,7 +11,7 @@
     calculationLogs: "calculationLogs",
   };
   const baseline = cloneData(window.CalculatorVariables || {});
-  const vehiclesSeedVersion = "business-seed-2026-06-26-v3";
+  const vehiclesSeedVersion = "business-seed-2026-06-29-v4";
 
   function cloneData(value) {
     return JSON.parse(JSON.stringify(value || {}));
@@ -69,6 +69,7 @@
     const capacityCuFt = Number(raw.capacityCuFt ?? raw.volume ?? 0);
     const maxWeightLb = Number(raw.maxWeightLb ?? raw.payload ?? 0);
     const maintenanceCostPerMile = Number(raw.maintenanceCostPerMile ?? raw.maintenancePerMile ?? raw.costPerMile ?? 0);
+    const depreciationPerMile = Number(raw.depreciationPerMile ?? 0);
     const fuelPerMile = Number(raw.fuelPerMile || 0);
     const volume = capacityCuFt;
     const payload = maxWeightLb;
@@ -97,6 +98,7 @@
       bodySpecsStatus: raw.bodySpecsStatus || "Not configured",
       maintenanceCostPerMile,
       maintenancePerMile: maintenanceCostPerMile,
+      depreciationPerMile,
       active: raw.active !== false,
     };
 
@@ -146,6 +148,7 @@
       liftGateFlag: seed.liftGateFlag,
       bodySpecsStatus: seed.bodySpecsStatus,
       maintenanceCostPerMile: seed.maintenanceCostPerMile,
+      depreciationPerMile: seed.depreciationPerMile,
       totalPriceReference: seed.totalPriceReference,
       milesLastReference: seed.milesLastReference,
       active: normalized.active !== false,

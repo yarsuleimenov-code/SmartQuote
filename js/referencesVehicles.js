@@ -47,6 +47,7 @@
       rampFlag: false,
       liftGateFlag: false,
       maintenanceCostPerMile: 0,
+      depreciationPerMile: 0,
       active: true,
     };
   }
@@ -122,6 +123,7 @@
       rampFlag: document.getElementById("vehicleRamp")?.checked === true,
       liftGateFlag: document.getElementById("vehicleLiftGate")?.checked === true,
       maintenanceCostPerMile: number(formValue("vehicleMaintenanceCost")),
+      depreciationPerMile: number(formValue("vehicleDepreciationCost")),
       active: document.getElementById("vehicleActive")?.checked !== false,
     });
   }
@@ -144,6 +146,7 @@
     document.getElementById("vehicleRamp").checked = record.rampFlag === true;
     document.getElementById("vehicleLiftGate").checked = record.liftGateFlag === true;
     document.getElementById("vehicleMaintenanceCost").value = record.maintenanceCostPerMile || "";
+    document.getElementById("vehicleDepreciationCost").value = record.depreciationPerMile || "";
     document.getElementById("vehicleActive").checked = record.active !== false;
     document.getElementById("vehicleFormTitle").textContent = editingId ? "Edit Vehicle" : "Add Vehicle";
     document.getElementById("vehicleFormPanel").classList.remove("hidden");
@@ -171,6 +174,7 @@
         <td class="px-4 py-3">${variableCell(vehicle.doorOpeningWidthIn && vehicle.doorOpeningHeightIn ? `${number(vehicle.doorOpeningWidthIn)} x ${number(vehicle.doorOpeningHeightIn)} in` : "Not configured")}</td>
         <td class="px-4 py-3">${variableCell(`${vehicle.rampFlag ? "Ramp" : "-"}${vehicle.liftGateFlag ? `${vehicle.rampFlag ? ", " : ""}Lift gate` : ""}`)}</td>
         <td class="px-4 py-3">${variableCell(`$${number(vehicle.maintenanceCostPerMile).toFixed(3)}`)}</td>
+        <td class="px-4 py-3">${variableCell(`$${number(vehicle.depreciationPerMile).toFixed(3)}`)}</td>
         <td class="px-4 py-3">
           <span class="px-2 py-1 rounded-full text-xs font-semibold ${vehicle.active === false ? "bg-slate-100 text-slate-500" : "bg-emerald-100 text-emerald-700"}">
             ${vehicle.active === false ? "Inactive" : "Active"}
@@ -194,7 +198,7 @@
       </div>
 
       <div class="overflow-x-auto border border-slate-200 rounded-xl">
-        <table class="w-full text-sm min-w-[1500px]">
+        <table class="w-full text-sm min-w-[1650px]">
           <thead class="bg-slate-50 text-slate-500">
             <tr>
               <th class="text-left px-4 py-3">Vehicle</th>
@@ -208,6 +212,7 @@
               <th class="text-left px-4 py-3">Door Opening, in</th>
               <th class="text-left px-4 py-3">Equipment</th>
               <th class="text-left px-4 py-3">Maintenance / Mile</th>
+              <th class="text-left px-4 py-3">Depreciation / Mile</th>
               <th class="text-left px-4 py-3">Active</th>
               <th class="text-right px-4 py-3">Actions</th>
             </tr>
@@ -230,6 +235,7 @@
           <label><span class="text-xs text-slate-400">MPG</span><input id="vehicleMpg" type="number" min="0.1" step="0.01" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Passenger Capacity</span><input id="vehiclePassengerCapacity" type="number" min="1" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Maintenance / Mile</span><input id="vehicleMaintenanceCost" type="number" min="0" step="0.001" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
+          <label><span class="text-xs text-slate-400">Depreciation / Mile</span><input id="vehicleDepreciationCost" type="number" min="0" step="0.001" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Cargo Interior Length, in</span><input id="vehicleInteriorLength" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Cargo Interior Width, in</span><input id="vehicleInteriorWidth" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>
           <label><span class="text-xs text-slate-400">Cargo Interior Height, in</span><input id="vehicleInteriorHeight" type="number" min="0" step="1" class="mt-1 w-full border rounded-lg px-3 py-2" /></label>

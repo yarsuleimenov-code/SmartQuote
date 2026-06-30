@@ -502,7 +502,11 @@
           <tr>
             <td class="px-4 py-3"><span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold ${severityClass(entry.severity)}">${escapeHtml(entry.severity)}</span></td>
             <td class="px-4 py-3 text-slate-600">${escapeHtml(entry.scope)}${entry.target ? `<p class="mt-1 text-xs text-slate-400">${escapeHtml(entry.target)}</p>` : ""}</td>
-            <td class="px-4 py-3"><p class="font-medium text-slate-800">${escapeHtml(entry.title)}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(entry.message)}</p></td>
+            <td class="px-4 py-3">
+              <p class="font-medium text-slate-800">${escapeHtml(entry.title)}</p>
+              <p class="mt-1 text-xs text-slate-500">${escapeHtml(entry.message)}</p>
+              ${entry.businessImpact ? `<p class="mt-1 text-xs text-slate-500">Impact: ${escapeHtml(entry.businessImpact)}</p>` : ""}
+            </td>
             <td class="px-4 py-3 text-slate-600">${escapeHtml(entry.actionLabel || "-")}</td>
             <td class="px-4 py-3 text-slate-600">${escapeHtml(entry.approvalRole || "Not assigned")}</td>
           </tr>
@@ -604,6 +608,7 @@
     setText("bdLaborCost", currency(totals.laborCost));
     setText("bdCrew", `${result.requiredCrew || 0} ${result.requiredCrew === 1 ? "person" : "people"}`);
     setText("bdNonRouteCost", currency(nonRouteOperationalCost));
+    setText("bdDepreciationAudit", "Tracked only");
     setText("bdStorage", currency(totals.storage));
     setText("bdInsurance", currency(totals.insurance));
     setText("bdAccessFees", currency(totals.accessFees));
