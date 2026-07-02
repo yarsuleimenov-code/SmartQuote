@@ -49,6 +49,9 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - `js/calculationContract.js` provides the versioned Formula Sprint input/output boundary and normalized Formula ID trace while preserving the UAT-approved calculation outputs.
 - The next masterdata sprint keeps two operational screens: Variables for concise active parameter control and References for business lookup tables. A separate System Registry is not planned because it has no current broker or operations value.
 - Operational masterdata mapping is generated from the normalized registries in `js/operationalMasterdata.js` and `docs/operational-masterdata-mapping.csv`. Variables exposes 52 business-owned values, including primary labor/time and access inputs, while retaining all 116 records for Formula Trace; References exposes all 40 records in six operational groups, including Fuel Prices.
+- Cost Breakdown v2 is the current admin/CFO explanation screen. It uses a Price Storyline, visual price composition, reconciliation, collapsible route-stage details, operational analysis, human-readable Formula Trace, and hidden Developer Payload.
+- Lifecycle Map is a modern architecture reference for Quote -> Estimate -> Invoice -> Order -> eBOL -> Completed.
+- Vehicle depreciation / amortization is visible as audit/reference data only and does not affect AS-IS pricing.
 
 ## Current Implementation Status
 
@@ -73,6 +76,7 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 - Quote Draft must remain compact for broker input; pickup / interstate / delivery stage visibility belongs in Cost Breakdown.
 - Cost Breakdown stage visibility exposes existing pickup / interstate / delivery costs and component buckets from the calculator result; it must not introduce new pricing formulas.
 - Cost Breakdown includes read-only Capacity Analysis, normalized warning details, Vehicle Fit placeholders, stage reconciliation, and an AS-IS Formula Trace. Missing Formula Sprint outputs remain `Not available` or blocked.
+- Cost Breakdown Formula Trace is business-readable and should not expose JSON as the primary CFO/CEO review surface.
 - Floor and elevator availability are captured for future labor/access pricing, but no floor/elevator pricing formula is active yet.
 - Future floor fee formula under discussion: `6.5 x max(floor - 3, 0) x people x item_count`.
 - Broker-facing packaging hides Bubble Protection; TV box rates and Custom Crate pricing require approved References/rates before activation.
@@ -92,11 +96,11 @@ Sales broker / admin user who needs fast, explainable, and reasonably accurate i
 
 ## Next Business Handoff Priorities
 
-1. Complete operational masterdata mapping for all 116 variables and 40 references.
-2. Expand Variables into concise read-only operational sections: `Variable ID | Name | Active Value | Unit`.
-3. Expand References into compact operational lookup tables without formula dependency data.
-4. Add data required for the next approved Formula Sprint block, `TBE-FEE-001 Custom Crate`, as read-only/test-mode masterdata before activating its formula.
-5. Keep broad governed editing and benchmark preview deferred until a separate approval.
+1. Keep documentation synchronized to current HEAD `1e9ea9c Add vehicle depreciation audit and special warnings`.
+2. QA Cost Breakdown v2 across desktop, tablet, and mobile widths before new UI work.
+3. Audit Estimate Document as a customer-facing artifact and decide whether a v2 wireframe is needed.
+4. If Formula Sprint starts, select exactly one Formula ID block, define UAT cases, bump formulaVersion for price-impact changes, and avoid unrelated UI changes.
+5. Keep broad governed editing, benchmark preview, backend migration, ZIP price activation, and Save Variables deferred until separate approval.
 
 The implementation order from the June 19 Calculator meeting is documented in:
 

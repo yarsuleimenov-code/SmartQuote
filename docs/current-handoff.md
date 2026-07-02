@@ -6,7 +6,7 @@ SmartQuote is a working business MVP prototype for Zaberman LLC broker pricing. 
 
 Current implementation baseline:
 
-- Current committed checkpoint: `30f1786 Refine operational variables and pickup time curve`.
+- Current committed checkpoint: `1e9ea9c Add vehicle depreciation audit and special warnings`.
 - Working tree is expected to be clean before Formula Sprint work starts.
 - Stage 6 Storage Reliability and Backup UX MVP completed.
 - Quick Quote -> Full Quote catalog transfer slice completed.
@@ -44,9 +44,22 @@ Current implementation baseline:
   - Quote Draft and Cost Breakdown show business-friendly warning impact text.
   - New warnings are review-only and do not block calculation or estimate generation.
   - No pricing formula change is active.
+- Cost Breakdown v2 is implemented:
+  - Price Storyline explains Operational Cost + Additional Charges + Margin = Raw Price -> Rounded Final Price.
+  - Price Composition reconciles stage totals, non-route operational cost, additional charges, margin, raw price, rounding, and final price.
+  - Route Stage Details are collapsible admin analysis.
+  - Operational Analysis groups capacity, vehicle fit, item handling, warnings, readiness, and items used in calculation.
+  - Formula Trace is human-readable for CFO/CEO review; Developer Payload is hidden by default.
+- Lifecycle Map was redesigned as a modern Quote -> Estimate -> Invoice -> Order -> eBOL -> Completed reference page.
+- Vehicle depreciation / amortization and special requirement warnings are audit-only and do not affect AS-IS pricing.
 
 Checkpoint history:
 
+- `1e9ea9c Add vehicle depreciation audit and special warnings`.
+- `592156e Redesign lifecycle reference map`.
+- `4849cd3 Finalize cost breakdown v2 layout`.
+- `1f75438 Restructure cost breakdown price storyline`.
+- `0277503 Document Formula Sprint guardrails`.
 - `30f1786 Refine operational variables and pickup time curve`.
 - `274ca0a Implement operational masterdata mapping screens`.
 - `b2d9d1e Implement order-level FVP protection pricing and sync masterdata plan`.
@@ -448,24 +461,33 @@ Stage 6 Storage Reliability MVP:
 
 ## Next Recommended Step
 
-Current stage: Cost Breakdown admin explanation and validation.
+Current stage: safe post-pause recovery and visual QA before any new Formula Sprint work.
 
 Business reason:
 
 - The calculator is calculation-stable and workflow-smoke-stable.
 - Quote Draft and Quick Quote must remain compact broker input screens.
-- Cost Breakdown is the correct location for route-stage, capacity, warning, vehicle-fit, and future formula-trace analysis.
-- The June 19 Calculator meeting identified these explanations as the next admin-facing UI priority.
+- Cost Breakdown v2 is now the correct location for route-stage, capacity, warning, vehicle-fit, and formula-trace analysis.
+- Documentation must reflect HEAD `1e9ea9c` before a new agent or Formula Sprint change starts.
+- The next work should be either safe UI polish or one explicitly approved Formula ID block.
 
 Required order:
 
-1. Audit the Cost Breakdown fields already available in drafts, estimate snapshots, and calculator results.
-2. Verify pickup, interstate, and delivery stage totals against Operational Cost.
-3. Add the Capacity Analysis shell using reliable existing outputs and `Not available` states.
-4. Add normalized warning/readiness details from the existing warning contract.
-5. Add Vehicle Fit details only after vehicle body and fit outputs are approved.
-6. Add Formula Trace only after the Formula ID registry and trace output are approved.
-7. Keep Save Variables disabled and do not change `js/calculator.js` or pricing formulas.
+1. Keep documentation synchronized to HEAD `1e9ea9c`.
+2. QA Cost Breakdown v2 on desktop, tablet, and mobile widths for overflow, readability, stacked bar, collapsible sections, long names, many items, warnings, and Formula Trace.
+3. Audit Estimate Document as a customer-facing artifact.
+4. If UI issues are found, fix them as safe UI polish only.
+5. Do not start Formula Sprint until a single Formula ID block, UAT cases, and formulaVersion bump are explicitly approved.
+6. Keep Save Variables disabled and do not change `js/calculator.js` or pricing formulas.
+
+Current short status:
+
+- Current HEAD: `1e9ea9c Add vehicle depreciation audit and special warnings`.
+- Current MVP capabilities: Quick Quote, Full Quote, Drafts, Estimates, Cost Breakdown v2, Estimate Document, Variables, References, Formula Catalog, ZIP Coverage, Lifecycle Map, storage backup/import.
+- Active formula version: AS-IS calculator baseline plus test-mode `formula-sprint-fvp-v1` for `TBE-FEE-002`; all other TO-BE outputs are audit-only unless explicitly activated.
+- Open UI backlog: Cost Breakdown v2 responsive QA, Estimate Document audit, minor Variables/References polish if business users request it.
+- Formula Program status: prepared but not broadly activated; proceed one Formula ID block at a time.
+- Recommended next step: finish Cost Breakdown v2 QA and Estimate Document audit before any Formula Sprint implementation.
 
 Detailed plan:
 

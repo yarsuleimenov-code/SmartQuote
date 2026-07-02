@@ -15,10 +15,31 @@ Current implemented baseline:
 - working broker quote flow from Quick Quote / Full Quote to Estimate Document;
 - local JavaScript pricing calculation aligned with accepted business test cases;
 - multiple local drafts and generated estimate snapshots;
+- Cost Breakdown v2 with Price Storyline, price composition reconciliation, route-stage details, operational analysis, and human-readable Formula Trace;
+- Lifecycle Map redesigned as a Quote -> Estimate -> Invoice -> Order -> eBOL -> Completed architecture reference;
 - Pricing Admin Google Sheets layer for audit / backup experiments;
 - runtime-driven Variables screen with Save Variables intentionally disabled;
 - Fuel Prices and runtime Vehicles participate in calculation;
+- ZIP Coverage, warning/readiness presentation, vehicle depreciation audit fields, and special requirement warnings are available for review without changing AS-IS pricing;
 - backend migration, production security hardening, and governed Save Variables are not enabled yet.
+
+Current checkpoint:
+
+```text
+main -> 1e9ea9c Add vehicle depreciation audit and special warnings
+```
+
+Active formula version:
+
+- AS-IS local calculator baseline remains the executable pricing source.
+- `formula-sprint-fvp-v1` is active in test mode for `TBE-FEE-002` Full Value Protection.
+- Other TO-BE formula outputs remain audit-only until a single Formula ID block is approved, implemented, and UAT-tested.
+
+Recommended next step:
+
+1. QA Cost Breakdown v2 across desktop, tablet, and mobile widths.
+2. Audit the customer-facing Estimate Document.
+3. Start Formula Sprint only after an explicit Formula ID block approval.
 
 ---
 

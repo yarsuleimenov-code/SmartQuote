@@ -201,6 +201,136 @@ document.getElementById("sidebar").innerHTML = `
   </aside>
 `;
 
+const responsiveStyle = document.createElement("style");
+responsiveStyle.textContent = `
+  #sidebar + main {
+    margin-left: 16rem !important;
+    width: calc(100% - 16rem) !important;
+    min-width: 0;
+  }
+
+  .smartquote-menu-toggle,
+  .smartquote-sidebar-backdrop {
+    display: none;
+  }
+
+  @media (max-width: 1279px) {
+    #sidebar + main {
+      margin-left: 0 !important;
+      width: 100% !important;
+    }
+
+    #sidebar aside {
+      z-index: 60;
+      transform: translateX(-100%);
+      transition: transform 160ms ease;
+      box-shadow: 16px 0 40px rgba(15, 23, 42, 0.28);
+    }
+
+    body.smartquote-sidebar-open #sidebar aside {
+      transform: translateX(0);
+    }
+
+    .smartquote-menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.75rem;
+      color: #334155;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .smartquote-sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    body.smartquote-sidebar-open .smartquote-sidebar-backdrop {
+      display: block;
+    }
+
+    main > header,
+    .topbar {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      gap: 0.75rem;
+    }
+
+    main > header > :last-child,
+    .topbar > :last-child {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  }
+
+  @media (max-width: 767px) {
+    main > header,
+    .topbar {
+      min-height: 4rem;
+      height: auto !important;
+      align-items: flex-start !important;
+      padding-top: 0.75rem !important;
+      padding-bottom: 0.75rem !important;
+    }
+
+    main > header h2,
+    .topbar h2 {
+      font-size: 1rem !important;
+      line-height: 1.35 !important;
+    }
+
+    main > header a,
+    main > header button,
+    .topbar a,
+    .topbar button {
+      white-space: nowrap;
+    }
+  }
+`;
+document.head.appendChild(responsiveStyle);
+
+const backdrop = document.createElement("button");
+backdrop.type = "button";
+backdrop.className = "smartquote-sidebar-backdrop";
+backdrop.setAttribute("aria-label", "Close navigation");
+document.body.appendChild(backdrop);
+
+const firstHeader = document.querySelector("main > header, .topbar");
+if (firstHeader) {
+  const menuButton = document.createElement("button");
+  menuButton.type = "button";
+  menuButton.className = "smartquote-menu-toggle";
+  menuButton.setAttribute("aria-label", "Open navigation");
+  menuButton.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
+  firstHeader.prepend(menuButton);
+  menuButton.addEventListener("click", () => {
+    document.body.classList.toggle("smartquote-sidebar-open");
+  });
+}
+
+backdrop.addEventListener("click", () => {
+  document.body.classList.remove("smartquote-sidebar-open");
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    document.body.classList.remove("smartquote-sidebar-open");
+  }
+});
+
+document.getElementById("sidebar")?.addEventListener("click", (event) => {
+  const link = event.target.closest?.("a");
+  if (link) {
+    document.body.classList.remove("smartquote-sidebar-open");
+  }
+});
+
 if (!isAdmin) {
   document.querySelectorAll("[data-admin-only]").forEach((element) => {
     element.hidden = true;
